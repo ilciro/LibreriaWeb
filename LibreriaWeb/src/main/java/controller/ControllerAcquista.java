@@ -6,8 +6,6 @@ import java.sql.SQLException;
 
 import java.util.logging.Level;
 
-
-
 import database.GiornaleDao;
 import database.LibroDao;
 import database.PagamentoDao;
@@ -94,7 +92,8 @@ public class ControllerAcquista {
 		try {
 			pagD.daiPrivilegi();
 		} catch (SQLException e) {
-			e.printStackTrace();
+			
+			Log.LOGGER.log(Level.SEVERE, e.getMessage(), e);
 		}
 		
 
