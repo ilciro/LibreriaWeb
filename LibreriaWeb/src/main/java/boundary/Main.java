@@ -3,6 +3,7 @@ package boundary;
 import java.io.FileNotFoundException;
 import java.sql.SQLException;
 
+
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -30,6 +31,7 @@ public class Main extends Application{
 		}
 
 	}
+	
 
 	public static void main(String[] args)  {
 		//uso status per vedere se trigger creati
@@ -41,7 +43,8 @@ public class Main extends Application{
 			CreateDefaultDB.createDefaultDB();			
 
 		} catch (FileNotFoundException |SQLException  eFile) {
-			eFile.printStackTrace();
+			eFile.getCause();
+
 		}
 		
 
