@@ -22,7 +22,6 @@ public class Config {
 		this.host="localhost";
 		this.user="root";
 		this.pwd=getEncryptedPassword("root");
-		this.pwd="root";
 		this.database="ispw";
 		this.port="3306";
 		this.driver="com.mysql.cj.jdbc.Driver";
