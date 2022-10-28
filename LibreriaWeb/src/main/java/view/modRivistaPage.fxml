@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.RowConstraints?>
+
+<Pane fx:id="pane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="564.0" prefWidth="681.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.uniroma2.ispw.view.BoundaryModifRivista">
+   <children>
+      <Label fx:id="header" layoutX="46.0" layoutY="43.0" prefHeight="17.0" prefWidth="274.0" text="Benvenuto nella schermata per aggiungere riviste" textAlignment="CENTER" textFill="#06e115" />
+      <GridPane fx:id="grid" layoutX="9.0" layoutY="112.0" prefHeight="389.0" prefWidth="511.0">
+        <columnConstraints>
+          <ColumnConstraints hgrow="SOMETIMES" maxWidth="168.0" minWidth="10.0" prefWidth="168.0" />
+            <ColumnConstraints hgrow="SOMETIMES" maxWidth="120.0" minWidth="10.0" prefWidth="94.0" />
+          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+        </columnConstraints>
+        <rowConstraints>
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+        </rowConstraints>
+         <children>
+            <Label fx:id="labelTipo" prefHeight="41.0" prefWidth="143.0" text="Inserire tipologia:" GridPane.rowIndex="1" />
+            <Label fx:id="labelT" prefHeight="54.0" prefWidth="132.0" text="Inserire titolo :" />
+            <Label fx:id="labelA" prefHeight="51.0" prefWidth="139.0" text="Inserire autore :" GridPane.rowIndex="2" />
+            <Label fx:id="labelLingua" prefHeight="49.0" prefWidth="132.0" text="Inserire lingua:" GridPane.rowIndex="3" />
+            <Label fx:id="labelE" prefHeight="52.0" prefWidth="168.0" text="Inserire Editore" GridPane.rowIndex="4" />
+            <Label fx:id="labelDesc" prefHeight="58.0" prefWidth="150.0" text="Inserire Descrizione" GridPane.rowIndex="5" />
+            <Label fx:id="labelData" prefHeight="31.0" prefWidth="167.0" text="Inserire Data Pubblicazione" GridPane.rowIndex="6" />
+            <Label fx:id="labelDisp" prefHeight="31.0" prefWidth="132.0" text="Disponibilita:" GridPane.rowIndex="7" />
+            <Label fx:id="labelP" prefHeight="57.0" prefWidth="135.0" text="Inserire Prezzo:" GridPane.rowIndex="8" />
+            <Label fx:id="labelCopie" prefHeight="54.0" prefWidth="171.0" text="Inserire CopieRimanenti:" GridPane.rowIndex="9" />
+            <TextField fx:id="titoloTF" GridPane.columnIndex="2" />
+            <TextField fx:id="autoreTF" GridPane.columnIndex="2" GridPane.rowIndex="2" />
+            <TextField fx:id="linguaTF" GridPane.columnIndex="2" GridPane.rowIndex="3" />
+            <TextField fx:id="prezzoTF" GridPane.columnIndex="2" GridPane.rowIndex="8" />
+            <TextField fx:id="editoreTF" GridPane.columnIndex="2" GridPane.rowIndex="4" />
+            <TextArea fx:id="descTA" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="2" GridPane.rowIndex="5" />
+            <DatePicker fx:id="datePick" prefHeight="43.0" prefWidth="231.0" GridPane.columnIndex="2" GridPane.rowIndex="6" />
+            <CheckBox fx:id="dispCheck" mnemonicParsing="false" text="Flaggare per disponibile" GridPane.columnIndex="2" GridPane.rowIndex="7" />
+            <TextField fx:id="copieTF" GridPane.columnIndex="2" GridPane.rowIndex="9" />
+            <Label fx:id="titoloV" prefHeight="47.0" prefWidth="139.0" GridPane.columnIndex="1" />
+            <Label fx:id="tipologiaV" prefHeight="58.0" prefWidth="148.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+            <Label fx:id="linguaV" prefHeight="52.0" prefWidth="144.0" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+            <Label fx:id="autoreV" prefHeight="42.0" prefWidth="130.0" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+            <Label fx:id="editoreV" prefHeight="53.0" prefWidth="155.0" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+            <Label fx:id="descV" prefHeight="65.0" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+            <Label fx:id="dataV" prefHeight="65.0" prefWidth="143.0" GridPane.columnIndex="1" GridPane.rowIndex="6" />
+            <Label fx:id="dispV" prefHeight="53.0" prefWidth="153.0" GridPane.columnIndex="1" GridPane.rowIndex="7" />
+            <Label fx:id="prezzoV" prefHeight="61.0" prefWidth="158.0" GridPane.columnIndex="1" GridPane.rowIndex="8" />
+            <Label fx:id="copieV" prefHeight="54.0" prefWidth="160.0" GridPane.columnIndex="1" GridPane.rowIndex="9" />
+            <ListView fx:id="tipologiaTF" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+         </children>
+      </GridPane>
+      <Button fx:id="buttonAdd" layoutX="577.0" layoutY="238.0" mnemonicParsing="false" onAction="#aggiungi" text="Aggiorna" textAlignment="CENTER" textFill="#19f502" />
+      <Button fx:id="buttonI" layoutX="577.0" layoutY="307.0" mnemonicParsing="false" onAction="#torna" text="Annulla" textFill="#f50202" />
+   </children>
+</Pane>

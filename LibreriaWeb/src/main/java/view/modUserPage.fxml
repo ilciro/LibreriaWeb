@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.RowConstraints?>
+
+<Pane fx:id="pane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="492.0" prefWidth="696.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.uniroma2.ispw.view.BoundaryModifUserPage">
+   <children>
+      <Label fx:id="header" layoutX="54.0" layoutY="42.0" prefHeight="17.0" prefWidth="274.0" text="Benvenuto nella scherata di inserimento utente" textAlignment="CENTER" textFill="#1eff05" />
+      <GridPane fx:id="grid" layoutX="70.0" layoutY="93.0" prefHeight="372.0" prefWidth="489.0">
+        <columnConstraints>
+          <ColumnConstraints hgrow="SOMETIMES" maxWidth="183.0" minWidth="10.0" prefWidth="171.0" />
+            <ColumnConstraints hgrow="SOMETIMES" maxWidth="183.0" minWidth="10.0" prefWidth="171.0" />
+            <ColumnConstraints hgrow="SOMETIMES" maxWidth="207.0" minWidth="10.0" prefWidth="152.0" />
+        </columnConstraints>
+        <rowConstraints>
+          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+        </rowConstraints>
+         <children>
+            <Label fx:id="nomeL" prefHeight="58.0" prefWidth="149.0" text="Inserire Nome Utente:" />
+            <Label fx:id="cognomeL" prefHeight="57.0" prefWidth="160.0" text="Inserire Cognome Utente:" GridPane.rowIndex="1" />
+            <Label fx:id="pwdL" prefHeight="56.0" prefWidth="168.0" text="Inserire Password Utente:" GridPane.rowIndex="3" />
+            <Label fx:id="emailL" prefHeight="53.0" prefWidth="160.0" text="Inserire Email Utente:" GridPane.rowIndex="2" />
+            <Label fx:id="descL" prefHeight="50.0" prefWidth="183.0" text="Immettere descrizione Utente:" GridPane.rowIndex="4" />
+            <Label fx:id="dataL" prefHeight="63.0" prefWidth="200.0" text="Inserire Date Nascita Utente:" GridPane.rowIndex="5" />
+            <Label fx:id="ruoloL" prefHeight="66.0" prefWidth="216.0" text="Scegliere Ruolo Utente:" GridPane.rowIndex="6" />
+            <TextField fx:id="nomeTF" GridPane.columnIndex="2" />
+            <TextField fx:id="emailTF" GridPane.columnIndex="2" GridPane.rowIndex="2" />
+            <TextField fx:id="cognomeTF" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+            <PasswordField fx:id="pwdTF" GridPane.columnIndex="2" GridPane.rowIndex="3" />
+            <TextArea fx:id="descTA" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="2" GridPane.rowIndex="4" />
+            <DatePicker fx:id="dataN" GridPane.columnIndex="2" GridPane.rowIndex="5" />
+            <TextField fx:id="ruoloTF" GridPane.columnIndex="2" GridPane.rowIndex="6" />
+            <Label fx:id="nomeV" prefHeight="51.0" prefWidth="188.0" GridPane.columnIndex="1" />
+            <Label fx:id="cognomeV" prefHeight="62.0" prefWidth="191.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+            <Label fx:id="emailV" prefHeight="56.0" prefWidth="203.0" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+            <Label fx:id="descV" prefHeight="58.0" prefWidth="188.0" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+            <Label fx:id="dataV" prefHeight="61.0" prefWidth="206.0" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+            <Label fx:id="ruoloV" prefHeight="53.0" prefWidth="190.0" GridPane.columnIndex="1" GridPane.rowIndex="6" />
+            <PasswordField fx:id="passV" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+         </children>
+      </GridPane>
+      <Button fx:id="modB" layoutX="586.0" layoutY="227.0" mnemonicParsing="false" onAction="#modUtente" prefHeight="25.0" prefWidth="74.0" text="Aggiorna" textFill="#064ff8" />
+      <Button fx:id="annB" layoutX="586.0" layoutY="267.0" mnemonicParsing="false" onAction="#torna" prefHeight="25.0" prefWidth="74.0" text="Annulla" textAlignment="CENTER" textFill="#f20202" />
+      <Label layoutX="-34.0" text="Label" />
+   </children>
+</Pane>

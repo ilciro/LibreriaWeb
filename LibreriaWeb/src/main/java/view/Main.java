@@ -1,18 +1,18 @@
-package boundary;
+package view;
 
 import java.io.FileNotFoundException;
 import java.sql.SQLException;
 
-
+import utilities.CreateDefaultDB;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-import utilities.CreateDefaultDB;
 
-public class Main extends Application{
+public class Main extends Application {
 
+	
 	@Override
 	public void start(Stage primaryStage) {
 		Scene scene;
@@ -31,21 +31,19 @@ public class Main extends Application{
 		}
 
 	}
-	
 
-	public static void main(String[] args)  {
-		//uso status per vedere se trigger creati
+	public static void main(String[] args) throws SQLException, FileNotFoundException {
 		 
-		
 
 		
-		try {
-			CreateDefaultDB.createDefaultDB();			
+		
+			CreateDefaultDB.createDefaultDB();
+			
+			
 
-		} catch (FileNotFoundException |SQLException  eFile) {
-			eFile.getCause();
-
-		}
+		
+		
+	
 		
 
 		launch(args);
@@ -53,4 +51,5 @@ public class Main extends Application{
 		
 		
 	}
+			
 }
