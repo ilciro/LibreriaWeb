@@ -1,7 +1,12 @@
 package controller;
 
+
+
 import java.sql.SQLException;
+
 import java.util.logging.Level;
+
+
 
 import database.GiornaleDao;
 import database.LibroDao;
@@ -263,5 +268,5 @@ public class ControllerAcquista {
 		
 	}
 	
-
+	
 }
