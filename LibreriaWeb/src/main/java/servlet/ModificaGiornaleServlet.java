@@ -22,10 +22,11 @@ import raccolta.Giornale;
 @WebServlet("/ModificaGiornaleServlet")
 public class ModificaGiornaleServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-	private GiornaleBean gB=new GiornaleBean();
-	private GiornaleDao gD=new GiornaleDao();
-	private ExceptionBean eB=new ExceptionBean();
-	private Giornale g=new Giornale();
+	private static GiornaleBean gB=new GiornaleBean();
+	private static GiornaleDao gD=new GiornaleDao();
+	private static ExceptionBean eB=new ExceptionBean();
+	private static Giornale g=new Giornale();
+	private static String modGiornale="/modificaGiornale.jsp";
        
     /**
      * @see HttpServlet#HttpServlet()
@@ -57,7 +58,7 @@ public class ModificaGiornaleServlet extends HttpServlet {
 				
 					gB.setMiaListaG(gD.getGiornaliList());
 					request.setAttribute("bean", gB);
-					RequestDispatcher view = getServletContext().getRequestDispatcher("/modificaGiornale.jsp"); 
+					RequestDispatcher view = getServletContext().getRequestDispatcher(modGiornale); 
 					view.forward(request,response);
 				
 			}
@@ -83,7 +84,7 @@ public class ModificaGiornaleServlet extends HttpServlet {
 					request.setAttribute("bean",gB);
 					
 
-					RequestDispatcher view = getServletContext().getRequestDispatcher("/modificaGiornale.jsp"); 
+					RequestDispatcher view = getServletContext().getRequestDispatcher(modGiornale); 
 					view.forward(request,response);
 				}
 				else {
@@ -105,7 +106,7 @@ public class ModificaGiornaleServlet extends HttpServlet {
 				if(gB.cancella(g)==1)
 				{
 
-					RequestDispatcher view = getServletContext().getRequestDispatcher("/modificaGiornale.jsp"); 
+					RequestDispatcher view = getServletContext().getRequestDispatcher(modGiornale); 
 					view.forward(request,response);
 				}
 				else
@@ -115,11 +116,11 @@ public class ModificaGiornaleServlet extends HttpServlet {
 					request.setAttribute("bean1",eB);
 					request.setAttribute("bean",gB);					
 
-					RequestDispatcher view = getServletContext().getRequestDispatcher("/modificaGiornale.jsp"); 
+					RequestDispatcher view = getServletContext().getRequestDispatcher(modGiornale); 
 					view.forward(request,response);
 				}
 			}
-		} catch (SQLException e) {
+		} catch (SQLException |ServletException e) {
 			e.printStackTrace();
 		}
 		

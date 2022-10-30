@@ -23,9 +23,10 @@ import model.User;
 @WebServlet("/UsersServlet")
 public class UsersServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-	private ExceptionBean eB=new ExceptionBean();
-	private UserBeanNoS us=new UserBeanNoS();
-       
+	private static ExceptionBean eB=new ExceptionBean();
+	private static UserBeanNoS us=new UserBeanNoS();
+	private static String ut="/utenti.jsp";
+	private static String bean1="bean1";
     /**
      * @see HttpServlet#HttpServlet()
      */
@@ -58,14 +59,14 @@ public class UsersServlet extends HttpServlet {
 					{
 						
 						request.setAttribute("bean",us);
-						RequestDispatcher view = getServletContext().getRequestDispatcher("/utenti.jsp"); 
+						RequestDispatcher view = getServletContext().getRequestDispatcher(ut); 
 						view.forward(request,response);
 					}
 					else {
 						
 						eB.setE(new SQLException(" lista non popolata"));
-						request.setAttribute("bean1",eB);
-						RequestDispatcher view = getServletContext().getRequestDispatcher("/utenti.jsp"); 
+						request.setAttribute(bean1,eB);
+						RequestDispatcher view = getServletContext().getRequestDispatcher(ut); 
 						view.forward(request,response);
 					}
 				
@@ -86,14 +87,13 @@ public class UsersServlet extends HttpServlet {
 			{
 				String id=request.getParameter("idU");
 				UserBean.getInstance().setId(Integer.parseInt(id));
-				System.out.println("id "+id);
 				
 				if(id==null)
 				{
 					eB.setE(new NumberFormatException(" id nullo "));
-					request.setAttribute("bean1",eB);
+					request.setAttribute(bean1,eB);
 					request.setAttribute("bean2", SystemBean.getIstance());
-					RequestDispatcher view = getServletContext().getRequestDispatcher("/utenti.jsp"); 
+					RequestDispatcher view = getServletContext().getRequestDispatcher(ut); 
 					view.forward(request,response);
 				}else {
 				request.setAttribute("bean",TempUser.getInstance());
@@ -111,18 +111,17 @@ public class UsersServlet extends HttpServlet {
 				if(id==null)
 				{
 					eB.setE(new NumberFormatException(" id nullo "));
-					request.setAttribute("bean1",eB);
-					RequestDispatcher view = getServletContext().getRequestDispatcher("/utenti.jsp"); 
+					request.setAttribute(bean1,eB);
+					RequestDispatcher view = getServletContext().getRequestDispatcher(ut); 
 					view.forward(request,response);
 				}
 				else {
-					//request.setAttribute("bean",UserBean.getInstance());
 					
 
 					
 					if(UserBean.getInstance().deleteUser(User.getInstance())==true)
 					{
-					RequestDispatcher view = getServletContext().getRequestDispatcher("/utenti.jsp"); 
+					RequestDispatcher view = getServletContext().getRequestDispatcher(ut); 
 					view.forward(request,response);
 					}
 					
@@ -140,8 +139,8 @@ public class UsersServlet extends HttpServlet {
 		
 		} catch (IOException | SQLException e) {
 			eB.setE(e);
-			request.setAttribute("bean1",eB);
-			RequestDispatcher view = getServletContext().getRequestDispatcher("/utenti.jsp"); 
+			request.setAttribute(bean1,eB);
+			RequestDispatcher view = getServletContext().getRequestDispatcher(ut); 
 			view.forward(request,response);e.printStackTrace();
 	}
 	}

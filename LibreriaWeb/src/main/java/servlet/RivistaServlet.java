@@ -22,18 +22,19 @@ import raccolta.Rivista;
 @WebServlet("/RivistaServlet")
 public class RivistaServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-	private RivistaBean rB=new RivistaBean();
-	private RivistaDao rD=new RivistaDao();
-	private Rivista r=new Rivista();
-	private int lunghezza;
-	private ExceptionBean eB=new ExceptionBean();
+	private static RivistaBean rB=new RivistaBean();
+	private static RivistaDao rD=new RivistaDao();
+	private static Rivista r=new Rivista();
+	private static int lunghezza;
+	private static ExceptionBean eB=new ExceptionBean();
+	private static String bean1="bean1";
+	private static String errore="/errore.jsp";
        
     /**
      * @see HttpServlet#HttpServlet()
      */
     public RivistaServlet() {
         super();
-        // TODO Auto-generated constructor stub
     }
 
 	/**
@@ -76,15 +77,15 @@ public class RivistaServlet extends HttpServlet {
 			else if(Integer.parseInt(id)>=1 && Integer.parseInt(id)>lunghezza)
 			{
 				eB.setE(new NumberFormatException(" indice eccede lista"));
-				request.setAttribute("bean1",eB);
-				RequestDispatcher view = getServletContext().getRequestDispatcher("/errore.jsp"); 
+				request.setAttribute(bean1,eB);
+				RequestDispatcher view = getServletContext().getRequestDispatcher(errore); 
 				view.forward(request,response); 
 			}
 			else 
 			{
 				eB.setE(new NumberFormatException(" indice minore di 0"));
-				request.setAttribute("bean1",eB);
-				RequestDispatcher view = getServletContext().getRequestDispatcher("/errore.jsp"); 
+				request.setAttribute(bean1,eB);
+				RequestDispatcher view = getServletContext().getRequestDispatcher(errore); 
 				view.forward(request,response); 
 			}
 			
@@ -98,8 +99,8 @@ public class RivistaServlet extends HttpServlet {
 		} catch (SQLException| ServletException| NumberFormatException e) {
 			eB.setE(e);
 		
-			request.setAttribute("bean1",eB);
-			RequestDispatcher view = getServletContext().getRequestDispatcher("/errore.jsp"); 
+			request.setAttribute(bean1,eB);
+			RequestDispatcher view = getServletContext().getRequestDispatcher(errore); 
 			view.forward(request,response); 
 		}
 		

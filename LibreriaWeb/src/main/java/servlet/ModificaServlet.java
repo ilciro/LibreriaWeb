@@ -17,6 +17,7 @@ import bean.SystemBean;
 @WebServlet("/ModificaServlet")
 public class ModificaServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
+	private static String bean1="bean1";
        
     /**
      * @see HttpServlet#HttpServlet()
@@ -39,14 +40,14 @@ public class ModificaServlet extends HttpServlet {
 		{
 			SystemBean.getIstance().setType("libro");
 			
-			request.setAttribute("bean1",SystemBean.getIstance());
+			request.setAttribute(bean1,SystemBean.getIstance());
 			RequestDispatcher view = getServletContext().getRequestDispatcher("/modificaLibro.jsp"); 
     		view.forward(request,response);
 		}
 		if(boxG!=null && boxG.equals("giornali"))
 		{
 			SystemBean.getIstance().setType("giornale");
-			request.setAttribute("bean1",SystemBean.getIstance());
+			request.setAttribute(bean1,SystemBean.getIstance());
 			RequestDispatcher view = getServletContext().getRequestDispatcher("/modificaGiornale.jsp"); 
     		view.forward(request,response);
 		}
@@ -54,7 +55,7 @@ public class ModificaServlet extends HttpServlet {
 		{
 			//iniziato
 			SystemBean.getIstance().setType("rivista");			
-			request.setAttribute("bean1",SystemBean.getIstance());
+			request.setAttribute(bean1,SystemBean.getIstance());
 			RequestDispatcher view = getServletContext().getRequestDispatcher("/modificaRivista.jsp"); 
     		view.forward(request,response);
 		}

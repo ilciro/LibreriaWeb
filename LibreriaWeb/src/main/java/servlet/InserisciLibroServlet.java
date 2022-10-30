@@ -26,13 +26,14 @@ import raccolta.Libro;
 @WebServlet("/InserisciLibroServlet")
 public class InserisciLibroServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-	private LibroBean lB=new LibroBean();
-	private String s;
-	private  java.util.Date utilDate;
-    private java.sql.Date sqlDate;
-    private LibroDao lD=new LibroDao();
-    private ExceptionBean eB=new ExceptionBean();
-    private Libro l=new Libro();
+	private static LibroBean lB=new LibroBean();
+	private static String s;
+	private  static java.util.Date utilDate;
+    private static java.sql.Date sqlDate;
+    private static LibroDao lD=new LibroDao();
+    private static ExceptionBean eB=new ExceptionBean();
+    private static Libro l=new Libro();
+    private static String aggLibro="/aggiungiLibro.jsp";
    
        
     /**
@@ -102,7 +103,7 @@ public class InserisciLibroServlet extends HttpServlet {
 
 			
 			request.setAttribute("bean",lB);
-			RequestDispatcher view = getServletContext().getRequestDispatcher("/aggiungiLibro.jsp"); 
+			RequestDispatcher view = getServletContext().getRequestDispatcher(aggLibro); 
 			view.forward(request,response);
 		}
 		
@@ -179,13 +180,13 @@ public class InserisciLibroServlet extends HttpServlet {
 				}
 				else {
 					//eB.setE(new LibroInsertException(" Libro non inserito.. Codice isbn non valido"));
-					RequestDispatcher view = getServletContext().getRequestDispatcher("/aggiungiLibro.jsp"); 
+					RequestDispatcher view = getServletContext().getRequestDispatcher(aggLibro); 
 					view.forward(request,response); 
 				}
 			} catch (SQLException e) {
 				eB.setE(e);
 				request.setAttribute("bean1", eB);
-				RequestDispatcher view = getServletContext().getRequestDispatcher("/aggiungiLibro.jsp"); 
+				RequestDispatcher view = getServletContext().getRequestDispatcher(aggLibro); 
 				view.forward(request,response); 
 			}
 			

@@ -26,12 +26,12 @@ import raccolta.Giornale;
 @WebServlet("/InserisciGiornaleServlet")
 public class InserisciGiornaleServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-	private  java.util.Date utilDate;
-    private java.sql.Date sqlDate;
-    private GiornaleBean gB=new GiornaleBean();
-    private GiornaleDao gD=new GiornaleDao();
-    private Giornale g=new Giornale();
-    private ExceptionBean eB=new ExceptionBean();
+	private  static java.util.Date utilDate;
+    private static java.sql.Date sqlDate;
+    private static GiornaleBean gB=new GiornaleBean();
+    private static GiornaleDao gD=new GiornaleDao();
+    private static Giornale g=new Giornale();
+    private static ExceptionBean eB=new ExceptionBean();
        
     /**
      * @see HttpServlet#HttpServlet()
@@ -49,6 +49,7 @@ public class InserisciGiornaleServlet extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		try {
 		SystemBean.getIstance().setType("giornale");
 
 		String titolo=request.getParameter("titoloG");
@@ -74,14 +75,11 @@ public class InserisciGiornaleServlet extends HttpServlet {
 				
 				SimpleDateFormat format = new SimpleDateFormat("yyyy/MM/dd");
 	
-			    try {
+			    
 			         utilDate = format.parse(data);
 			        sqlDate = new java.sql.Date(utilDate.getTime());
-			        System.out.println(sqlDate);
 			        gB.setDate(sqlDate);
-			    } catch (ParseException e) {
-			        e.printStackTrace();
-			    }
+			    
 			    gB.setCopieRimanenti(Integer.parseInt(copieG));
 			    gB.setDisponibilita(Integer.parseInt(disp));
 			    gB.setPrezzo(Float.parseFloat(prezzo));
@@ -101,7 +99,7 @@ public class InserisciGiornaleServlet extends HttpServlet {
 				  g.setDisponibilita(gB.getDisponibilita());
 				  g.setPrezzo(gB.getPrezzo());
 				  
-				  try {
+				  
 					if(gD.creaGiornale(g)==true)
 					{
 						gB.aggiornaData(g, sqlDate);
@@ -109,9 +107,7 @@ public class InserisciGiornaleServlet extends HttpServlet {
 						RequestDispatcher view = getServletContext().getRequestDispatcher("/modificaGiornale.jsp"); 
 						view.forward(request,response); 
 					}
-				} catch (SQLException e) {
-					e.printStackTrace();
-				}
+				
 			}
 			else {
 				eB.setE(new Exception(" data nulla"));
@@ -125,6 +121,10 @@ public class InserisciGiornaleServlet extends HttpServlet {
 			view.forward(request,response); 
 		}
 		
+	} catch (ParseException |SQLException |ServletException e) {
+        e.printStackTrace();
+    
+	}
 	}
 
 }

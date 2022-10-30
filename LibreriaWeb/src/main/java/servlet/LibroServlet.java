@@ -24,11 +24,13 @@ import raccolta.Libro;
 @WebServlet("/LibroServlet")
 public class LibroServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-	private LibroBean lB=new LibroBean();
-	private LibroDao lD=new LibroDao();
-	private Libro l=new Libro();
-	private ExceptionBean eB=new ExceptionBean();
-	private int lunghezza;
+	private static LibroBean lB=new LibroBean();
+	private static LibroDao lD=new LibroDao();
+	private static Libro l=new Libro();
+	private static ExceptionBean eB=new ExceptionBean();
+	private static int lunghezza;
+	private static String bean1="bean1";
+	private static String errore="/errore.jsp";
 	
 
     /**
@@ -78,15 +80,15 @@ public class LibroServlet extends HttpServlet {
 			else if(Integer.parseInt(id)>=1 && Integer.parseInt(id)>lunghezza)
 			{
 				eB.setE(new NumberFormatException(" indice eccede lista"));
-				request.setAttribute("bean1",eB);
-				RequestDispatcher view = getServletContext().getRequestDispatcher("/errore.jsp"); 
+				request.setAttribute(bean1,eB);
+				RequestDispatcher view = getServletContext().getRequestDispatcher(errore); 
 				view.forward(request,response); 
 			}
 			else 
 			{
 				eB.setE(new NumberFormatException(" indice minore di 0"));
-				request.setAttribute("bean1",eB);
-				RequestDispatcher view = getServletContext().getRequestDispatcher("/errore.jsp"); 
+				request.setAttribute(bean1,eB);
+				RequestDispatcher view = getServletContext().getRequestDispatcher(errore); 
 				view.forward(request,response); 
 			}
 			
@@ -100,8 +102,8 @@ public class LibroServlet extends HttpServlet {
 		} catch (SQLException| ServletException| NumberFormatException e) {
 			eB.setE(e);
 		
-			request.setAttribute("bean1",eB);
-			RequestDispatcher view = getServletContext().getRequestDispatcher("/errore.jsp"); 
+			request.setAttribute(bean1,eB);
+			RequestDispatcher view = getServletContext().getRequestDispatcher(errore); 
 			view.forward(request,response); 
 		}
 		

@@ -22,11 +22,12 @@ import raccolta.Giornale;
 @WebServlet("/GiornaleServlet")
 public class GiornaleServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-	private GiornaleBean gB=new GiornaleBean();
-	private GiornaleDao gD=new GiornaleDao();
-	private int lunghezza;
-	private Giornale g=new Giornale();
-	private ExceptionBean eB=new ExceptionBean();
+	private static GiornaleBean gB=new GiornaleBean();
+	private static GiornaleDao gD=new GiornaleDao();
+	private static int lunghezza;
+	private static Giornale g=new Giornale();
+	private static ExceptionBean eB=new ExceptionBean();
+	private static String errore="/errore.jsp";
 	
        
     /**
@@ -78,14 +79,14 @@ public class GiornaleServlet extends HttpServlet {
 			{
 				eB.setE(new NumberFormatException(" indice eccede lista"));
 				request.setAttribute("bean1",eB);
-				RequestDispatcher view = getServletContext().getRequestDispatcher("/errore.jsp"); 
+				RequestDispatcher view = getServletContext().getRequestDispatcher(errore); 
 				view.forward(request,response); 
 			}
 			else 
 			{
 				eB.setE(new NumberFormatException(" indice minore di 0"));
 				request.setAttribute("bean1",eB);
-				RequestDispatcher view = getServletContext().getRequestDispatcher("/errore.jsp"); 
+				RequestDispatcher view = getServletContext().getRequestDispatcher(errore); 
 				view.forward(request,response); 
 			}
 			
@@ -93,7 +94,7 @@ public class GiornaleServlet extends HttpServlet {
 		
 			eB.setE(e);
 			request.setAttribute("bean",eB);
-			RequestDispatcher view = getServletContext().getRequestDispatcher("/errore.jsp"); 
+			RequestDispatcher view = getServletContext().getRequestDispatcher(errore); 
 			view.forward(request,response); 
 		}
 	}

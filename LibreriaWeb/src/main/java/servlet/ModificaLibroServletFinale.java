@@ -26,12 +26,13 @@ import raccolta.Libro;
 @WebServlet("/ModificaLibroServletFinale")
 public class ModificaLibroServletFinale extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-	private LibroBean lB=new LibroBean();
-	private LibroDao lD=new LibroDao();
-	private Libro l=new Libro();
-	private  java.util.Date utilDate;
-    private java.sql.Date sqlDate;
+	private static LibroBean lB=new LibroBean();
+	private static LibroDao lD=new LibroDao();
+	private static Libro l=new Libro();
+	private  static java.util.Date utilDate;
+    private static java.sql.Date sqlDate;
     private ExceptionBean eB=new ExceptionBean();
+    private static String modLibroF="/modificaLibroFinale.jsp";
        
     /**
      * @see HttpServlet#HttpServlet()
@@ -78,7 +79,7 @@ public class ModificaLibroServletFinale extends HttpServlet {
 			try {
 				lB.setMiaLista(lD.getLibriSingoloByIdLista(l));
 				request.setAttribute("bean",lB);
-				RequestDispatcher view = getServletContext().getRequestDispatcher("/modificaLibroFinale.jsp"); 
+				RequestDispatcher view = getServletContext().getRequestDispatcher(modLibroF); 
 				view.forward(request,response);
 			} catch (SQLException e) {
 				e.printStackTrace();
@@ -140,14 +141,14 @@ public class ModificaLibroServletFinale extends HttpServlet {
 				if(lB.aggiornaLibro(l)==1)
 				{
 						request.setAttribute("bean", lB);
-				        RequestDispatcher view = getServletContext().getRequestDispatcher("/modificaLibroFinale.jsp"); 
+				        RequestDispatcher view = getServletContext().getRequestDispatcher(modLibroF); 
 						view.forward(request,response);
 				  
 				}
 				else {
 					eB.setE(new SQLException(" aggiornamento non avvenuto"));
 					request.setAttribute("bean1", eB);
-					RequestDispatcher view = getServletContext().getRequestDispatcher("/modificaLibroFinale.jsp"); 
+					RequestDispatcher view = getServletContext().getRequestDispatcher(modLibroF); 
 					view.forward(request,response);
 				}
 			} catch (NullPointerException | SQLException   e) {

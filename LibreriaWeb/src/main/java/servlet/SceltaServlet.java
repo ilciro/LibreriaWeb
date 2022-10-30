@@ -26,13 +26,17 @@ import raccolta.Rivista;
 @WebServlet("/SceltaServlet")
 public class SceltaServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-	private Libro l=new Libro();
-	private LibroDao lD=new LibroDao();
-	private ExceptionBean bE=new ExceptionBean();
-	private Giornale g=new Giornale();
-	private GiornaleDao gD=new GiornaleDao();
-	private Rivista r=new Rivista();
-	private RivistaDao rD=new RivistaDao();
+	private static Libro l=new Libro();
+	private static LibroDao lD=new LibroDao();
+	private static ExceptionBean bE=new ExceptionBean();
+	private static Giornale g=new Giornale();
+	private static GiornaleDao gD=new GiornaleDao();
+	private static Rivista r=new Rivista();
+	private static RivistaDao rD=new RivistaDao();
+	private static String quantitaM=" quantita minore di 1";
+	private static String bean1="bean1";
+	private static String scelta="/scelta.jsp";
+
 
        
     /**
@@ -57,8 +61,8 @@ public class SceltaServlet extends HttpServlet {
 				
 				if(Integer.parseInt(quantita)<1)
 				{
-					bE.setE(new NumberFormatException(" quantita minore di 1"));
-					request.setAttribute("bean1", bE);
+					bE.setE(new NumberFormatException(quantitaM));
+					request.setAttribute(bean1, bE);
 					RequestDispatcher view = getServletContext().getRequestDispatcher("/libri.jsp"); 
 					view.forward(request,response); 
 				}
@@ -70,7 +74,7 @@ public class SceltaServlet extends HttpServlet {
 				SystemBean.getIstance().setSpesaT(prezzo*Float.parseFloat(quantita));			
 				
 				request.setAttribute("bean", SystemBean.getIstance());
-				RequestDispatcher view = getServletContext().getRequestDispatcher("/scelta.jsp"); 
+				RequestDispatcher view = getServletContext().getRequestDispatcher(scelta); 
 				view.forward(request,response); 
 				}
 			}
@@ -78,8 +82,8 @@ public class SceltaServlet extends HttpServlet {
 			{
 				if(Integer.parseInt(quantita)<1)
 				{
-					bE.setE(new NumberFormatException(" quantita minore di 1"));
-					request.setAttribute("bean1", bE);
+					bE.setE(new NumberFormatException(quantitaM));
+					request.setAttribute(bean1, bE);
 					RequestDispatcher view = getServletContext().getRequestDispatcher("/giornali.jsp"); 
 					view.forward(request,response); 
 				}
@@ -91,7 +95,7 @@ public class SceltaServlet extends HttpServlet {
 				SystemBean.getIstance().setSpesaT(prezzo*Float.parseFloat(quantita));			
 				
 				request.setAttribute("bean", SystemBean.getIstance());
-				RequestDispatcher view = getServletContext().getRequestDispatcher("/scelta.jsp"); 
+				RequestDispatcher view = getServletContext().getRequestDispatcher(scelta); 
 				view.forward(request,response); 
 				}
 			}
@@ -99,8 +103,8 @@ public class SceltaServlet extends HttpServlet {
 			{
 				if(Integer.parseInt(quantita)<1)
 				{
-					bE.setE(new NumberFormatException(" quantita minore di 1"));
-					request.setAttribute("bean1", bE);
+					bE.setE(new NumberFormatException(quantitaM));
+					request.setAttribute(bean1, bE);
 					RequestDispatcher view = getServletContext().getRequestDispatcher("/giornali.jsp"); 
 					view.forward(request,response); 
 				}
@@ -112,15 +116,15 @@ public class SceltaServlet extends HttpServlet {
 				SystemBean.getIstance().setSpesaT(prezzo*Float.parseFloat(quantita));			
 				
 				request.setAttribute("bean", SystemBean.getIstance());
-				RequestDispatcher view = getServletContext().getRequestDispatcher("/scelta.jsp"); 
+				RequestDispatcher view = getServletContext().getRequestDispatcher(scelta); 
 				view.forward(request,response); 
 				}
 			}
-			}catch(NumberFormatException |SQLException e) {
-				bE.setE(new NumberFormatException(" quantit� non valida"));
-				RequestDispatcher view = getServletContext().getRequestDispatcher("/errore.jsp"); 
-				view.forward(request,response); 
-			}
+		}catch(NumberFormatException |SQLException |ServletException  e) {
+			bE.setE(new NumberFormatException(" quantit� non valida"));
+			RequestDispatcher view = getServletContext().getRequestDispatcher("/errore.jsp"); 
+			view.forward(request,response); 
+		}
 			
 		 		
 	}

@@ -22,10 +22,11 @@ import raccolta.Rivista;
 @WebServlet("/ModificaRivistaServlet")
 public class ModificaRivistaServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-	private Rivista r=new Rivista();
-	private RivistaDao rD=new RivistaDao();
-	private RivistaBean rB=new RivistaBean();
-	private ExceptionBean eB=new ExceptionBean();
+	private static Rivista r=new Rivista();
+	private static RivistaDao rD=new RivistaDao();
+	private static RivistaBean rB=new RivistaBean();
+	private static ExceptionBean eB=new ExceptionBean();
+	private static String modRivista="/modificaRivista.jsp";
        
     /**
      * @see HttpServlet#HttpServlet()
@@ -57,7 +58,7 @@ public class ModificaRivistaServlet extends HttpServlet {
 				
 					rB.setListaR(rD.getRivisteList());
 					request.setAttribute("bean", rB);
-					RequestDispatcher view = getServletContext().getRequestDispatcher("/modificaRivista.jsp"); 
+					RequestDispatcher view = getServletContext().getRequestDispatcher(modRivista); 
 					view.forward(request,response);
 				
 			}
@@ -83,7 +84,7 @@ public class ModificaRivistaServlet extends HttpServlet {
 					request.setAttribute("bean",rB);
 					
 
-					RequestDispatcher view = getServletContext().getRequestDispatcher("/modificaRivista.jsp"); 
+					RequestDispatcher view = getServletContext().getRequestDispatcher(modRivista); 
 					view.forward(request,response);
 				}
 				else {
@@ -105,7 +106,7 @@ public class ModificaRivistaServlet extends HttpServlet {
 				if(rB.cancella(r)==1)
 				{
 
-					RequestDispatcher view = getServletContext().getRequestDispatcher("/modificaRivista.jsp"); 
+					RequestDispatcher view = getServletContext().getRequestDispatcher(modRivista); 
 					view.forward(request,response);
 				}
 				else
@@ -115,7 +116,7 @@ public class ModificaRivistaServlet extends HttpServlet {
 					request.setAttribute("bean1",eB);
 					request.setAttribute("bean",rB);					
 
-					RequestDispatcher view = getServletContext().getRequestDispatcher("/modificaRivista.jsp"); 
+					RequestDispatcher view = getServletContext().getRequestDispatcher(modRivista); 
 					view.forward(request,response);
 				}
 			}

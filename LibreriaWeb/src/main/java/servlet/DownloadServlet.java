@@ -22,9 +22,11 @@ import bean.SystemBean;
 @WebServlet("/DownloadServlet")
 public class DownloadServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-	private LibroBean lB=new LibroBean();
-	private GiornaleBean gB=new GiornaleBean();
-	private RivistaBean rB=new RivistaBean();
+	private static LibroBean lB=new LibroBean();
+	private static GiornaleBean gB=new GiornaleBean();
+	private static RivistaBean rB=new RivistaBean();
+	private static String bean1="bean1";
+	private static String index="/index.html";
 
        
     /**
@@ -56,27 +58,27 @@ public class DownloadServlet extends HttpServlet {
 			{
 				lB.scarica();		
 				lB.leggi(SystemBean.getIstance().getId());		
-				request.setAttribute("bean1",SystemBean.getIstance());
+				request.setAttribute(bean1,SystemBean.getIstance());
 				request.setAttribute("bean","lB");
-				RequestDispatcher view = getServletContext().getRequestDispatcher("/index.html"); 
+				RequestDispatcher view = getServletContext().getRequestDispatcher(index); 
 				view.forward(request,response); 
 			}
 			else if(SystemBean.getIstance().getType().equals("giornale"))
 			{
 				gB.scarica();
 				gB.leggi(SystemBean.getIstance().getId());
-				request.setAttribute("bean1",SystemBean.getIstance());
+				request.setAttribute(bean1,SystemBean.getIstance());
 				request.setAttribute("bean","gB");
-				RequestDispatcher view = getServletContext().getRequestDispatcher("/index.html"); 
+				RequestDispatcher view = getServletContext().getRequestDispatcher(index); 
 				view.forward(request,response); 
 			}
 			else if(SystemBean.getIstance().getType().equals("rivista"))
 			{
 				rB.scarica();
 				rB.leggi(SystemBean.getIstance().getId());
-				request.setAttribute("bean1",SystemBean.getIstance());
+				request.setAttribute(bean1,SystemBean.getIstance());
 				request.setAttribute("bean","rB");
-				RequestDispatcher view = getServletContext().getRequestDispatcher("/index.html"); 
+				RequestDispatcher view = getServletContext().getRequestDispatcher(index); 
 				view.forward(request,response); 
 			}
 		} catch (DocumentException | IOException e) {

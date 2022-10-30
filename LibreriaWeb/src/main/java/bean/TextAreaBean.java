@@ -2,7 +2,6 @@ package bean;
 
 
 
-import java.io.IOException;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -17,6 +16,8 @@ public class TextAreaBean {
 	Connection conn=null;
 	ResultSet rs=null;
 	Statement stmt=null;
+	private static String ricavo="Ricavo totale :";
+	private static String  titolo="Titolo :";
 	
 	
 	
@@ -29,7 +30,7 @@ public class TextAreaBean {
 	public void setS(String s) {
 		this.s = s;
 	}
-	public String generaReportL() throws SQLException, IOException
+	public String generaReportL() throws SQLException
 	{
 		
 		 s="";
@@ -44,7 +45,7 @@ public class TextAreaBean {
 				rs.getInt(2);
 				rs.getFloat(3);
 
-				s+= "\n" +"Titolo :"+rs.getString(1)+"\t"+"Ricavo totale :" +rs.getInt(2)*rs.getFloat(3)+"\n";
+				s+= "\n" +titolo +rs.getString(1)+"\t"+ricavo +rs.getInt(2)*rs.getFloat(3)+"\n";
 
 			}
 
@@ -54,7 +55,7 @@ public class TextAreaBean {
 
 	}
 	
-	public  String generaReportG() throws IOException, SQLException
+	public  String generaReportG() throws SQLException
 	{
 		
 			s="";		   
@@ -77,7 +78,7 @@ public class TextAreaBean {
 
 
 
-				s+=("\n "+ "Titolo :"+rs.getString(1)+"\t"+"Editore :"+rs.getString(2)+"\t"+"Ricavo totale :" +rs.getInt(3)*rs.getFloat(4)+"\n");
+				s+=("\n "+ titolo+rs.getString(1)+"\t"+"Editore :"+rs.getString(2)+"\t"+ricavo +rs.getInt(3)*rs.getFloat(4)+"\n");
 
 			}
 
@@ -87,7 +88,7 @@ public class TextAreaBean {
 
 
 	}
-	public String generaReportR() throws SQLException, IOException
+	public String generaReportR() throws SQLException
 	{
 				s="";
 		        
@@ -112,8 +113,8 @@ public class TextAreaBean {
 								rs.getFloat(4);
 								
 										
-				
-		        		s+="\n"+"Titolo :"+rs.getString(1)+"\t"+"Editore :"+rs.getString(2)+"\t"+"Ricavo totale :" +rs.getInt(3)*rs.getFloat(4)+"\n";
+							
+		        		s+="\n"+titolo+rs.getString(1)+"\t"+"Editore :"+rs.getString(2)+"\t"+ricavo +rs.getInt(3)*rs.getFloat(4)+"\n";
 
 		
 		            }
@@ -121,7 +122,7 @@ public class TextAreaBean {
 		            return s;
 		   			
 	}
-	public String getListaUtenti() throws IOException, SQLException  {
+	public String getListaUtenti() throws  SQLException  {
 
 		conn= ConnToDb.generalConnection();
 		

@@ -28,16 +28,18 @@ import raccolta.Rivista;
 @WebServlet("/AcquistaServlet")
 public class AcquistaServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-	private LibroDao lD=new LibroDao();
-	private Libro lib=new Libro();
-	private LibroBean lB=new LibroBean();
-	private ExceptionBean bE=new ExceptionBean();
-	private GiornaleBean gB=new GiornaleBean();
-	private GiornaleDao gD=new GiornaleDao();
-	private Giornale g=new Giornale ();
-	private RivistaBean rB=new RivistaBean();
-	private Rivista r=new Rivista();
-	private RivistaDao rD=new RivistaDao();
+	private static LibroDao lD=new LibroDao();
+	private static Libro lib=new Libro();
+	private static LibroBean lB=new LibroBean();
+	private static ExceptionBean bE=new ExceptionBean();
+	private static GiornaleBean gB=new GiornaleBean();
+	private static GiornaleDao gD=new GiornaleDao();
+	private static Giornale g=new Giornale ();
+	private static RivistaBean rB=new RivistaBean();
+	private static Rivista r=new Rivista();
+	private static RivistaDao rD=new RivistaDao();
+	private static String bean="bean1";
+	private static String acquista="/acquista.jsp";
 
        
     /**
@@ -70,7 +72,7 @@ public class AcquistaServlet extends HttpServlet {
 				{
 					id="0";
 					gB.setMiaListaG(gD.getGiornaliList());
-					request.setAttribute("bean1",SystemBean.getIstance());
+					request.setAttribute(bean,SystemBean.getIstance());
 				    request.setAttribute("bean",gB); 
 				    RequestDispatcher view = getServletContext().getRequestDispatcher("/giornali.jsp"); 
 					view.forward(request,response); 
@@ -93,8 +95,8 @@ public class AcquistaServlet extends HttpServlet {
 					SystemBean.getIstance().setId(Integer.parseInt(id));
 					
 					 request.setAttribute("bean",gB);  
-					 request.setAttribute("bean1", SystemBean.getIstance());
-					RequestDispatcher view = getServletContext().getRequestDispatcher("/acquista.jsp"); 
+					 request.setAttribute(bean, SystemBean.getIstance());
+					RequestDispatcher view = getServletContext().getRequestDispatcher(acquista); 
 					view.forward(request,response); 
 				}
 				else {
@@ -110,7 +112,7 @@ public class AcquistaServlet extends HttpServlet {
 					{
 						id="0";
 						lB.setMiaLista(lD.getLibriSingoloList());
-						request.setAttribute("bean1",SystemBean.getIstance());
+						request.setAttribute(bean,SystemBean.getIstance());
 					    request.setAttribute("bean",lB); 
 					    RequestDispatcher view = getServletContext().getRequestDispatcher("/libri.jsp"); 
 						view.forward(request,response); 
@@ -133,8 +135,8 @@ public class AcquistaServlet extends HttpServlet {
 						SystemBean.getIstance().setId(Integer.parseInt(id));
 						
 						 request.setAttribute("bean",lB);  
-						 request.setAttribute("bean1", SystemBean.getIstance());
-						RequestDispatcher view = getServletContext().getRequestDispatcher("/acquista.jsp"); 
+						 request.setAttribute(bean, SystemBean.getIstance());
+						RequestDispatcher view = getServletContext().getRequestDispatcher(acquista); 
 						view.forward(request,response); 
 					}
 					else {
@@ -146,11 +148,11 @@ public class AcquistaServlet extends HttpServlet {
 			
 			}
 			else if(SystemBean.getIstance().getType().equals("rivista"))
-			if(id==null)
-			{
+				if(id==null)
+				{
 				id="0";
 				rB.setListaR(rD.getRivisteList());
-				request.setAttribute("bean1",SystemBean.getIstance());
+				request.setAttribute(bean,SystemBean.getIstance());
 			    request.setAttribute("bean",rB); 
 			    RequestDispatcher view = getServletContext().getRequestDispatcher("/riviste.jsp"); 
 				view.forward(request,response); 
@@ -174,8 +176,8 @@ public class AcquistaServlet extends HttpServlet {
 				SystemBean.getIstance().setId(Integer.parseInt(id));
 				
 				 request.setAttribute("bean",rB);  
-				 request.setAttribute("bean1", SystemBean.getIstance());
-				RequestDispatcher view = getServletContext().getRequestDispatcher("/acquista.jsp"); 
+				 request.setAttribute(bean, SystemBean.getIstance());
+				RequestDispatcher view = getServletContext().getRequestDispatcher(acquista); 
 				view.forward(request,response); 
 			}
 			else {
@@ -188,7 +190,7 @@ public class AcquistaServlet extends HttpServlet {
 	
 		} catch (ServletException| NumberFormatException |SQLException e) {
 			bE.setE(e);
-			 request.setAttribute("bean1",bE);
+			 request.setAttribute(bean,bE);
 			RequestDispatcher view = getServletContext().getRequestDispatcher("/errore.jsp"); 
 			view.forward(request,response); 
 		}

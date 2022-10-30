@@ -26,12 +26,13 @@ import raccolta.Rivista;
 @WebServlet("/ModificaRivistaServletFinale")
 public class ModificaRivistaServletFinale extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-	private RivistaDao rD=new RivistaDao();
-	private Rivista r=new Rivista();
-	private RivistaBean rB=new RivistaBean();
-	private  java.util.Date utilDate;
-    private java.sql.Date sqlDate;
-    private ExceptionBean eB=new ExceptionBean();
+	private static RivistaDao rD=new RivistaDao();
+	private static Rivista r=new Rivista();
+	private static RivistaBean rB=new RivistaBean();
+	private static java.util.Date utilDate;
+    private static java.sql.Date sqlDate;
+    private static ExceptionBean eB=new ExceptionBean();
+    private static String modRivistaF="/modificaRivistaFinale.jsp";
        
     /**
      * @see HttpServlet#HttpServlet()
@@ -73,7 +74,7 @@ public class ModificaRivistaServletFinale extends HttpServlet {
 			try {
 				rB.setListaR(rD.getRivistaSingoloByIdLista(r));
 				request.setAttribute("bean",rB);
-				RequestDispatcher view = getServletContext().getRequestDispatcher("/modificaRivistaFinale.jsp"); 
+				RequestDispatcher view = getServletContext().getRequestDispatcher(modRivistaF); 
 				view.forward(request,response);
 			} catch (SQLException e) {
 				e.printStackTrace();
@@ -130,14 +131,14 @@ public class ModificaRivistaServletFinale extends HttpServlet {
 				if(rB.aggiornaRivista(r)==1)
 				{
 						request.setAttribute("bean", rB);
-				        RequestDispatcher view = getServletContext().getRequestDispatcher("/modificaRivistaFinale.jsp"); 
+				        RequestDispatcher view = getServletContext().getRequestDispatcher(modRivistaF); 
 						view.forward(request,response);
 				  
 				}
 				else {
 					eB.setE(new SQLException(" aggiornamento non avvenuto"));
 					request.setAttribute("bean1", eB);
-					RequestDispatcher view = getServletContext().getRequestDispatcher("/modificaRivistaFinale.jsp"); 
+					RequestDispatcher view = getServletContext().getRequestDispatcher(modRivistaF); 
 					view.forward(request,response);
 				}
 			} catch (NullPointerException | SQLException   e) {

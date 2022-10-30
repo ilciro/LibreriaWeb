@@ -27,15 +27,16 @@ import raccolta.Rivista;
 @WebServlet("/CancellaPagamentoServlet")
 public class CancellaPagamentoServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-	private ExceptionBean eB=new ExceptionBean();
-	private ContrassegnoDao fD=new ContrassegnoDao();
-	private PagamentoDao pD=new PagamentoDao();
-	private Libro l=new Libro();
-	private LibroDao lD=new LibroDao();
-	private Giornale g=new Giornale();
-	private GiornaleDao gD=new GiornaleDao();
-	private Rivista r=new Rivista();
-	private RivistaDao rD=new RivistaDao();
+	private static ExceptionBean eB=new ExceptionBean();
+	private static  ContrassegnoDao fD=new ContrassegnoDao();
+	private static PagamentoDao pD=new PagamentoDao();
+	private static Libro l=new Libro();
+	private static LibroDao lD=new LibroDao();
+	private static Giornale g=new Giornale();
+	private static GiornaleDao gD=new GiornaleDao();
+	private static Rivista r=new Rivista();
+	private static RivistaDao rD=new RivistaDao();
+	private static String index="/index.html";
        
     /**
      * @see HttpServlet#HttpServlet()
@@ -83,7 +84,7 @@ public class CancellaPagamentoServlet extends HttpServlet {
 						lD.aggiornaDisponibilita(l);
 						
 						request.setAttribute("bean", SystemBean.getIstance());
-						RequestDispatcher view = getServletContext().getRequestDispatcher("/index.html"); 
+						RequestDispatcher view = getServletContext().getRequestDispatcher(index); 
 						view.forward(request,response);
 					}
 					} catch (NumberFormatException | SQLException e) {
@@ -99,7 +100,7 @@ public class CancellaPagamentoServlet extends HttpServlet {
 						lD.aggiornaDisponibilita(l);
 						
 						request.setAttribute("bean", SystemBean.getIstance());
-						RequestDispatcher view = getServletContext().getRequestDispatcher("/index.html"); 
+						RequestDispatcher view = getServletContext().getRequestDispatcher(index); 
 						view.forward(request,response);
 					}
 				} catch (NumberFormatException | SQLException e) {
@@ -122,7 +123,7 @@ public class CancellaPagamentoServlet extends HttpServlet {
 						g.setId(SystemBean.getIstance().getId());
 						gD.aggiornaDisponibilita(g);
 						request.setAttribute("bean", SystemBean.getIstance());
-						RequestDispatcher view = getServletContext().getRequestDispatcher("/index.html"); 
+						RequestDispatcher view = getServletContext().getRequestDispatcher(index); 
 						view.forward(request,response);
 					}
 					} catch (NumberFormatException | SQLException e) {
@@ -138,7 +139,7 @@ public class CancellaPagamentoServlet extends HttpServlet {
 						gD.aggiornaDisponibilita(g);
 						
 						request.setAttribute("bean", SystemBean.getIstance());
-						RequestDispatcher view = getServletContext().getRequestDispatcher("/index.html"); 
+						RequestDispatcher view = getServletContext().getRequestDispatcher(index); 
 						view.forward(request,response);
 					}
 				} catch (NumberFormatException | SQLException e) {
@@ -159,7 +160,7 @@ public class CancellaPagamentoServlet extends HttpServlet {
 						r.setId(SystemBean.getIstance().getId());
 						rD.aggiornaDisponibilita(r);
 						request.setAttribute("bean", SystemBean.getIstance());
-						RequestDispatcher view = getServletContext().getRequestDispatcher("/index.html"); 
+						RequestDispatcher view = getServletContext().getRequestDispatcher(index); 
 						view.forward(request,response);
 					}
 					} catch (NumberFormatException | SQLException e) {
@@ -175,7 +176,7 @@ public class CancellaPagamentoServlet extends HttpServlet {
 						rD.aggiornaDisponibilita(r);
 						
 						request.setAttribute("bean", SystemBean.getIstance());
-						RequestDispatcher view = getServletContext().getRequestDispatcher("/index.html"); 
+						RequestDispatcher view = getServletContext().getRequestDispatcher(index); 
 						view.forward(request,response);
 					}
 				} catch (NumberFormatException | SQLException e) {

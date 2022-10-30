@@ -25,12 +25,13 @@ import raccolta.Rivista;
 @WebServlet("/InserisciRivistaServlet")
 public class InserisciRivistaServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-	private RivistaBean rB=new RivistaBean();
-	private RivistaDao rD=new RivistaDao();
-	private Rivista r=new Rivista();
-	private  java.util.Date utilDate;
-    private java.sql.Date sqlDate;
-    private ExceptionBean eB=new ExceptionBean();
+	private static RivistaBean rB=new RivistaBean();
+	private static RivistaDao rD=new RivistaDao();
+	private static Rivista r=new Rivista();
+	private  static java.util.Date utilDate;
+    private static java.sql.Date sqlDate;
+    private static ExceptionBean eB=new ExceptionBean();
+    private static String aggRivista="/aggiungiRivista.jsp";
        
     /**
      * @see HttpServlet#HttpServlet()
@@ -76,7 +77,7 @@ public class InserisciRivistaServlet extends HttpServlet {
 			
 			rB.setListaCategorie(s);
 			request.setAttribute("bean",rB);
-			RequestDispatcher view = getServletContext().getRequestDispatcher("/aggiungiRivista.jsp"); 
+			RequestDispatcher view = getServletContext().getRequestDispatcher(aggRivista); 
 			view.forward(request,response);
 
 		}
@@ -147,13 +148,13 @@ public class InserisciRivistaServlet extends HttpServlet {
 				}
 				else {
 					eB.setE(new SQLException(" data non corretta"));
-					RequestDispatcher view = getServletContext().getRequestDispatcher("/aggiungiRivista.jsp"); 
+					RequestDispatcher view = getServletContext().getRequestDispatcher(aggRivista); 
 					view.forward(request,response); 
 				}
 			} catch (SQLException e) {
 				eB.setE(e);
 				request.setAttribute("bean1", eB);
-				RequestDispatcher view = getServletContext().getRequestDispatcher("/aggiungiRivista.jsp"); 
+				RequestDispatcher view = getServletContext().getRequestDispatcher(aggRivista); 
 				view.forward(request,response); 
 			}
 			

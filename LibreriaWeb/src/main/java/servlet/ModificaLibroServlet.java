@@ -22,10 +22,11 @@ import raccolta.Libro;
 @WebServlet("/ModificaLibroServlet")
 public class ModificaLibroServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-	private LibroBean lB=new LibroBean();
-	private LibroDao lD=new LibroDao();
-	private ExceptionBean eB=new ExceptionBean();
-	private Libro l=new Libro();
+	private static LibroBean lB=new LibroBean();
+	private static LibroDao lD=new LibroDao();
+	private static ExceptionBean eB=new ExceptionBean();
+	private static Libro l=new Libro();
+	private static String modLibro="/modificaLibro.jsp";
        
     /**
      * @see HttpServlet#HttpServlet()
@@ -57,7 +58,7 @@ public class ModificaLibroServlet extends HttpServlet {
 				
 					lB.setMiaLista(lD.getLibriSingoloList());
 					request.setAttribute("bean", lB);
-					RequestDispatcher view = getServletContext().getRequestDispatcher("/modificaLibro.jsp"); 
+					RequestDispatcher view = getServletContext().getRequestDispatcher(modLibro); 
 					view.forward(request,response);
 				
 			}
@@ -83,7 +84,7 @@ public class ModificaLibroServlet extends HttpServlet {
 					request.setAttribute("bean",lB);
 					
 
-					RequestDispatcher view = getServletContext().getRequestDispatcher("/modificaLibro.jsp"); 
+					RequestDispatcher view = getServletContext().getRequestDispatcher(modLibro); 
 					view.forward(request,response);
 				}
 				else {
@@ -105,7 +106,7 @@ public class ModificaLibroServlet extends HttpServlet {
 				if(lB.cancella(l)==1)
 				{
 
-					RequestDispatcher view = getServletContext().getRequestDispatcher("/modificaLibro.jsp"); 
+					RequestDispatcher view = getServletContext().getRequestDispatcher(modLibro); 
 					view.forward(request,response);
 				}
 				else
@@ -115,11 +116,11 @@ public class ModificaLibroServlet extends HttpServlet {
 					request.setAttribute("bean1",eB);
 					request.setAttribute("bean",lB);					
 
-					RequestDispatcher view = getServletContext().getRequestDispatcher("/modificaLibro.jsp"); 
+					RequestDispatcher view = getServletContext().getRequestDispatcher(modLibro); 
 					view.forward(request,response);
 				}
 			}
-		} catch (SQLException e) {
+		} catch (SQLException | ServletException e) {
 			e.printStackTrace();
 		}
 		

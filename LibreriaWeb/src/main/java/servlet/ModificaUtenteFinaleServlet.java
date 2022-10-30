@@ -6,6 +6,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.logging.Level;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -17,6 +18,7 @@ import javax.servlet.http.HttpServletResponse;
 import bean.ExceptionBean;
 import bean.UserBean;
 import bean.UserBeanNoS;
+import model.Log;
 import model.User;
 
 /**
@@ -25,10 +27,11 @@ import model.User;
 @WebServlet("/ModificaUtenteFinaleServlet")
 public class ModificaUtenteFinaleServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-	private UserBeanNoS us=new UserBeanNoS();
-	private ExceptionBean eB=new ExceptionBean();
-	private  java.util.Date utilDate;
-    private java.sql.Date sqlDate;
+	private static UserBeanNoS us=new UserBeanNoS();
+	private static ExceptionBean eB=new ExceptionBean();
+	private static java.util.Date utilDate;
+    private static java.sql.Date sqlDate;
+    private static String utenti="/utenti.jsp";
        
     /**
      * @see HttpServlet#HttpServlet()
@@ -42,6 +45,7 @@ public class ModificaUtenteFinaleServlet extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
+		try {
 		String ruolo=request.getParameter("ruoloL");
 		String nome=request.getParameter("nomeL");
 		String cognome=request.getParameter("cognomeL");
@@ -56,7 +60,7 @@ public class ModificaUtenteFinaleServlet extends HttpServlet {
 		{
 			//generare lista
 			
-			try {
+			
 				us.setListaDb(us.getListaUtente());
 				
 				if(us.getListaDb()!=null)
@@ -72,19 +76,13 @@ public class ModificaUtenteFinaleServlet extends HttpServlet {
 					
 					eB.setE(new SQLException(" lista non popolata"));
 					request.setAttribute("bean1",eB);
-					RequestDispatcher view = getServletContext().getRequestDispatcher("/utenti.jsp"); 
+					RequestDispatcher view = getServletContext().getRequestDispatcher(utenti); 
 					view.forward(request,response);
 				}
 			
-			} catch (IOException | SQLException e) {
-				
-				e.printStackTrace();
-			}
-		}
-		if(mod!=null && mod.equals("modifica"))
-		{
 			
-			if(ruolo.equalsIgnoreCase("W") || ruolo.equalsIgnoreCase("A") || ruolo.equalsIgnoreCase("E") || ruolo.equalsIgnoreCase("U"))
+		}
+		if(mod!=null && mod.equals("modifica") && (ruolo.equalsIgnoreCase("W") || ruolo.equalsIgnoreCase("A") || ruolo.equalsIgnoreCase("E") || ruolo.equalsIgnoreCase("U")))
 			{
 				if(UserBean.getInstance().checkEmail(mail)!=false)
 				{
@@ -97,18 +95,16 @@ public class ModificaUtenteFinaleServlet extends HttpServlet {
 					
 					SimpleDateFormat format = new SimpleDateFormat("yyyy/MM/dd");
 					
-				    try {
+				    
 				         utilDate = format.parse(data);
 				        sqlDate = new java.sql.Date(utilDate.getTime());
 				        System.out.println(sqlDate);
 				       UserBean.getInstance().setDate(sqlDate);
-				    } catch (ParseException e) {
-				        e.printStackTrace();
-				    }
+				    
 				    User.getInstance().setIdRuolo(UserBean.getInstance().getIdRuolo());
 				    User.getInstance().setNome(UserBean.getInstance().getNome());
 				    User.getInstance().setCognome(UserBean.getInstance().getCognome());
-				   User.getInstance().setEmail(UserBean.getInstance().getEmail());
+				    User.getInstance().setEmail(UserBean.getInstance().getEmail());
 				    User.getInstance().setPassword(UserBean.getInstance().getPassword());
 				    User.getInstance().setDescrizione(UserBean.getInstance().getDescrizione());
 				    User.getInstance().setId(UserBean.getInstance().getId());
@@ -120,30 +116,29 @@ public class ModificaUtenteFinaleServlet extends HttpServlet {
 				
 					User.getInstance().setDataDiNascita(localDate);
 					 
-					 try {
+					 
 						if(UserBean.getInstance().aggiornaUtente(User.getInstance())==1)
 						 {
-							RequestDispatcher view = getServletContext().getRequestDispatcher("/utenti.jsp"); 
+							RequestDispatcher view = getServletContext().getRequestDispatcher(utenti); 
 							view.forward(request,response);
 						 }
 						
-					} catch (SQLException e) {
-						eB.setE(e);
-						request.setAttribute("bean1", eB);
-						RequestDispatcher view = getServletContext().getRequestDispatcher("/utenti.jsp"); 
-						view.forward(request,response);
-					}
+					
 				    
 			}
 		}
 		
-		}
+		
 		if(ind!=null && ind.equals("indietro"))
 		{
 			
-				RequestDispatcher view = getServletContext().getRequestDispatcher("/utenti.jsp"); 
+				RequestDispatcher view = getServletContext().getRequestDispatcher(utenti); 
 				view.forward(request,response);
 			
+		}
+	}catch(SQLException | ServletException |ParseException e)
+		{
+			Log.LOGGER.log(Level.SEVERE," eccezione ottenuta ",e);
 		}
 	}
 

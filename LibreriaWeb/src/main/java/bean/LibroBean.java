@@ -262,7 +262,7 @@ public class LibroBean implements Raccolta {
 	
 	public LibroBean()
 	{
-		
+		Log.LOGGER.log(Level.INFO,"istanziazione libro bean");
 	}
 	@Override
 	public void scarica() throws DocumentException, IOException {

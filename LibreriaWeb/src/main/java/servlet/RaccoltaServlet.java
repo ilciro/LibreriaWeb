@@ -18,8 +18,9 @@ import bean.TextAreaBean;
 @WebServlet("/RaccoltaServlet")
 public class RaccoltaServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-	private TextAreaBean tAB=new TextAreaBean();
-	private String s;
+	private static TextAreaBean tAB=new TextAreaBean();
+	private static String s;
+	private static String report="/report.jsp";
        
     /**
      * @see HttpServlet#HttpServlet()S
@@ -58,7 +59,7 @@ public class RaccoltaServlet extends HttpServlet {
 					s+=tAB.getListaUtenti();
 					tAB.setS(s);
 					request.setAttribute("bean",tAB);
-					RequestDispatcher view = getServletContext().getRequestDispatcher("/report.jsp"); 
+					RequestDispatcher view = getServletContext().getRequestDispatcher(report); 
 					view.forward(request,response);			
 				
 					
@@ -72,7 +73,7 @@ public class RaccoltaServlet extends HttpServlet {
 					s+=tAB.generaReportL();
 					tAB.setS(s);
 					request.setAttribute("bean",tAB);
-					RequestDispatcher view = getServletContext().getRequestDispatcher("/report.jsp"); 
+					RequestDispatcher view = getServletContext().getRequestDispatcher(report); 
 					view.forward(request,response);			
 				
 					
@@ -87,7 +88,7 @@ public class RaccoltaServlet extends HttpServlet {
 					s+=tAB.generaReportG();
 					tAB.setS(s);
 					request.setAttribute("bean",tAB);
-					RequestDispatcher view = getServletContext().getRequestDispatcher("/report.jsp"); 
+					RequestDispatcher view = getServletContext().getRequestDispatcher(report); 
 					view.forward(request,response);			
 				
 					
@@ -102,7 +103,7 @@ public class RaccoltaServlet extends HttpServlet {
 					s+=tAB.generaReportR();
 					tAB.setS(s);
 					request.setAttribute("bean",tAB);
-					RequestDispatcher view = getServletContext().getRequestDispatcher("/report.jsp"); 
+					RequestDispatcher view = getServletContext().getRequestDispatcher(report); 
 					view.forward(request,response);			
 				
 					
@@ -118,7 +119,7 @@ public class RaccoltaServlet extends HttpServlet {
 					s+=tAB.generaReportR();
 					tAB.setS(s);
 					request.setAttribute("bean",tAB);
-					RequestDispatcher view = getServletContext().getRequestDispatcher("/report.jsp"); 
+					RequestDispatcher view = getServletContext().getRequestDispatcher(report); 
 					view.forward(request,response);			
 				
 					
