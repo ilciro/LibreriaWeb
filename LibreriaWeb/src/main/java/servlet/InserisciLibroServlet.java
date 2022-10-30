@@ -28,7 +28,6 @@ import raccolta.Libro;
 public class InserisciLibroServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private static LibroBean lB=new LibroBean();
-	private static String s;
 	
     private static LibroDao lD=new LibroDao();
     private static Libro l=new Libro();
@@ -76,50 +75,15 @@ public class InserisciLibroServlet extends HttpServlet {
 		if(generaL!=null && generaL.equals("prendi lista"))
 		{
 			
-			s+="ADOLESCENTI_RAGAZZI"+"\n";
-			s+="ARTE"+"\n";
-			s+="CINEMA_FOTOGRAFIA"+"\n";
-			s+="BIOGRAFIE"+"\n";
-			s+="DIARI_MEMORIE"+"\n";
-			s+="CALENDARI_AGENDE"+"\n";
-			s+="DIRITTO"+"\n";
-			s+="DIZINARI_OPERE"+"\n";
-			s+="ECONOMIA"+"\n";
-			s+="FAMIGLIA"+"\n";
-			s+="SALUTE_BENESSERE"+"\n";
-			s+="FANTASCIENZA_FANTASY"+"\n";
-			s+="FUMETTI_MANGA"+"\n";
-			s+="GIALLI_THRILLER"+"\n";
-			s+="COMPUTER_GIOCHI"+"\n";
-			s+="HUMOR"+"\n";
-			s+="INFORMATICA"+"\n";
-			s+="WEB_DIGITAL_MEDIA"+"\n";
-			s+="LETTERATURA_NARRATIVA"+"\n";
-			s+="LIBRI_BAMBINI"+"\n";
-			s+="LIBRI_SCOLASTICI"+"\n";
-			s+="LIBRI_UNIVERSITARI"+"\n";
-			s+="RICETTARI_GENERALI"+"\n";
-			s+="LINGUISTICA_SCRITTURA"+"\n";
-			s+="POLITICA"+"\n";
-			s+="RELIGIONE"+"\n";
-			s+="ROMANZI_ROSA"+"\n";
-			s+="SCIENZE"+"\n";
-			s+="TECNOLOGIA_MEDICINA"+"\n";
 			
-			
-			lB.setListaCategorie(s);	
+			lB.setListaCategorie(setCategorie());	
 
-			
 			request.setAttribute("bean",lB);
 			RequestDispatcher view = getServletContext().getRequestDispatcher(aggLibro); 
 			view.forward(request,response);
 		}
 		
-		if(buttonC!=null && buttonC.equals("conferma"))
-		{
-			
-		
-			if(codL!=null && codL!="" && codL.length()<=10)
+		if(buttonC!=null && buttonC.equals("conferma") && (codL!=null && !codL.equals("") && codL.length()<=10))
 			{
 				lB.setTitolo(titolo);
 				lB.setCodIsbn(codL);
@@ -134,7 +98,6 @@ public class InserisciLibroServlet extends HttpServlet {
 			    
 			         utilDate = format.parse(dataL);
 			        sqlDate = new java.sql.Date(utilDate.getTime());
-			        System.out.println(sqlDate);
 			        lB.setDate(sqlDate);
 			   
 				
@@ -176,7 +139,7 @@ public class InserisciLibroServlet extends HttpServlet {
 			  
 			
 			
-				if(lD.creaLibrio(l)==true)
+				if(lD.creaLibrio(l))
 				{
 					lB.aggiornaData(l, sqlDate);
 					request.setAttribute("bean", lB);
@@ -193,7 +156,7 @@ public class InserisciLibroServlet extends HttpServlet {
 			
 			
 			}
-		}
+		
 		if(buttonA!=null && buttonA.equals("indietro"))
 		{
 			RequestDispatcher view = getServletContext().getRequestDispatcher("/modificaLibro.jsp"); 
@@ -202,6 +165,41 @@ public class InserisciLibroServlet extends HttpServlet {
 	}  catch ( SQLException |ParseException|ServletException e) {
         Log.LOGGER.log(Level.SEVERE," eccezione ottenuta {}",e.getMessage());
     }
+    }
+    
+    public static String setCategorie()
+    {
+    	String s = null;
+    	s+="ADOLESCENTI_RAGAZZI"+"\n";
+		s+="ARTE"+"\n";
+		s+="CINEMA_FOTOGRAFIA"+"\n";
+		s+="BIOGRAFIE"+"\n";
+		s+="DIARI_MEMORIE"+"\n";
+		s+="CALENDARI_AGENDE"+"\n";
+		s+="DIRITTO"+"\n";
+		s+="DIZINARI_OPERE"+"\n";
+		s+="ECONOMIA"+"\n";
+		s+="FAMIGLIA"+"\n";
+		s+="SALUTE_BENESSERE"+"\n";
+		s+="FANTASCIENZA_FANTASY"+"\n";
+		s+="FUMETTI_MANGA"+"\n";
+		s+="GIALLI_THRILLER"+"\n";
+		s+="COMPUTER_GIOCHI"+"\n";
+		s+="HUMOR"+"\n";
+		s+="INFORMATICA"+"\n";
+		s+="WEB_DIGITAL_MEDIA"+"\n";
+		s+="LETTERATURA_NARRATIVA"+"\n";
+		s+="LIBRI_BAMBINI"+"\n";
+		s+="LIBRI_SCOLASTICI"+"\n";
+		s+="LIBRI_UNIVERSITARI"+"\n";
+		s+="RICETTARI_GENERALI"+"\n";
+		s+="LINGUISTICA_SCRITTURA"+"\n";
+		s+="POLITICA"+"\n";
+		s+="RELIGIONE"+"\n";
+		s+="ROMANZI_ROSA"+"\n";
+		s+="SCIENZE"+"\n";
+		s+="TECNOLOGIA_MEDICINA"+"\n";
+    	return s;
     }
 
 }
