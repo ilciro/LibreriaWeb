@@ -1,0 +1,33 @@
+@charset "ISO-8859-1";
+
+table
+{
+	   border-collapse: collapse;
+	   border-spacing: 8px 2px;
+	   margin-left: auto; 
+	   margin-right: auto;
+	   table-layout:auto;
+	   width:auto;
+	  
+
+}
+ td {
+    border: 2px solid #ff8080;
+    padding : 6px;
+}
+
+caption{
+	color:#00ffff;
+}
+
+h1{
+	font-weight : 500;
+	color:#ff0080;
+	text-align:center;
+}
+
+h2{
+	font-weight : 300;
+	color:#0000ff;
+	text-align:center;
+}

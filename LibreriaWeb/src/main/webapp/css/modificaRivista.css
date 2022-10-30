@@ -1,0 +1,41 @@
+@charset "ISO-8859-1";
+
+table
+{
+	   border-collapse: collapse;
+	   border-spacing: 8px 2px;
+	   margin-left: auto; 
+	   margin-right: auto;
+	   table-layout:auto;
+	  
+
+}
+ td {
+    border: 2px solid brown;
+    padding : 6px;
+}
+
+caption{
+	color:#0000ff;
+}
+
+h1{
+	font-weight : 500;
+	color:green;
+	text-align:center;
+}
+
+
+
+.modifica
+{
+	   border-collapse: collapse;
+	   border-spacing: 8px 2px;
+	   margin-left: auto; 
+	   margin-right: auto;
+	   table-layout:auto;
+	   border: 2px solid violet;
+    	padding : 6px;
+    	text-align:right;
+}
+ 
