@@ -56,6 +56,18 @@ public class ModificaGiornaleServlet extends HttpServlet {
 		String idCanc=request.getParameter("cancL");
 		String id=request.getParameter("idL");
 		try {
+			if(id==null || id.equals(""))
+			{
+				eB.setE(new NullPointerException("valore nullo o vuoto"));
+				
+				request.setAttribute("bean1",eB);
+				request.setAttribute("bean",gB);
+				
+
+				RequestDispatcher view = getServletContext().getRequestDispatcher(modGiornale); 
+				view.forward(request,response);
+			}
+			
 			if(genera!=null && genera.equals("genera lista"))
 			{
 				
@@ -79,18 +91,7 @@ public class ModificaGiornaleServlet extends HttpServlet {
 			if(buttonM!=null && buttonM.equals("modifica"))
 			{
 				
-				if(id==null || id.equals(""))
-				{
-					eB.setE(new NullPointerException("valore nullo o vuoto"));
-					
-					request.setAttribute("bean1",eB);
-					request.setAttribute("bean",gB);
-					
-
-					RequestDispatcher view = getServletContext().getRequestDispatcher(modGiornale); 
-					view.forward(request,response);
-				}
-				else {
+				
 					
 					
 					SystemBean.getIstance().setId(Integer.parseInt(id));
@@ -100,7 +101,7 @@ public class ModificaGiornaleServlet extends HttpServlet {
 					request.setAttribute("bean2",SystemBean.getIstance());
 					RequestDispatcher view = getServletContext().getRequestDispatcher("/modificaGiornaleFinale.jsp"); 
 					view.forward(request,response);
-				}
+				
 			}
 			if(buttonC!=null && buttonC.equals("cancella"))
 			{
@@ -112,16 +113,7 @@ public class ModificaGiornaleServlet extends HttpServlet {
 					RequestDispatcher view = getServletContext().getRequestDispatcher(modGiornale); 
 					view.forward(request,response);
 				}
-				else
-				{
-					eB.setE(new SQLException("delete fallita"));
-					
-					request.setAttribute("bean1",eB);
-					request.setAttribute("bean",gB);					
-
-					RequestDispatcher view = getServletContext().getRequestDispatcher(modGiornale); 
-					view.forward(request,response);
-				}
+				//vedere else
 			}
 		} catch (SQLException |ServletException e) {
 			Log.LOGGER.log(Level.SEVERE," eccezione ottenuta {}",e.getMessage());

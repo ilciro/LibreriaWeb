@@ -2,6 +2,7 @@ package servlet;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.logging.Level;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -14,6 +15,7 @@ import bean.ExceptionBean;
 import bean.GiornaleBean;
 import bean.SystemBean;
 import database.GiornaleDao;
+import model.Log;
 import raccolta.Giornale;
 
 /**
@@ -24,7 +26,6 @@ public class GiornaleServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private static GiornaleBean gB=new GiornaleBean();
 	private static GiornaleDao gD=new GiornaleDao();
-	private static int lunghezza;
 	private static Giornale g=new Giornale();
 	private static ExceptionBean eB=new ExceptionBean();
 	private static String errore="/errore.jsp";
@@ -35,7 +36,6 @@ public class GiornaleServlet extends HttpServlet {
      */
     public GiornaleServlet() {
         super();
-        // TODO Auto-generated constructor stub
     }
 
 	/**
@@ -46,11 +46,14 @@ public class GiornaleServlet extends HttpServlet {
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
+    @Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
 		SystemBean.getIstance().setType("giornale");
 		
 		String id=request.getParameter("idG");
+		 int lunghezza=0;
+
 		
 		try {
 			 lunghezza=gD.getGiornaliList().size();
@@ -90,12 +93,10 @@ public class GiornaleServlet extends HttpServlet {
 				view.forward(request,response); 
 			}
 			
-		} catch (SQLException e) {
+		} catch (SQLException|ServletException  e) {
+			Log.LOGGER.log(Level.SEVERE," eccezione ottenuta {}",e.getMessage());
+
 		
-			eB.setE(e);
-			request.setAttribute("bean",eB);
-			RequestDispatcher view = getServletContext().getRequestDispatcher(errore); 
-			view.forward(request,response); 
 		}
 	}
     

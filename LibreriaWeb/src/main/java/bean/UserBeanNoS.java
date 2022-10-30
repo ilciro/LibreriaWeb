@@ -96,7 +96,7 @@ public class UserBeanNoS {
 		this.listaDb = listaDb;
 	}
 	
-	public List<UserBeanNoS>getListaUtenti() throws IOException, SQLException  {
+	public List<UserBeanNoS>getListaUtenti() throws SQLException  {
 
 		Connection conn=null;
 		Statement st=null;
@@ -133,7 +133,7 @@ public class UserBeanNoS {
 		return utentiL;
 	}
 
-	public List<UserBeanNoS>getListaUtente() throws IOException, SQLException  {
+	public List<UserBeanNoS>getListaUtente() throws SQLException  {
 
 		Connection conn=null;
 		Statement st=null;
