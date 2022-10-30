@@ -45,8 +45,8 @@ public class ModificaUtenteFinaleServlet extends HttpServlet {
     @Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
-    	 final java.util.Date utilDate;
-         final java.sql.Date sqlDate;
+    	 java.util.Date utilDate;
+          java.sql.Date sqlDate;
 		try {
 		String ruolo=request.getParameter("ruoloL");
 		String nome=request.getParameter("nomeL");
@@ -84,9 +84,7 @@ public class ModificaUtenteFinaleServlet extends HttpServlet {
 			
 			
 		}
-		if(mod!=null && mod.equals("modifica") && (ruolo.equalsIgnoreCase("W") || ruolo.equalsIgnoreCase("A") || ruolo.equalsIgnoreCase("E") || ruolo.equalsIgnoreCase("U")))
-			{
-				if(UserBean.getInstance().checkEmail(mail)!=false)
+		if(mod!=null && mod.equals("modifica") && (ruolo.equalsIgnoreCase("W") || ruolo.equalsIgnoreCase("A") || ruolo.equalsIgnoreCase("E") || ruolo.equalsIgnoreCase("U")) && UserBean.getInstance().checkEmail(mail))
 				{
 					UserBean.getInstance().setIdRuolo(ruolo);
 					UserBean.getInstance().setNome(nome);
@@ -127,7 +125,7 @@ public class ModificaUtenteFinaleServlet extends HttpServlet {
 					
 				    
 			}
-		}
+		
 		
 		
 		if(ind!=null && ind.equals("indietro"))

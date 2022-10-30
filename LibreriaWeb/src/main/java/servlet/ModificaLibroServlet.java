@@ -54,6 +54,18 @@ public class ModificaLibroServlet extends HttpServlet {
 		String idCanc=request.getParameter("cancL");
 		String id=request.getParameter("idL");
 		
+		if(id==null || id.equals(""))
+				{
+					eB.setE(new NullPointerException("valore nullo o vuoto"));
+					
+					request.setAttribute("bean1",eB);
+					request.setAttribute("bean",lB);
+					
+
+				RequestDispatcher view = getServletContext().getRequestDispatcher(modLibro); 
+				view.forward(request,response);
+				}
+		
 			if(genera!=null && genera.equals("genera lista"))
 			{
 				
@@ -74,17 +86,7 @@ public class ModificaLibroServlet extends HttpServlet {
 				RequestDispatcher view = getServletContext().getRequestDispatcher("/aggiungiLibro.jsp"); 
 				view.forward(request,response);
 			}
-			if(buttonM!=null && buttonM.equals("modifica") && (id==null || id.equals("")))
-				{
-					eB.setE(new NullPointerException("valore nullo o vuoto"));
-					
-					request.setAttribute("bean1",eB);
-					request.setAttribute("bean",lB);
-					
-
-					RequestDispatcher view = getServletContext().getRequestDispatcher(modLibro); 
-					view.forward(request,response);
-			}else {
+			if(buttonM!=null && buttonM.equals("modifica") ){
 					
 					
 					SystemBean.getIstance().setId(Integer.parseInt(id));
@@ -106,17 +108,9 @@ public class ModificaLibroServlet extends HttpServlet {
 					RequestDispatcher view = getServletContext().getRequestDispatcher(modLibro); 
 					view.forward(request,response);
 				}
-				else
-				{
-					eB.setE(new SQLException("delete fallita"));
-					
-					request.setAttribute("bean1",eB);
-					request.setAttribute("bean",lB);					
-
-					RequestDispatcher view = getServletContext().getRequestDispatcher(modLibro); 
-					view.forward(request,response);
-				}
+				//vedere if
 			}
+			
 		} catch (SQLException | ServletException e) {
 			e.printStackTrace();
 		}

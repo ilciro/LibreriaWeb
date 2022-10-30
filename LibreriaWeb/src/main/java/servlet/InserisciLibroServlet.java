@@ -6,6 +6,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.logging.Level;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -14,10 +15,10 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import bean.ExceptionBean;
 import bean.LibroBean;
 import bean.SystemBean;
 import database.LibroDao;
+import model.Log;
 import raccolta.Libro;
 
 /**
@@ -28,10 +29,8 @@ public class InserisciLibroServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private static LibroBean lB=new LibroBean();
 	private static String s;
-	private  static java.util.Date utilDate;
-    private static java.sql.Date sqlDate;
+	
     private static LibroDao lD=new LibroDao();
-    private static ExceptionBean eB=new ExceptionBean();
     private static Libro l=new Libro();
     private static String aggLibro="/aggiungiLibro.jsp";
    
@@ -41,13 +40,17 @@ public class InserisciLibroServlet extends HttpServlet {
      */
     public InserisciLibroServlet() {
         super();
+       
     }
 
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
+    @Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 	
+    	
+    	
 		SystemBean.getIstance().setType("libro");
 		String titolo=request.getParameter("titoloL");
 		String nrPagL=request.getParameter("nrPagL");
@@ -66,9 +69,13 @@ public class InserisciLibroServlet extends HttpServlet {
 		String buttonC=request.getParameter("confermaB");
 		String buttonA=request.getParameter("annullaB");
 		
+		 java.util.Date utilDate;
+	     java.sql.Date sqlDate;
+		
+		try {
 		if(generaL!=null && generaL.equals("prendi lista"))
 		{
-			s="";
+			
 			s+="ADOLESCENTI_RAGAZZI"+"\n";
 			s+="ARTE"+"\n";
 			s+="CINEMA_FOTOGRAFIA"+"\n";
@@ -99,6 +106,7 @@ public class InserisciLibroServlet extends HttpServlet {
 			s+="SCIENZE"+"\n";
 			s+="TECNOLOGIA_MEDICINA"+"\n";
 			
+			
 			lB.setListaCategorie(s);	
 
 			
@@ -123,14 +131,12 @@ public class InserisciLibroServlet extends HttpServlet {
 				
 				SimpleDateFormat format = new SimpleDateFormat("yyyy/MM/dd");
 	
-			    try {
+			    
 			         utilDate = format.parse(dataL);
 			        sqlDate = new java.sql.Date(utilDate.getTime());
 			        System.out.println(sqlDate);
 			        lB.setDate(sqlDate);
-			    } catch (ParseException e) {
-			        e.printStackTrace();
-			    }
+			   
 				
 			    lB.setRecensione(recensione);
 			    lB.setDesc(desc);
@@ -169,7 +175,7 @@ public class InserisciLibroServlet extends HttpServlet {
 			
 			  
 			
-			try {
+			
 				if(lD.creaLibrio(l)==true)
 				{
 					lB.aggiornaData(l, sqlDate);
@@ -179,16 +185,10 @@ public class InserisciLibroServlet extends HttpServlet {
 	
 				}
 				else {
-					//eB.setE(new LibroInsertException(" Libro non inserito.. Codice isbn non valido"));
 					RequestDispatcher view = getServletContext().getRequestDispatcher(aggLibro); 
 					view.forward(request,response); 
 				}
-			} catch (SQLException e) {
-				eB.setE(e);
-				request.setAttribute("bean1", eB);
-				RequestDispatcher view = getServletContext().getRequestDispatcher(aggLibro); 
-				view.forward(request,response); 
-			}
+			
 			
 			
 			
@@ -199,6 +199,9 @@ public class InserisciLibroServlet extends HttpServlet {
 			RequestDispatcher view = getServletContext().getRequestDispatcher("/modificaLibro.jsp"); 
 			view.forward(request,response); 
 		}
-	}
+	}  catch ( SQLException |ParseException|ServletException e) {
+        Log.LOGGER.log(Level.SEVERE," eccezione ottenuta {}",e.getMessage());
+    }
+    }
 
 }

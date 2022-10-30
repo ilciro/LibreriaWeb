@@ -51,13 +51,23 @@ public class UsersServlet extends HttpServlet {
 		String modif=request.getParameter("modifB");
 		String cancella=request.getParameter("cancB");
 		String indietro=request.getParameter("indB");
+		String id=request.getParameter("idU");
+
 		
 		
 		try {
-			if(genera!=null && genera.equals("genera lista")) 
+			if(id==null)
+			{
+				eB.setE(new NumberFormatException(" id nullo "));
+				request.setAttribute(bean1,eB);
+				request.setAttribute("bean2", SystemBean.getIstance());
+				RequestDispatcher view = getServletContext().getRequestDispatcher(ut); 
+				view.forward(request,response);
+			}
+			if(genera!=null && genera.equals("genera lista") && (us.getListaUtenti())!=null)  
 			{
 				
-				us.setListaDb(us.getListaUtenti());
+					us.setListaDb(us.getListaUtenti());
 					if(us.getListaDb()!=null)
 					{
 						
@@ -65,13 +75,7 @@ public class UsersServlet extends HttpServlet {
 						RequestDispatcher view = getServletContext().getRequestDispatcher(ut); 
 						view.forward(request,response);
 					}
-					else {
-						
-						eB.setE(new SQLException(" lista non popolata"));
-						request.setAttribute(bean1,eB);
-						RequestDispatcher view = getServletContext().getRequestDispatcher(ut); 
-						view.forward(request,response);
-					}
+					//vedere else
 				
 				
 			}
@@ -88,47 +92,30 @@ public class UsersServlet extends HttpServlet {
 			
 			if(modif!=null &&modif.equals("modifica"))
 			{
-				String id=request.getParameter("idU");
 				UserBean.getInstance().setId(Integer.parseInt(id));
 				
-				if(id==null)
-				{
-					eB.setE(new NumberFormatException(" id nullo "));
-					request.setAttribute(bean1,eB);
-					request.setAttribute("bean2", SystemBean.getIstance());
-					RequestDispatcher view = getServletContext().getRequestDispatcher(ut); 
-					view.forward(request,response);
-				}else {
+				
 				request.setAttribute("bean",TempUser.getInstance());
 				request.setAttribute("bean2", us);
 				RequestDispatcher view = getServletContext().getRequestDispatcher("/modificaUtente.jsp"); 
 				view.forward(request,response);
-				}
+				
 			}
 			if(cancella!=null && cancella.equals("cancella"))
 			{
-				String id=request.getParameter("idU");
+				
 				UserBean.getInstance().setId(Integer.parseInt(id));
 				User.getInstance().setId(Integer.parseInt(id));
 
-				if(id==null)
+			
+				
+				if(UserBean.getInstance().deleteUser(User.getInstance()))
 				{
-					eB.setE(new NumberFormatException(" id nullo "));
-					request.setAttribute(bean1,eB);
-					RequestDispatcher view = getServletContext().getRequestDispatcher(ut); 
-					view.forward(request,response);
+				RequestDispatcher view = getServletContext().getRequestDispatcher(ut); 
+				view.forward(request,response);
 				}
-				else {
 					
-
-					
-					if(UserBean.getInstance().deleteUser(User.getInstance()))
-					{
-					RequestDispatcher view = getServletContext().getRequestDispatcher(ut); 
-					view.forward(request,response);
-					}
-					
-			}
+			
 			
 			}
 			if(indietro!=null && indietro.equals("indietro"))

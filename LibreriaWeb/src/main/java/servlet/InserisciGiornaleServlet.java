@@ -26,8 +26,7 @@ import raccolta.Giornale;
 @WebServlet("/InserisciGiornaleServlet")
 public class InserisciGiornaleServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-	private  static java.util.Date utilDate;
-    private static java.sql.Date sqlDate;
+	
     private static GiornaleBean gB=new GiornaleBean();
     private static GiornaleDao gD=new GiornaleDao();
     private static Giornale g=new Giornale();
@@ -48,8 +47,11 @@ public class InserisciGiornaleServlet extends HttpServlet {
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
+    @Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		try {
+			 java.util.Date utilDate;
+		    java.sql.Date sqlDate;
 		SystemBean.getIstance().setType("giornale");
 
 		String titolo=request.getParameter("titoloG");
@@ -100,7 +102,7 @@ public class InserisciGiornaleServlet extends HttpServlet {
 				  g.setPrezzo(gB.getPrezzo());
 				  
 				  
-					if(gD.creaGiornale(g)==true)
+					if(gD.creaGiornale(g))
 					{
 						gB.aggiornaData(g, sqlDate);
 						request.setAttribute("bean", gB);

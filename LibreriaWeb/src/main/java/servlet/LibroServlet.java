@@ -2,6 +2,7 @@ package servlet;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.logging.Level;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -14,6 +15,7 @@ import bean.ExceptionBean;
 import bean.LibroBean;
 import bean.SystemBean;
 import database.LibroDao;
+import model.Log;
 import raccolta.Libro;
 
 
@@ -28,7 +30,6 @@ public class LibroServlet extends HttpServlet {
 	private static LibroDao lD=new LibroDao();
 	private static Libro l=new Libro();
 	private static ExceptionBean eB=new ExceptionBean();
-	private static int lunghezza;
 	private static String bean1="bean1";
 	private static String errore="/errore.jsp";
 	
@@ -51,6 +52,8 @@ public class LibroServlet extends HttpServlet {
 		
 		SystemBean.getIstance().setType("libro");		
 		String id=request.getParameter("idL");
+		 int lunghezza=0;
+
 		
 		
 		try {
@@ -100,11 +103,8 @@ public class LibroServlet extends HttpServlet {
 		
 			
 		} catch (SQLException| ServletException| NumberFormatException e) {
-			eB.setE(e);
-		
-			request.setAttribute(bean1,eB);
-			RequestDispatcher view = getServletContext().getRequestDispatcher(errore); 
-			view.forward(request,response); 
+			Log.LOGGER.log(Level.SEVERE," eccezione ottenuta {}",e.getMessage());
+
 		}
 		
 		

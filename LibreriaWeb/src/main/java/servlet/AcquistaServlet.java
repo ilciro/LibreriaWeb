@@ -2,6 +2,7 @@ package servlet;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.logging.Level;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -10,7 +11,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import bean.ExceptionBean;
 import bean.GiornaleBean;
 import bean.LibroBean;
 import bean.RivistaBean;
@@ -18,6 +18,7 @@ import bean.SystemBean;
 import database.GiornaleDao;
 import database.LibroDao;
 import database.RivistaDao;
+import model.Log;
 import raccolta.Giornale;
 import raccolta.Libro;
 import raccolta.Rivista;
@@ -31,7 +32,6 @@ public class AcquistaServlet extends HttpServlet {
 	private static LibroDao lD=new LibroDao();
 	private static Libro lib=new Libro();
 	private static LibroBean lB=new LibroBean();
-	private static ExceptionBean bE=new ExceptionBean();
 	private static GiornaleBean gB=new GiornaleBean();
 	private static GiornaleDao gD=new GiornaleDao();
 	private static Giornale g=new Giornale ();
@@ -59,25 +59,14 @@ public class AcquistaServlet extends HttpServlet {
 	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 	
-		/*TODO
-		 *  vedere riuso questa servlet
-		 * 
-		 */
+		//rivedere
 		
 		try {
 			String id=request.getParameter("idL");
-			if(SystemBean.getIstance().getType().equals("giornale"))
+			if(id==null)
+				id+="0";
+			if(SystemBean.getIstance().getType().equals("giornale")&& Integer.parseInt(id)>=1 && Integer.parseInt(id)<=SystemBean.getIstance().getElemLista())
 			{
-				if(id==null)
-				{
-					id="0";
-					gB.setMiaListaG(gD.getGiornaliList());
-					request.setAttribute(bean,SystemBean.getIstance());
-				    request.setAttribute("bean",gB); 
-				    RequestDispatcher view = getServletContext().getRequestDispatcher("/giornali.jsp"); 
-					view.forward(request,response); 
-				}
-				else if(Integer.parseInt(id)>=1 && Integer.parseInt(id)<=SystemBean.getIstance().getElemLista()) {
 					gB.setId(Integer.parseInt(id));
 					String titolo;
 					String tipologia;
@@ -96,28 +85,24 @@ public class AcquistaServlet extends HttpServlet {
 					
 					 request.setAttribute("bean",gB);  
 					 request.setAttribute(bean, SystemBean.getIstance());
-					RequestDispatcher view = getServletContext().getRequestDispatcher(acquista); 
+					  RequestDispatcher view = getServletContext().getRequestDispatcher(acquista); 
+
 					view.forward(request,response); 
 				}
-				else {
 					
-					RequestDispatcher view = getServletContext().getRequestDispatcher("/giornali.jsp"); 
-					view.forward(request,response); 
-				}
-			
-			}else if(SystemBean.getIstance().getType().equals("libro"))
-			{
-				
-					if(id==null)
-					{
-						id="0";
-						lB.setMiaLista(lD.getLibriSingoloList());
+					
+					else if(SystemBean.getIstance().getType().equals("giornale")){
+						gB.setMiaListaG(gD.getGiornaliList());
 						request.setAttribute(bean,SystemBean.getIstance());
-					    request.setAttribute("bean",lB); 
-					    RequestDispatcher view = getServletContext().getRequestDispatcher("/libri.jsp"); 
+					    request.setAttribute("bean",gB); 
+					    RequestDispatcher view = getServletContext().getRequestDispatcher("/giornali.jsp"); 
+						view.forward(request,response); 
+						 view = getServletContext().getRequestDispatcher("/giornali.jsp"); 
 						view.forward(request,response); 
 					}
-					else if(Integer.parseInt(id)>=1 && Integer.parseInt(id)<=SystemBean.getIstance().getElemLista()) {
+				
+				
+			else if(SystemBean.getIstance().getType().equals("libro") &&(Integer.parseInt(id)>=1 && Integer.parseInt(id)<=SystemBean.getIstance().getElemLista())) {
 						lB.setId(id);
 						String titolo;
 						String tipologia;
@@ -136,29 +121,20 @@ public class AcquistaServlet extends HttpServlet {
 						
 						 request.setAttribute("bean",lB);  
 						 request.setAttribute(bean, SystemBean.getIstance());
-						RequestDispatcher view = getServletContext().getRequestDispatcher(acquista); 
+						 RequestDispatcher view = getServletContext().getRequestDispatcher(acquista); 
+						  
 						view.forward(request,response); 
 					}
-					else {
-						
-						RequestDispatcher view = getServletContext().getRequestDispatcher("/libri.jsp"); 
+				else if(SystemBean.getIstance().getType().equals("libro")) {
+						lB.setMiaLista(lD.getLibriSingoloList());
+						request.setAttribute(bean,SystemBean.getIstance());
+					    request.setAttribute("bean",lB); 
+					    RequestDispatcher view = getServletContext().getRequestDispatcher("/libri.jsp"); 
 						view.forward(request,response); 
+						
 					
 					}
-			
-			}
-			else if(SystemBean.getIstance().getType().equals("rivista"))
-				if(id==null)
-				{
-				id="0";
-				rB.setListaR(rD.getRivisteList());
-				request.setAttribute(bean,SystemBean.getIstance());
-			    request.setAttribute("bean",rB); 
-			    RequestDispatcher view = getServletContext().getRequestDispatcher("/riviste.jsp"); 
-				view.forward(request,response); 
-			}
-			//rivista
-			else if(Integer.parseInt(id)>=1 && Integer.parseInt(id)<=SystemBean.getIstance().getElemLista()) {
+			else if(SystemBean.getIstance().getType().equals("rivista") &&(Integer.parseInt(id)>=1 && Integer.parseInt(id)<=SystemBean.getIstance().getElemLista())) {
 				rB.setId(Integer.parseInt(id));
 				String titolo;
 				String tipologia;
@@ -177,22 +153,26 @@ public class AcquistaServlet extends HttpServlet {
 				
 				 request.setAttribute("bean",rB);  
 				 request.setAttribute(bean, SystemBean.getIstance());
-				RequestDispatcher view = getServletContext().getRequestDispatcher(acquista); 
+				 RequestDispatcher view = getServletContext().getRequestDispatcher(acquista); 
 				view.forward(request,response); 
 			}
-			else {
+			else if(SystemBean.getIstance().getType().equals("rivista")) {
+					rB.setListaR(rD.getRivisteList());
 				
-				RequestDispatcher view = getServletContext().getRequestDispatcher("/riviste.jsp"); 
+				request.setAttribute(bean,SystemBean.getIstance());
+				
+			    request.setAttribute("bean",rB); 
+			    RequestDispatcher view = getServletContext().getRequestDispatcher("/riviste.jsp"); 
+				view.forward(request,response); 
+				
+				 view = getServletContext().getRequestDispatcher("/riviste.jsp"); 
 				view.forward(request,response); 
 			
 			}
 		
-	
 		} catch (ServletException| NumberFormatException |SQLException e) {
-			bE.setE(e);
-			 request.setAttribute(bean,bE);
-			RequestDispatcher view = getServletContext().getRequestDispatcher("/errore.jsp"); 
-			view.forward(request,response); 
+			Log.LOGGER.log(Level.SEVERE," eccezione ottenuta {}" , e.getMessage());
+
 		}
 		
 

@@ -6,6 +6,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.logging.Level;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -18,6 +19,7 @@ import bean.ExceptionBean;
 import bean.RivistaBean;
 import bean.SystemBean;
 import database.RivistaDao;
+import model.Log;
 import raccolta.Rivista;
 
 /**
@@ -29,8 +31,7 @@ public class ModificaRivistaServletFinale extends HttpServlet {
 	private static RivistaDao rD=new RivistaDao();
 	private static Rivista r=new Rivista();
 	private static RivistaBean rB=new RivistaBean();
-	private static java.util.Date utilDate;
-    private static java.sql.Date sqlDate;
+	
     private static ExceptionBean eB=new ExceptionBean();
     private static String modRivistaF="/modificaRivistaFinale.jsp";
        
@@ -44,7 +45,11 @@ public class ModificaRivistaServletFinale extends HttpServlet {
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
+    @Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		try{
+		 java.util.Date utilDate;
+	     java.sql.Date sqlDate;
 		String buttonG=request.getParameter("buttonGenera");
 		String buttonM=request.getParameter("modifB");
 		String buttonI=request.getParameter("indietroB");
@@ -71,14 +76,12 @@ public class ModificaRivistaServletFinale extends HttpServlet {
 		{
 			r.setId(SystemBean.getIstance().getId());
 			
-			try {
+			
 				rB.setListaR(rD.getRivistaSingoloByIdLista(r));
 				request.setAttribute("bean",rB);
 				RequestDispatcher view = getServletContext().getRequestDispatcher(modRivistaF); 
 				view.forward(request,response);
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
+			
 		}
 		if(buttonM!=null && buttonM.equals("modifica"))
 		{
@@ -94,14 +97,12 @@ public class ModificaRivistaServletFinale extends HttpServlet {
 			
 			SimpleDateFormat format = new SimpleDateFormat("yyyy/MM/dd");
 
-			try {
+			
 		         utilDate = format.parse(data);
 		        sqlDate = new java.sql.Date(utilDate.getTime());
-		        System.out.println(sqlDate);
+		       
 		        rB.setDate(sqlDate);
-		    } catch (ParseException e) {
-		        e.printStackTrace();
-		    }
+		    
 			
 			rB.setDisp(Integer.parseInt(disp));
 			rB.setPrezzo(Float.parseFloat(prezzo));
@@ -127,7 +128,7 @@ public class ModificaRivistaServletFinale extends HttpServlet {
 			r.setCopieRim(rB.getCopieRim());
 			
 			
-			try {
+			
 				if(rB.aggiornaRivista(r)==1)
 				{
 						request.setAttribute("bean", rB);
@@ -141,11 +142,7 @@ public class ModificaRivistaServletFinale extends HttpServlet {
 					RequestDispatcher view = getServletContext().getRequestDispatcher(modRivistaF); 
 					view.forward(request,response);
 				}
-			} catch (NullPointerException | SQLException   e) {
-				e.printStackTrace();
 			
-			
-		}
 		
 		}
 		if(buttonI!=null && buttonI.equals("indietro") )
@@ -154,6 +151,11 @@ public class ModificaRivistaServletFinale extends HttpServlet {
 			view.forward(request,response);
 		}
 	
+	}catch(SQLException|ParseException|ServletException|NumberFormatException e)
+	{
+		Log.LOGGER.log(Level.SEVERE," eccezione ottenuta {}",e.getMessage());
+
 	}
+    }
 
 }

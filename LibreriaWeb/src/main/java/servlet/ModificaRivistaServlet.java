@@ -2,6 +2,7 @@ package servlet;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.logging.Level;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -14,6 +15,7 @@ import bean.ExceptionBean;
 import bean.RivistaBean;
 import bean.SystemBean;
 import database.RivistaDao;
+import model.Log;
 import raccolta.Rivista;
 
 /**
@@ -42,6 +44,7 @@ public class ModificaRivistaServlet extends HttpServlet {
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
+    @Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
 		String genera=request.getParameter("generaB");
@@ -53,6 +56,19 @@ public class ModificaRivistaServlet extends HttpServlet {
 		String id=request.getParameter("idL");
 		
 		try {
+			
+			if(id==null || id.equals(""))
+			{
+				eB.setE(new NullPointerException("valore nullo o vuoto"));
+				
+				request.setAttribute("bean1",eB);
+				request.setAttribute("bean",rB);
+				
+
+				RequestDispatcher view = getServletContext().getRequestDispatcher(modRivista); 
+				view.forward(request,response);
+			}
+			
 			if(genera!=null && genera.equals("genera lista"))
 			{
 				
@@ -76,28 +92,17 @@ public class ModificaRivistaServlet extends HttpServlet {
 			if(buttonM!=null && buttonM.equals("modifica"))
 			{
 				
-				if(id==null || id=="")
-				{
-					eB.setE(new NullPointerException("valore nullo o vuoto"));
-					
-					request.setAttribute("bean1",eB);
-					request.setAttribute("bean",rB);
-					
-
-					RequestDispatcher view = getServletContext().getRequestDispatcher(modRivista); 
-					view.forward(request,response);
-				}
-				else {
+				
 					
 					
 					SystemBean.getIstance().setId(Integer.parseInt(id));
 					r.setId(SystemBean.getIstance().getId());
-					rB.setListaR(rD.getRivistaSingoloByIdLista(r));;
+					rB.setListaR(rD.getRivistaSingoloByIdLista(r));
 					request.setAttribute("bean",rB);
 					request.setAttribute("bean2",SystemBean.getIstance());
 					RequestDispatcher view = getServletContext().getRequestDispatcher("/modificaRivistaFinale.jsp"); 
 					view.forward(request,response);
-				}
+				
 			}
 			if(buttonC!=null && buttonC.equals("cancella"))
 			{
@@ -109,19 +114,10 @@ public class ModificaRivistaServlet extends HttpServlet {
 					RequestDispatcher view = getServletContext().getRequestDispatcher(modRivista); 
 					view.forward(request,response);
 				}
-				else
-				{
-					eB.setE(new SQLException("delete fallita"));
-					
-					request.setAttribute("bean1",eB);
-					request.setAttribute("bean",rB);					
-
-					RequestDispatcher view = getServletContext().getRequestDispatcher(modRivista); 
-					view.forward(request,response);
-				}
+				//vedere delete
 			}
-		} catch (SQLException e) {
-			e.printStackTrace();
+		} catch (SQLException |ServletException e) {
+			Log.LOGGER.log(Level.SEVERE," eccezione ottenuta {}",e.getMessage());
 		}
 	
 	}

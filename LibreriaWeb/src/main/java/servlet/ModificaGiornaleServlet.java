@@ -2,6 +2,7 @@ package servlet;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.logging.Level;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -14,6 +15,7 @@ import bean.ExceptionBean;
 import bean.GiornaleBean;
 import bean.SystemBean;
 import database.GiornaleDao;
+import model.Log;
 import raccolta.Giornale;
 
 /**
@@ -122,7 +124,8 @@ public class ModificaGiornaleServlet extends HttpServlet {
 				}
 			}
 		} catch (SQLException |ServletException e) {
-			e.printStackTrace();
+			Log.LOGGER.log(Level.SEVERE," eccezione ottenuta {}",e.getMessage());
+
 		}
 		
 	}

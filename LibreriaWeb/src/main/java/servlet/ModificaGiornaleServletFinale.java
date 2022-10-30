@@ -6,6 +6,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.logging.Level;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -18,6 +19,7 @@ import bean.ExceptionBean;
 import bean.GiornaleBean;
 import bean.SystemBean;
 import database.GiornaleDao;
+import model.Log;
 import raccolta.Giornale;
 
 /**
@@ -26,12 +28,11 @@ import raccolta.Giornale;
 @WebServlet("/ModificaGiornaleServletFinale")
 public class ModificaGiornaleServletFinale extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-	private GiornaleBean gB=new GiornaleBean();
-	private Giornale g=new Giornale();
-	private  GiornaleDao gD=new GiornaleDao();
-	private  java.util.Date utilDate;
-    private java.sql.Date sqlDate;
-    private ExceptionBean eB=new ExceptionBean();
+	private static GiornaleBean gB=new GiornaleBean();
+	private static Giornale g=new Giornale();
+	private static GiornaleDao gD=new GiornaleDao();
+	private static String modGiornaleF="/modificaGiornaleFinale.jsp";	
+    private static ExceptionBean eB=new ExceptionBean();
        
     /**
      * @see HttpServlet#HttpServlet()
@@ -43,8 +44,10 @@ public class ModificaGiornaleServletFinale extends HttpServlet {
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
+    @Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		String buttonG=request.getParameter("buttonGenera");
+    	try {
+    	String buttonG=request.getParameter("buttonGenera");
 		String buttonM=request.getParameter("modifB");
 		String buttonI=request.getParameter("indietroB");
 
@@ -61,18 +64,19 @@ public class ModificaGiornaleServletFinale extends HttpServlet {
 		  
 		 gB.setId(id);
 			g.setId(SystemBean.getIstance().getId());
+			
+			  java.util.Date utilDate;
+		   java.sql.Date sqlDate;
 
 		 if(buttonG!=null && buttonG.equals("genera"))
 			{
 				
-				try {
+				
 					gB.setMiaListaG(gD.getGiornaliListSingolo(g));
 					request.setAttribute("bean",gB);
-					RequestDispatcher view = getServletContext().getRequestDispatcher("/modificaGiornaleFinale.jsp"); 
+					RequestDispatcher view = getServletContext().getRequestDispatcher(modGiornaleF); 
 					view.forward(request,response);
-				} catch (SQLException e) {
-					e.printStackTrace();
-				}
+				
 			}
 		 if(buttonM!=null && buttonM.equals("modifica"))
 			{
@@ -85,15 +89,11 @@ public class ModificaGiornaleServletFinale extends HttpServlet {
 				
 				SimpleDateFormat format = new SimpleDateFormat("yyyy/MM/dd");
 
-				try {
+				
 			         utilDate = format.parse(data);
 			        sqlDate = new java.sql.Date(utilDate.getTime());
-			        System.out.println(sqlDate);
 			        gB.setDate(sqlDate);
-			    } catch (ParseException e) {
-			        e.printStackTrace();
-			    }
-				
+			  
 				gB.setCopieRimanenti(Integer.parseInt(copie));
 				gB.setDisponibilita(Integer.parseInt(disp));
 				gB.setPrezzo(Float.parseFloat(prezzo));
@@ -118,25 +118,21 @@ public class ModificaGiornaleServletFinale extends HttpServlet {
 				g.setPrezzo(gB.getPrezzo());
 				
 				
-				try {
+				
 					if(gB.aggiornaGiornale(g)==1)
 					{
 							request.setAttribute("bean", gB);
-					        RequestDispatcher view = getServletContext().getRequestDispatcher("/modificaGiornaleFinale.jsp"); 
+					        RequestDispatcher view = getServletContext().getRequestDispatcher(modGiornaleF); 
 							view.forward(request,response);
 					  
 					}
 					else {
 						eB.setE(new SQLException(" aggiornamento non avvenuto"));
 						request.setAttribute("bean1", eB);
-						RequestDispatcher view = getServletContext().getRequestDispatcher("/modificaGiornaleFinale.jsp"); 
+						RequestDispatcher view = getServletContext().getRequestDispatcher(modGiornaleF); 
 						view.forward(request,response);
 					}
-				} catch (NullPointerException | SQLException   e) {
-					e.printStackTrace();
 				
-				
-			}
 			
 			}
 		 if(buttonI!=null && buttonI.equals("indietro") )
@@ -145,6 +141,9 @@ public class ModificaGiornaleServletFinale extends HttpServlet {
 				view.forward(request,response);
 			}
 		 
+	} catch (SQLException|ServletException|ParseException e) {
+		Log.LOGGER.log(Level.SEVERE," eccezione ottenuta {}",e.getMessage());
 	}
+    }
 
 }
