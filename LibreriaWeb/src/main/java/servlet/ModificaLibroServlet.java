@@ -42,8 +42,9 @@ public class ModificaLibroServlet extends HttpServlet {
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
+    @Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		
+    	try {
 		
 		String genera=request.getParameter("generaB");
 		String indietro=request.getParameter("buttonB");
@@ -52,7 +53,7 @@ public class ModificaLibroServlet extends HttpServlet {
 		String buttonC=request.getParameter("buttonCanc");
 		String idCanc=request.getParameter("cancL");
 		String id=request.getParameter("idL");
-		try {
+		
 			if(genera!=null && genera.equals("genera lista"))
 			{
 				
@@ -73,10 +74,7 @@ public class ModificaLibroServlet extends HttpServlet {
 				RequestDispatcher view = getServletContext().getRequestDispatcher("/aggiungiLibro.jsp"); 
 				view.forward(request,response);
 			}
-			if(buttonM!=null && buttonM.equals("modifica"))
-			{
-				
-				if(id==null || id=="")
+			if(buttonM!=null && buttonM.equals("modifica") && (id==null || id.equals("")))
 				{
 					eB.setE(new NullPointerException("valore nullo o vuoto"));
 					
@@ -86,8 +84,7 @@ public class ModificaLibroServlet extends HttpServlet {
 
 					RequestDispatcher view = getServletContext().getRequestDispatcher(modLibro); 
 					view.forward(request,response);
-				}
-				else {
+			}else {
 					
 					
 					SystemBean.getIstance().setId(Integer.parseInt(id));
@@ -98,7 +95,7 @@ public class ModificaLibroServlet extends HttpServlet {
 					RequestDispatcher view = getServletContext().getRequestDispatcher("/modificaLibroFinale.jsp"); 
 					view.forward(request,response);
 				}
-			}
+			
 			if(buttonC!=null && buttonC.equals("cancella"))
 			{
 				lB.setId(idCanc);

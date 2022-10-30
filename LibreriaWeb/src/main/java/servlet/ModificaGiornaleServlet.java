@@ -42,6 +42,7 @@ public class ModificaGiornaleServlet extends HttpServlet {
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
+    @Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
 		
@@ -76,7 +77,7 @@ public class ModificaGiornaleServlet extends HttpServlet {
 			if(buttonM!=null && buttonM.equals("modifica"))
 			{
 				
-				if(id==null || id=="")
+				if(id==null || id.equals(""))
 				{
 					eB.setE(new NullPointerException("valore nullo o vuoto"));
 					

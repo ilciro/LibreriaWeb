@@ -6,6 +6,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.logging.Level;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -17,6 +18,7 @@ import javax.servlet.http.HttpServletResponse;
 import bean.ExceptionBean;
 import bean.RivistaBean;
 import database.RivistaDao;
+import model.Log;
 import raccolta.Rivista;
 
 /**
@@ -28,8 +30,7 @@ public class InserisciRivistaServlet extends HttpServlet {
 	private static RivistaBean rB=new RivistaBean();
 	private static RivistaDao rD=new RivistaDao();
 	private static Rivista r=new Rivista();
-	private  static java.util.Date utilDate;
-    private static java.sql.Date sqlDate;
+	
     private static ExceptionBean eB=new ExceptionBean();
     private static String aggRivista="/aggiungiRivista.jsp";
        
@@ -43,8 +44,13 @@ public class InserisciRivistaServlet extends HttpServlet {
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
+    @Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		String titolo=request.getParameter("titoloL");
+    	 java.util.Date utilDate;
+         java.sql.Date sqlDate;
+    	
+         try {
+    	String titolo=request.getParameter("titoloL");
 		String cat=request.getParameter("catS");
 		String autore=request.getParameter("autL");
 		String lingua=request.getParameter("linguaL");
@@ -81,11 +87,7 @@ public class InserisciRivistaServlet extends HttpServlet {
 			view.forward(request,response);
 
 		}
-		if(buttonC!=null && buttonC.equals("conferma"))
-		{
-			
-		
-			if(data!=null )
+		if(buttonC!=null && buttonC.equals("conferma") && (data!=null) )
 			{
 				rB.setTitolo(titolo);
 				rB.setTipologia(cat);
@@ -99,14 +101,11 @@ public class InserisciRivistaServlet extends HttpServlet {
 				
 				SimpleDateFormat format = new SimpleDateFormat("yyyy/MM/dd");
 	
-			    try {
+			    
 			         utilDate = format.parse(data);
 			        sqlDate = new java.sql.Date(utilDate.getTime());
-			        System.out.println(sqlDate);
 			        rB.setDate(sqlDate);
-			    } catch (ParseException e) {
-			        e.printStackTrace();
-			    }
+			   
 				rB.setPrezzo(Float.parseFloat(prezzo));
 				rB.setCopieRim(Integer.parseInt(copie));
 			
@@ -137,8 +136,8 @@ public class InserisciRivistaServlet extends HttpServlet {
 			
 			  
 			
-			try {
-				if(rD.creaRivista(r)==true)
+			
+				if(Boolean.TRUE.equals(rD.creaRivista(r)))
 				{
 					rB.aggiornaData(r, sqlDate);
 					request.setAttribute("bean", rB);
@@ -151,24 +150,19 @@ public class InserisciRivistaServlet extends HttpServlet {
 					RequestDispatcher view = getServletContext().getRequestDispatcher(aggRivista); 
 					view.forward(request,response); 
 				}
-			} catch (SQLException e) {
-				eB.setE(e);
-				request.setAttribute("bean1", eB);
-				RequestDispatcher view = getServletContext().getRequestDispatcher(aggRivista); 
-				view.forward(request,response); 
 			}
 			
-			
-			
-			}
-		}
+		
 		if(buttonA!=null && buttonA.equals("indietro"))
 		{
 			RequestDispatcher view = getServletContext().getRequestDispatcher("/modificaRivista.jsp"); 
 			view.forward(request,response); 
 		}
-	}
+	}catch(SQLException|ParseException|ServletException e)
+         {
+			Log.LOGGER.log(Level.SEVERE,"ecceione ottenuta {}" ,e.getMessage());
+         }
 
-	
+    }
 
 }

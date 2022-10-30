@@ -2,6 +2,7 @@ package servlet;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.logging.Level;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -14,6 +15,7 @@ import bean.ExceptionBean;
 import bean.SystemBean;
 import bean.UserBean;
 import bean.UserBeanNoS;
+import model.Log;
 import model.TempUser;
 import model.User;
 
@@ -42,6 +44,7 @@ public class UsersServlet extends HttpServlet {
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
+    @Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String genera=request.getParameter("buttonG");
 		String aggiungi=request.getParameter("aggiungiB");
@@ -119,7 +122,7 @@ public class UsersServlet extends HttpServlet {
 					
 
 					
-					if(UserBean.getInstance().deleteUser(User.getInstance())==true)
+					if(UserBean.getInstance().deleteUser(User.getInstance()))
 					{
 					RequestDispatcher view = getServletContext().getRequestDispatcher(ut); 
 					view.forward(request,response);
@@ -138,10 +141,8 @@ public class UsersServlet extends HttpServlet {
 		
 		
 		} catch (IOException | SQLException e) {
-			eB.setE(e);
-			request.setAttribute(bean1,eB);
-			RequestDispatcher view = getServletContext().getRequestDispatcher(ut); 
-			view.forward(request,response);e.printStackTrace();
+			Log.LOGGER.log(Level.SEVERE," eccezione ottenuta {}" , e.getMessage());
+
 	}
 	}
 	

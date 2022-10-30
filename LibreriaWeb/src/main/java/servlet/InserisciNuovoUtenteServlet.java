@@ -6,6 +6,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.logging.Level;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -17,6 +18,7 @@ import javax.servlet.http.HttpServletResponse;
 import bean.ExceptionBean;
 import bean.UserBean;
 import database.UsersDao;
+import model.Log;
 import model.TempUser;
 
 /**
@@ -25,9 +27,7 @@ import model.TempUser;
 @WebServlet("/InserisciNuovoUtenteServlet")
 public class InserisciNuovoUtenteServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-	private  java.util.Date utilDate;
-    private java.sql.Date sqlDate;
-    private ExceptionBean eB=new ExceptionBean();
+    private static ExceptionBean eB=new ExceptionBean();
        
     /**
      * @see HttpServlet#HttpServlet()
@@ -39,7 +39,12 @@ public class InserisciNuovoUtenteServlet extends HttpServlet {
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
+	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		
+		try {
+		
+		
 		String ruolo=request.getParameter("ruoloL");
 		String nome=request.getParameter("nomeL");
 		String cognome=request.getParameter("cognomeL");
@@ -48,11 +53,12 @@ public class InserisciNuovoUtenteServlet extends HttpServlet {
 		String desc=request.getParameter("descL");
 		String dataN=request.getParameter("dataL");
 		
-		if(dataN!=null)
-		{
-			if(ruolo.equalsIgnoreCase("W") || ruolo.equalsIgnoreCase("A") || ruolo.equalsIgnoreCase("E"))
+		 java.util.Date utilDate;
+		 java.sql.Date sqlDate;
+		
+		if(dataN!=null &&(ruolo.equalsIgnoreCase("W") || ruolo.equalsIgnoreCase("A") || ruolo.equalsIgnoreCase("E")))
 			{
-				if(UserBean.getInstance().checkEmail(mail)!=false)
+				if(!UserBean.getInstance().checkEmail(mail))
 				{
 					UserBean.getInstance().setIdRuolo(ruolo);
 					UserBean.getInstance().setNome(nome);
@@ -63,14 +69,11 @@ public class InserisciNuovoUtenteServlet extends HttpServlet {
 					
 					SimpleDateFormat format = new SimpleDateFormat("yyyy/MM/dd");
 					
-				    try {
+				    
 				         utilDate = format.parse(dataN);
 				        sqlDate = new java.sql.Date(utilDate.getTime());
-				        System.out.println(sqlDate);
 				       UserBean.getInstance().setDate(sqlDate);
-				    } catch (ParseException e) {
-				        e.printStackTrace();
-				    }
+				   
 				    
 				    TempUser.getInstance().setIdRuolo(UserBean.getInstance().getIdRuolo());
 				    TempUser.getInstance().setNome(UserBean.getInstance().getNome());
@@ -86,8 +89,8 @@ public class InserisciNuovoUtenteServlet extends HttpServlet {
 				
 				    TempUser.getInstance().setDataDiNascita(localDate);
 				    
-				    try {
-						if(UsersDao.createUser2(TempUser.getInstance())==true)
+				    
+						if(UsersDao.createUser2(TempUser.getInstance()))
 							{
 								
 								RequestDispatcher view = getServletContext().getRequestDispatcher("/utenti.jsp"); 
@@ -100,9 +103,7 @@ public class InserisciNuovoUtenteServlet extends HttpServlet {
 							RequestDispatcher view = getServletContext().getRequestDispatcher("/utenti.jsp"); 
 							view.forward(request,response);
 						}
-					} catch (SQLException e) {
-						e.printStackTrace();
-					}
+					
 				}
 			  }
 			else
@@ -112,6 +113,9 @@ public class InserisciNuovoUtenteServlet extends HttpServlet {
 				RequestDispatcher view = getServletContext().getRequestDispatcher("/inserisciUtente.jsp"); 
 				view.forward(request,response);
 			}
+		}catch(SQLException|ServletException|ParseException e)
+		{
+			Log.LOGGER.log(Level.SEVERE,"eccezione generata ",e.getCause());
 		}
 	}
 

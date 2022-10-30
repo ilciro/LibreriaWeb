@@ -6,6 +6,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.logging.Level;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -18,6 +19,7 @@ import bean.ExceptionBean;
 import bean.LibroBean;
 import bean.SystemBean;
 import database.LibroDao;
+import model.Log;
 import raccolta.Libro;
 
 /**
@@ -29,9 +31,8 @@ public class ModificaLibroServletFinale extends HttpServlet {
 	private static LibroBean lB=new LibroBean();
 	private static LibroDao lD=new LibroDao();
 	private static Libro l=new Libro();
-	private  static java.util.Date utilDate;
-    private static java.sql.Date sqlDate;
-    private ExceptionBean eB=new ExceptionBean();
+	
+    private static ExceptionBean eB=new ExceptionBean();
     private static String modLibroF="/modificaLibroFinale.jsp";
        
     /**
@@ -44,7 +45,12 @@ public class ModificaLibroServletFinale extends HttpServlet {
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
+    @Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		
+		try {
+	  java.util.Date utilDate;
+	  java.sql.Date sqlDate;
 		
 		
 		String buttonG=request.getParameter("buttonGenera");
@@ -76,19 +82,16 @@ public class ModificaLibroServletFinale extends HttpServlet {
 		{
 			l.setId(SystemBean.getIstance().getId());
 			
-			try {
+	
 				lB.setMiaLista(lD.getLibriSingoloByIdLista(l));
 				request.setAttribute("bean",lB);
 				RequestDispatcher view = getServletContext().getRequestDispatcher(modLibroF); 
 				view.forward(request,response);
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
+			
 		}
 		if(buttonM!=null && buttonM.equals("modifica"))
 		{
 			
-			System.out.println("id in modifica" + id);
 			lB.setTitolo(tA);
 			lB.setNumeroPagine(Integer.parseInt(numP));
 			lB.setCodIsbn(cod);
@@ -99,16 +102,13 @@ public class ModificaLibroServletFinale extends HttpServlet {
 			
 			SimpleDateFormat format = new SimpleDateFormat("yyyy/MM/dd");
 
-			try {
+			
 		         utilDate = format.parse(data);
 		        sqlDate = new java.sql.Date(utilDate.getTime());
-		        System.out.println(sqlDate);
-		        lB.setDate(sqlDate);
-		    } catch (ParseException e) {
-		        e.printStackTrace();
-		    }
-			
-			
+		        
+		        Log.LOGGER.log(Level.INFO," data : {0}",utilDate +"" + sqlDate);
+		       
+		        
 		
 			lB.setRecensione(rec);
 			lB.setDesc(desc);
@@ -137,7 +137,7 @@ public class ModificaLibroServletFinale extends HttpServlet {
 			l.setDisponibilita(lB.getDisponibilita());
 			l.setPrezzo(lB.getPrezzo());
 			l.setNrCopie(lB.getCopieRim());
-			try {
+			
 				if(lB.aggiornaLibro(l)==1)
 				{
 						request.setAttribute("bean", lB);
@@ -151,11 +151,7 @@ public class ModificaLibroServletFinale extends HttpServlet {
 					RequestDispatcher view = getServletContext().getRequestDispatcher(modLibroF); 
 					view.forward(request,response);
 				}
-			} catch (NullPointerException | SQLException   e) {
-				e.printStackTrace();
 			
-			
-		}
 		
 		}
 		if(buttonI!=null && buttonI.equals("indietro") )
@@ -163,6 +159,10 @@ public class ModificaLibroServletFinale extends HttpServlet {
 			RequestDispatcher view = getServletContext().getRequestDispatcher("/modificaLibro.jsp"); 
 			view.forward(request,response);
 		}
-	}
+		}catch(SQLException|ServletException|ParseException e)
+		{
+			Log.LOGGER.log(Level.SEVERE,"eccezione ottenuta ",e.getCause());
+		}
+    }
 
 }

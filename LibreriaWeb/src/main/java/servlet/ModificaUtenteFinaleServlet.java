@@ -29,8 +29,7 @@ public class ModificaUtenteFinaleServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private static UserBeanNoS us=new UserBeanNoS();
 	private static ExceptionBean eB=new ExceptionBean();
-	private static java.util.Date utilDate;
-    private static java.sql.Date sqlDate;
+	
     private static String utenti="/utenti.jsp";
        
     /**
@@ -43,8 +42,11 @@ public class ModificaUtenteFinaleServlet extends HttpServlet {
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
+    @Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
+    	 final java.util.Date utilDate;
+         final java.sql.Date sqlDate;
 		try {
 		String ruolo=request.getParameter("ruoloL");
 		String nome=request.getParameter("nomeL");
@@ -98,7 +100,6 @@ public class ModificaUtenteFinaleServlet extends HttpServlet {
 				    
 				         utilDate = format.parse(data);
 				        sqlDate = new java.sql.Date(utilDate.getTime());
-				        System.out.println(sqlDate);
 				       UserBean.getInstance().setDate(sqlDate);
 				    
 				    User.getInstance().setIdRuolo(UserBean.getInstance().getIdRuolo());

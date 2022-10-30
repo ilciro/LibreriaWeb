@@ -19,7 +19,6 @@ import bean.TextAreaBean;
 public class RaccoltaServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private static TextAreaBean tAB=new TextAreaBean();
-	private static String s;
 	private static String report="/report.jsp";
        
     /**
@@ -33,8 +32,10 @@ public class RaccoltaServlet extends HttpServlet {
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
+    @Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
+    	 String s = null;
 		try {
 			String buttonTot=request.getParameter("totaleC");
 			String buttonL=request.getParameter("totaleL");
@@ -49,7 +50,7 @@ public class RaccoltaServlet extends HttpServlet {
 			 if(buttonTot!=null && buttonTot.equals("totale") )
 			{
 				
-								s="";
+								s+="";
 				tAB.setS(s);
 				
 				

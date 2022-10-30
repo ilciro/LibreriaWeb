@@ -2,6 +2,7 @@ package servlet;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.logging.Level;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -14,6 +15,7 @@ import bean.ExceptionBean;
 import bean.RivistaBean;
 import bean.SystemBean;
 import database.RivistaDao;
+import model.Log;
 import raccolta.Rivista;
 
 /**
@@ -25,7 +27,6 @@ public class RivistaServlet extends HttpServlet {
 	private static RivistaBean rB=new RivistaBean();
 	private static RivistaDao rD=new RivistaDao();
 	private static Rivista r=new Rivista();
-	private static int lunghezza;
 	private static ExceptionBean eB=new ExceptionBean();
 	private static String bean1="bean1";
 	private static String errore="/errore.jsp";
@@ -45,10 +46,11 @@ public class RivistaServlet extends HttpServlet {
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
+    @Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		SystemBean.getIstance().setType("rivista");		
 		String id=request.getParameter("idR");
-		
+		int lunghezza=0;
 		
 		try {
 			lunghezza=rD.getRivisteList().size();
@@ -97,11 +99,7 @@ public class RivistaServlet extends HttpServlet {
 		
 			
 		} catch (SQLException| ServletException| NumberFormatException e) {
-			eB.setE(e);
-		
-			request.setAttribute(bean1,eB);
-			RequestDispatcher view = getServletContext().getRequestDispatcher(errore); 
-			view.forward(request,response); 
+				Log.LOGGER.log(Level.SEVERE," eccezione ottenuta {}" , e.getMessage());
 		}
 		
 	}
