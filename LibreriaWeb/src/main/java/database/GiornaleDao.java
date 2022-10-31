@@ -220,7 +220,8 @@ public class GiornaleDao {
 			conn=ConnToDb.generalConnection();
 
 			stmt=conn.createStatement();
-			rs=stmt.executeQuery("SELECT * FROM giornale where id = '"+id+"' ");
+			String giornaleS="SELECT * FROM giornale where id = '"+id+"' ";
+			rs=stmt.executeQuery(giornaleS);
 
 			if (rs.next())
 			{
@@ -253,7 +254,8 @@ public class GiornaleDao {
 		
 			conn = ConnToDb.generalConnection();
 			stmt = conn.createStatement();
-			rs = stmt.executeQuery("select id from giornale where titolo ='"+titoloG+"'");
+			String prendiId="select id from giornale where titolo ='"+titoloG+"'";
+			rs = stmt.executeQuery(prendiId);
 
 			while ( rs.next() ) {
 				id=rs.getInt("id");
@@ -510,12 +512,12 @@ public class GiornaleDao {
 
 		ObservableList<Raccolta> catalogo=FXCollections.observableArrayList();
 
-
+		String giornaleNE="SELECT * FROM giornale where titolo = '"+s+"' OR editore = '"+s+"'";
 		
 
 			conn=ConnToDb.generalConnection();
 			stmt=conn.createStatement();
-			rs=stmt.executeQuery("SELECT * FROM giornale where titolo = '"+s+"' OR editore = '"+s+"'");
+			rs=stmt.executeQuery(giornaleNE);
 
 			while(rs.next())
 			{

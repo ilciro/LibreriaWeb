@@ -136,7 +136,8 @@ private ResultSet rs=null;
 		boolean state=false;
 		
 		conn = ConnToDb.generalConnection();
-			prepQ= conn.prepareStatement("delete from ispw.pagamento where id_op='"+idC+"'");
+		String cancella="delete from ispw.pagamento where id_op='"+idC+"'";
+			prepQ= conn.prepareStatement(cancella);
 				
 		
 			

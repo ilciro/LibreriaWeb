@@ -141,9 +141,10 @@ public class LibroDao  {
 		
 		
 		conn= ConnToDb.generalConnection();
+		String libroSE="SELECT * FROM libro where titolo = '"+s+"' OR autore = '"+s+"'";
 
 		stmt=conn.createStatement();
-		rs=stmt.executeQuery("SELECT * FROM libro where titolo = '"+s+"' OR autore = '"+s+"'");
+		rs=stmt.executeQuery(libroSE);
 		while(rs.next())
 		{
 			
@@ -165,7 +166,8 @@ public class LibroDao  {
 	{
 		conn= ConnToDb.generalConnection();
 		stmt=conn.createStatement();
-		rs=stmt.executeQuery("SELECT * FROM libro where idProd = '"+id+"'");
+		String libroId="SELECT * FROM libro where idProd = '"+id+"'";
+		rs=stmt.executeQuery(libroId);
 		if (rs.next())
 		{
 			f.createRaccoltaFinale1(LIBRO, rs.getString(1), rs.getString(7), rs.getString(5), rs.getString(6),rs.getString(4), rs.getString(7));
@@ -341,8 +343,9 @@ public class LibroDao  {
 				conn = ConnToDb.generalConnection();
 				stmt = conn.createStatement();
 
+				String lDisp="SELECT disp FROM ispw.libro where idProd = '"+id+"'";
 
-				rs=  stmt.executeQuery("SELECT disp FROM ispw.libro where idProd = '"+id+"'");
+				rs=  stmt.executeQuery(lDisp);
 				if(rs.next())
 				{
 					disp = rs.getInt(1);

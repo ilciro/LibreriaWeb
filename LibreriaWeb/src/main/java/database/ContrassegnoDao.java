@@ -95,9 +95,10 @@ public class ContrassegnoDao {
 	public boolean annullaOrdine(int idC) throws SQLException
 	{
 		boolean state=false;
+		String cancella="delete from fattura where id='"+idC+"'";
 		
 			conn =ConnToDb.generalConnection();
-			stmt= conn.prepareStatement("delete from fattura where id='"+idC+"'");
+			stmt= conn.prepareStatement(cancella);
 			
 
 				

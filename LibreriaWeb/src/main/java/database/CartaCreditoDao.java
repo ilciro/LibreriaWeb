@@ -29,13 +29,13 @@ public class CartaCreditoDao {
 		 * uare funzione internet
 		 */
 		ObservableList<CartaDiCredito> catalogo=FXCollections.observableArrayList();
-
+		String listaCC="select nomeP,cognomeP,codiceCarta from cartacredito where nomeP='"+nome+"'";
 		
 			conn=ConnToDb.generalConnection();
 
 			stmt1= conn.createStatement();
 
-				rs=stmt1.executeQuery("select nomeP,cognomeP,codiceCarta from cartacredito where nomeP='"+nome+"'");
+				rs=stmt1.executeQuery(listaCC);
 			
 
 				while(rs.next())
@@ -115,10 +115,11 @@ public class CartaCreditoDao {
 		cog = null;
 		cod = null;
 
+		String popolaDati="select nomeP,cognomeP,codiceCarta,scad from cartacredito where codiceCarta='"+codice+"'";
 		
 			conn=ConnToDb.generalConnection();
 			stmt1=conn.createStatement();
-			 rs=stmt1.executeQuery("select nomeP,cognomeP,codiceCarta,scad from cartacredito where codiceCarta='"+codice+"'");
+			 rs=stmt1.executeQuery(popolaDati);
 			
 
 				while(rs.next())
