@@ -407,17 +407,19 @@ public class LibroBean implements Raccolta {
 	
 	public void aggiornaData(Libro l,java.sql.Date dataSql) throws SQLException
 	{
-
-			Connection conn=null;
-			PreparedStatement prepQ=null;
 		
-			conn = ConnToDb.generalConnection();
-			prepQ= conn.prepareStatement("update ispw.libro set dataPubblicazione= ? where Cod_isbn='"+l.getCodIsbn()+"'");
+			try(Connection conn=ConnToDb.generalConnection();
+				PreparedStatement prepQ=conn.prepareStatement("update ispw.libro set dataPubblicazione= ? where Cod_isbn='"+l.getCodIsbn()+"'");)
+			{
+			
 			prepQ.setDate(1, dataSql);
 			prepQ.executeUpdate();
+			}catch(SQLException e)
+			{
+				Log.LOGGER.log(Level.SEVERE,"eccezione generata ",e.getCause());
+			}
 
-		conn.close();
-
+		
 
 	}
 	
@@ -426,14 +428,8 @@ public class LibroBean implements Raccolta {
 
 
 		int rowAffected=0;
-		Connection conn=null;
-		PreparedStatement prepQ=null;
 		
-
-		conn = ConnToDb.generalConnection();
-		 stmt = conn.createStatement();
-
-
+		
 		
 
 		 String query=" UPDATE libro "
@@ -453,8 +449,11 @@ public class LibroBean implements Raccolta {
 				+ " `prezzo` = ?,"
 				+ " `copieRimanenti` =?"
 				+ " WHERE `idProd` ="+l.getId()+";";
-		prepQ=conn.prepareStatement(query);
-
+		 
+		 try(Connection conn=ConnToDb.generalConnection();
+			PreparedStatement prepQ=conn.prepareStatement(query);	 )
+		 {
+	
 		prepQ.setString(1,l.getTitolo());
 		prepQ.setInt(2,l.getNumeroPagine());
 		prepQ.setString(3,l.getCodIsbn());
@@ -472,9 +471,12 @@ public class LibroBean implements Raccolta {
 
 
 		rowAffected = prepQ.executeUpdate();
-		prepQ.close();
-
+		
 		Log.LOGGER.log(Level.INFO, "row affected .{0}", rowAffected);
+		 }catch(SQLException e)
+		 {
+			 Log.LOGGER.log(Level.SEVERE,"eccezione ottenuta ",e.getCause());
+		 }
 		return rowAffected;
 
 	}	
@@ -482,15 +484,20 @@ public class LibroBean implements Raccolta {
 	public int cancella(Libro l) throws SQLException {
 		
 		int row=0;
-		Connection conn=null;
-		PreparedStatement prepQ=null;
-		
-			conn = ConnToDb.generalConnection();
-			
-			prepQ=conn.prepareStatement("delete  FROM ispw.libro where idProd = "+l.getId()+" ;");
+		String query="delete  FROM ispw.libro where idProd = "+l.getId()+" ;";
+		try(Connection conn=ConnToDb.generalConnection();
+			PreparedStatement prepQ=conn.prepareStatement(query))
+		{
 			row=prepQ.executeUpdate();
+
+		}catch(SQLException e)
+		{
+			Log.LOGGER.log(Level.SEVERE,"ecceizone ottenuta ",e.getCause());
+		}
+			
+			
 		
-	conn.close();
+	
 
 	Log.LOGGER.log(Level.INFO,"Libro cancellato : .{0}",row);
 	return row;
