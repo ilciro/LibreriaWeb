@@ -85,6 +85,7 @@ public class BoundaryPagamentoCC implements Initializable {
 	protected Scene scene;
 	
 	private static ControllerSystemState vis = ControllerSystemState.getIstance();
+	private static String eccezione="eccezione ottenuta";
 
 	@FXML
 	private void procediCC() throws IOException, SQLException {
@@ -159,7 +160,7 @@ public class BoundaryPagamentoCC implements Initializable {
 		try {
 			cPCC = new ControllerPagamentoCC();
 		} catch (Exception e) {
-			Log.LOGGER.log(Level.SEVERE,"eccezione ottenuta" ,e.getCause());
+			Log.LOGGER.log(Level.SEVERE,eccezione ,e.getCause());
 		}
 		
 	}
@@ -186,7 +187,7 @@ public class BoundaryPagamentoCC implements Initializable {
 		         utilDate = format.parse(d);
 		         sqlDate = new java.sql.Date(utilDate.getTime());
 		    } catch (ParseException e) {
-				Log.LOGGER.log(Level.SEVERE,"eccezione ottenuta" ,e.getCause());
+				Log.LOGGER.log(Level.SEVERE,eccezione ,e.getCause());
 		    }
 		cPCC.aggiungiCartaDB(nome, cognome, codice, sqlDate, civ, (float) 0.0);
 		
@@ -220,7 +221,7 @@ public class BoundaryPagamentoCC implements Initializable {
 				tableCC.setItems(cPCC.ritornaElencoCC(nomeUt));
 			}
 		} catch (IOException e) {
-			Log.LOGGER.log(Level.SEVERE,"eccezione ottenuta" ,e.getCause());
+			Log.LOGGER.log(Level.SEVERE,eccezione ,e.getCause());
 		}
 		buttonPrendi.setDisable(false);
 	}

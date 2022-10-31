@@ -37,6 +37,7 @@ public class GiornaleBean implements Raccolta {
 	private List<Giornale> miaListaG;
 	private java.sql.Date date;
 	Statement stmt;
+	private static String eccezione=" eccezione generata ";
 
 	public String getTitolo() {
 		return titolo;
@@ -193,7 +194,7 @@ public class GiornaleBean implements Raccolta {
 			}
 			catch(SQLException e)
 			{
-				Log.LOGGER.log(Level.SEVERE," eccezione ottenuta ",e.getCause());
+				Log.LOGGER.log(Level.SEVERE,eccezione,e.getCause());
 			}
 			
 			
@@ -228,7 +229,7 @@ public class GiornaleBean implements Raccolta {
 			prepQ.setDate(1, dataSql);
 			prepQ.executeUpdate();
 			}catch(SQLException e) {
-				Log.LOGGER.log(Level.SEVERE," eccezione ottenuta ",e.getCause());
+				Log.LOGGER.log(Level.SEVERE,eccezione,e.getCause());
 
 			}
 
@@ -273,7 +274,7 @@ public class GiornaleBean implements Raccolta {
 		row=prepQ.executeUpdate();
 		}catch(SQLException e)
 		{
-			Log.LOGGER.log(Level.SEVERE," eccezione ottenuta ",e.getCause());
+			Log.LOGGER.log(Level.SEVERE,eccezione,e.getCause());
 
 		}
 

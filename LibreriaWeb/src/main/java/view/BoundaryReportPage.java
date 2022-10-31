@@ -53,6 +53,7 @@ public class BoundaryReportPage implements Initializable {
 	protected String fileGiornale ="ReportFinale\\riepilogoGiornali.txt";	
 	protected String fileRiviste = "ReportFinale\\riepilogoRiviste.txt";
 	protected Scene scene;
+	private static String eccezione="eccezione ottenuta";
 	
 	
 	@FXML
@@ -66,7 +67,7 @@ public class BoundaryReportPage implements Initializable {
 			try {
 				cRR.generaReportRiviste();
 			} catch ( IOException | SQLException e1) {
-				Log.LOGGER.log(Level.SEVERE,"eccezione ottenuta" ,e1.getCause());
+				Log.LOGGER.log(Level.SEVERE,eccezione ,e1.getCause());
 			}
 			cUP.getUtenti();
 				
@@ -85,7 +86,7 @@ public class BoundaryReportPage implements Initializable {
 		} 
 		catch(IOException | NullPointerException e)
 		{
-			Log.LOGGER.log(Level.SEVERE,"eccezione ottenuta" ,e.getCause());
+			Log.LOGGER.log(Level.SEVERE,eccezione ,e.getCause());
 
 		}
 		
@@ -120,7 +121,7 @@ public class BoundaryReportPage implements Initializable {
 		} 
 		catch(IOException | NullPointerException e)
 		{
-			Log.LOGGER.log(Level.SEVERE,"eccezione ottenuta" ,e.getCause());
+			Log.LOGGER.log(Level.SEVERE,eccezione ,e.getCause());
 
 		}
 		
@@ -167,7 +168,7 @@ public class BoundaryReportPage implements Initializable {
 		try {
 			cRR.generaReportRiviste();
 		} catch ( IOException | SQLException e1) {
-			Log.LOGGER.log(Level.SEVERE,"eccezione ottenuta" ,e1.getCause());
+			Log.LOGGER.log(Level.SEVERE,eccezione ,e1.getCause());
 
 		}
 		
@@ -181,7 +182,7 @@ public class BoundaryReportPage implements Initializable {
 		}
 		catch(IOException e)
 		{
-			Log.LOGGER.log(Level.SEVERE,"eccezione ottenuta" ,e.getCause());
+			Log.LOGGER.log(Level.SEVERE,eccezione ,e.getCause());
 
 		}
 		
@@ -226,7 +227,7 @@ public class BoundaryReportPage implements Initializable {
 			 }
 		}catch(IOException e)
 		{
-			Log.LOGGER.log(Level.SEVERE,"eccezione ottenuta" ,e.getCause());
+			Log.LOGGER.log(Level.SEVERE,eccezione ,e.getCause());
 
 		}
 		
@@ -255,7 +256,7 @@ public class BoundaryReportPage implements Initializable {
 			try {
 				cRR.generaReportRiviste();
 			} catch ( IOException | SQLException e) {
-				Log.LOGGER.log(Level.SEVERE,"eccezione ottenuta" ,e.getCause());
+				Log.LOGGER.log(Level.SEVERE,eccezione ,e.getCause());
 
 			}
 		
