@@ -1,5 +1,9 @@
 package bean;
 
+import java.util.logging.Level;
+
+import model.Log;
+
 public class FatturaBean {
 	private String nome;
 	private String cognome;
@@ -55,6 +59,8 @@ public class FatturaBean {
 	}
 	
 	public FatturaBean() {
+		Log.LOGGER.log(Level.INFO,"costruttore fattura bean");
+
 		
 	}
 }

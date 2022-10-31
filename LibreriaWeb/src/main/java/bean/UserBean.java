@@ -5,8 +5,10 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.time.LocalDate;
+import java.util.logging.Level;
 import java.util.regex.Pattern;
 
+import model.Log;
 import model.User;
 import utilities.ConnToDb;
 
@@ -171,20 +173,19 @@ public class UserBean {
 	{
 
 		LocalDate d=u.getDataDiNascita();
-		Connection conn=null;
-		PreparedStatement prepQ=null;
+		
 		
 		int row=0;
 		
-			conn = ConnToDb.generalConnection();
-			 st=conn.createStatement();
+			
 			
 			String query="UPDATE ispw.users set idRuolo=?,Nome=?,Cognome=?,Email=?,pwd=?,descrizione=?,DataDiNascita=? where idUser="+u.getId()+"";
 
+			try(Connection conn=ConnToDb.generalConnection();
+					PreparedStatement prepQ=conn.prepareStatement(query);)
+			{
 
-
-			prepQ = conn.prepareStatement(query);
-
+			
 			// setto i vari dati 
 			prepQ.setString(1,u.getIdRuolo().substring(0,1));
 			prepQ.setString(2,u.getNome() );
@@ -199,45 +200,39 @@ public class UserBean {
 
 			row=prepQ.executeUpdate();
 
+			}catch(SQLException e)
+			{
+				Log.LOGGER.log(Level.SEVERE,"eccezione ottenuta ",e.getCause());
+			}
 
-
-
-
-
-
-		
-			conn.close();
 		
 		return row;
 	}
 	
 	public  boolean deleteUser(User user) throws SQLException
 	{
-		int id=user.getId();
+		int idU=user.getId();
 		
 		
 			/*
 			 * Levo if multipli e cancello in base ad email 
 			 */
-			
-		Connection conn=null;
-		PreparedStatement prepQ=null;
-		boolean state=false;
+		String cancella="delete from ispw.users where idUser=?";
 		
-				conn = ConnToDb.generalConnection();
+		boolean state=false;
+		try(Connection conn=ConnToDb.generalConnection();
+				PreparedStatement prepQ=conn.prepareStatement(cancella);)
+		{
 				
-				String query="DELETE FROM ispw.users WHERE idUser=?";
-				prepQ=conn.prepareStatement(query);
-				prepQ.setInt(1,id);
+				
+				prepQ.setInt(1,idU);
 				prepQ.executeUpdate();
 				state= true;
+		}catch(SQLException e)
+		{
+			Log.LOGGER.log(Level.SEVERE,"eccezione ottenuta :" , e.getCause());
+		}
 
-			
-
-			
-
-		
-				conn.close();
 		
 		return state ;
 		

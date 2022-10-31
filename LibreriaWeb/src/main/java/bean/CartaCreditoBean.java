@@ -1,6 +1,9 @@
 package bean;
 
 import java.sql.Date;
+import java.util.logging.Level;
+
+import model.Log;
 
 public class CartaCreditoBean {
 	private int tipo;
@@ -13,9 +16,9 @@ public class CartaCreditoBean {
 	private String cognomeUser; 
 	private String civ;
 
-	private static final String[] types = {"No Card:Cash Only","DINER'S","JCB","MASTER","VISA"};
 
 	public CartaCreditoBean() {
+		Log.LOGGER.log(Level.INFO,"costruttore cartaCredito bean");
 	}
 	
 	public CartaCreditoBean(int tipo, String numeroCC, double limite, double ammontare, Date scadenza, String nomeUser,
@@ -102,9 +105,6 @@ public class CartaCreditoBean {
 		this.civ = civ;
 	}
 
-	public static String[] getTypes() {
-		return types;
-	}
-
+	
 
 }

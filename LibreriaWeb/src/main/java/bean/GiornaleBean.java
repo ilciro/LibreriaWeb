@@ -10,12 +10,14 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.logging.Level;
 
 import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
 import com.itextpdf.text.Paragraph;
 import com.itextpdf.text.pdf.PdfWriter;
 
+import model.Log;
 import raccolta.Giornale;
 import raccolta.Raccolta;
 import utilities.ConnToDb;
@@ -179,16 +181,28 @@ public class GiornaleBean implements Raccolta {
 
 		
 		int row=0;
-		Connection conn=null;
-		PreparedStatement prepQ=null;
+	
+		String cancella="delete  FROM ispw.giornale where id = '"+g.getId()+"'";
 		
-			conn = ConnToDb.generalConnection();
+		
+		
+			try	(Connection conn=ConnToDb.generalConnection();
+				 PreparedStatement prepQ=conn.prepareStatement(cancella);)
+			{
+				 row=prepQ.executeUpdate();
+			}
+			catch(SQLException e)
+			{
+				Log.LOGGER.log(Level.SEVERE," eccezione ottenuta ",e.getCause());
+			}
+			
+			
+					
+					
+		
 		
 
-		prepQ=conn.prepareStatement("delete  FROM ispw.giornale where id = '"+g.getId()+"'");
-		row=prepQ.executeUpdate();
 
-	conn.close();
 	return row;
 
 
@@ -204,15 +218,19 @@ public class GiornaleBean implements Raccolta {
 	public void aggiornaData(Giornale g,java.sql.Date dataSql) throws SQLException
 	{
 
-			Connection conn=null;
-			PreparedStatement prepQ=null;
+			
+			String aggiorna="update ispw.giornale set dataPubblicazione= ? where titolo='"+g.getTitolo()+"'";
+			try(Connection conn=ConnToDb.generalConnection();
+					PreparedStatement prepQ=conn.prepareStatement(aggiorna);
+					)
+			{
 		
-			conn = ConnToDb.generalConnection();
-			prepQ= conn.prepareStatement("update ispw.giornale set dataPubblicazione= ? where titolo='"+g.getTitolo()+"'");
 			prepQ.setDate(1, dataSql);
 			prepQ.executeUpdate();
+			}catch(SQLException e) {
+				Log.LOGGER.log(Level.SEVERE," eccezione ottenuta ",e.getCause());
 
-		conn.close();
+			}
 
 
 	}
@@ -220,14 +238,11 @@ public class GiornaleBean implements Raccolta {
 	public  int aggiornaGiornale(Giornale g) throws SQLException  {
 		
 
-		Connection conn=null;
-		PreparedStatement prepQ=null;
+	
 		int row=0;
 
 		
-		conn = ConnToDb.generalConnection();
-
-		stmt=conn.createStatement();
+		
 
 
 		String query=" UPDATE `ispw`.`giornale`"
@@ -241,8 +256,10 @@ public class GiornaleBean implements Raccolta {
 				+ "`disp` = ?,"
 				+ "`prezzo` = ?"
 				+ "WHERE `id` = "+g.getId()+"";
-		prepQ=conn.prepareStatement(query);
-
+		try(Connection conn=ConnToDb.generalConnection();
+				PreparedStatement prepQ=conn.prepareStatement(query);)
+		{
+		
 		prepQ.setString(1,g.getTitolo());
 		prepQ.setString(2,g.getTipologia());
 		prepQ.setString(3,g.getLingua());
@@ -254,10 +271,14 @@ public class GiornaleBean implements Raccolta {
 
 
 		row=prepQ.executeUpdate();
+		}catch(SQLException e)
+		{
+			Log.LOGGER.log(Level.SEVERE," eccezione ottenuta ",e.getCause());
+
+		}
 
 
-
-	conn.close();
+	
 	return row;
 
 

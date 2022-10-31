@@ -1,14 +1,15 @@
 package bean;
 
-import java.io.IOException;
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
 
+import model.Log;
 import utilities.ConnToDb;
 
 public class UserBeanNoS {
@@ -98,18 +99,13 @@ public class UserBeanNoS {
 	
 	public List<UserBeanNoS>getListaUtenti() throws SQLException  {
 
-		Connection conn=null;
-		Statement st=null;
-		ResultSet rs=null;
 		List<UserBeanNoS>utentiL=new ArrayList<>();
-		conn= ConnToDb.generalConnection();
-	
+		String listaU="select * from ispw.users";
 		
-		
-
-			st=conn.createStatement();
-			rs = st.executeQuery("SELECT * FROM ispw.users");
-
+		try(Connection conn=ConnToDb.generalConnection();
+			PreparedStatement prepQ=conn.prepareStatement(listaU);	
+			ResultSet rs=prepQ.executeQuery())
+		{
 			while(rs.next())
 			{
 				UserBeanNoS uS=new UserBeanNoS();
@@ -126,27 +122,25 @@ public class UserBeanNoS {
 			
 			}
 		
+		}catch(SQLException e) {
+			Log.LOGGER.log(null);
+		}
 		
-			
-				conn.close();
+	
 			         
 		return utentiL;
 	}
 
 	public List<UserBeanNoS>getListaUtente() throws SQLException  {
 
-		Connection conn=null;
-		Statement st=null;
-		ResultSet rs=null;
+		
 		List<UserBeanNoS>utentiL=new ArrayList<>();
-		conn= ConnToDb.generalConnection();
-	
+		String utenteS="select* from ispw.users where idUser='"+UserBean.getInstance().getId()+"'";
 		
-		
-
-			st=conn.createStatement();
-			rs = st.executeQuery("SELECT * FROM ispw.users where idUser='"+UserBean.getInstance().getId()+"'");
-
+		try(Connection conn=ConnToDb.generalConnection();
+			PreparedStatement prepQ=conn.prepareStatement(utenteS);
+			ResultSet rs=prepQ.executeQuery();)
+		{
 			while(rs.next())
 			{
 				UserBeanNoS uS=new UserBeanNoS();
@@ -165,8 +159,13 @@ public class UserBeanNoS {
 		
 		
 			
-				conn.close();
-				
+		}catch(SQLException e )
+		{
+			Log.LOGGER.log(Level.SEVERE,"eccezione ottenuta ",e.getCause());
+		}
+			
+
+
 			         
 		return utentiL;
 	}
