@@ -5,9 +5,11 @@ import java.net.URL;
 import java.sql.SQLException;
 import java.util.Optional;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
 
 import controller.ControllerScegliNegozio;
 import controller.ControllerSystemState;
+import model.Log;
 import model.Negozio;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -74,7 +76,8 @@ public class BoundaryScegliNegozio implements Initializable {
 		try {
 			listOfNegozi=cSN.getNegozi();
 		} catch (SQLException e) {
-			e.printStackTrace();
+			Log.LOGGER.log(Level.SEVERE,"eccezione ottenuta" ,e.getCause());
+
 		}
 		ToggleGroup radioGroup=new ToggleGroup();
 		radio1.setToggleGroup(radioGroup);
@@ -120,7 +123,8 @@ public class BoundaryScegliNegozio implements Initializable {
 			
 
 		} catch (SQLException  e) {
-			e.printStackTrace(); 
+			Log.LOGGER.log(Level.SEVERE,"eccezione ottenuta" ,e.getCause());
+
 			
 		}
 	}

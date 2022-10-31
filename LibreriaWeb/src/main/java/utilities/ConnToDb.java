@@ -31,8 +31,7 @@ public class ConnToDb {
 		} 
 		catch (SQLException | ClassNotFoundException  e1)
 		{
-			e1.printStackTrace();
-			Log.LOGGER.log(Level.SEVERE,"Errore in mysql..........\\n");
+			Log.LOGGER.log(Level.SEVERE,"Errore in mysql..........\\n",e1.getCause());
 
 		} 
 		
@@ -63,8 +62,7 @@ public class ConnToDb {
 		} 
 		catch (SQLException | ClassNotFoundException  e1) 
 		{
-			e1.printStackTrace();
-			Log.LOGGER.log(Level.SEVERE,"Errore mysql..........\\n");
+			Log.LOGGER.log(Level.SEVERE,"Errore mysql..........\\n",e1.getCause());
 
 		} 
 		
@@ -86,8 +84,7 @@ public class ConnToDb {
 		} 
 		catch (SQLException  | ClassNotFoundException e1)
 		{
-			e1.printStackTrace();
-			Log.LOGGER.log(Level.SEVERE,"Errore di sql..........\\n");
+			Log.LOGGER.log(Level.SEVERE,"Errore di sql..........\\n{0.}",e1.getCause());
 
 		} 
 		

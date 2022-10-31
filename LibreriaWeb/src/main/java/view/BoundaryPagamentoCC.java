@@ -159,7 +159,7 @@ public class BoundaryPagamentoCC implements Initializable {
 		try {
 			cPCC = new ControllerPagamentoCC();
 		} catch (Exception e) {
-			e.printStackTrace();
+			Log.LOGGER.log(Level.SEVERE,"eccezione ottenuta" ,e.getCause());
 		}
 		
 	}
@@ -186,7 +186,7 @@ public class BoundaryPagamentoCC implements Initializable {
 		         utilDate = format.parse(d);
 		         sqlDate = new java.sql.Date(utilDate.getTime());
 		    } catch (ParseException e) {
-		        e.printStackTrace();
+				Log.LOGGER.log(Level.SEVERE,"eccezione ottenuta" ,e.getCause());
 		    }
 		cPCC.aggiungiCartaDB(nome, cognome, codice, sqlDate, civ, (float) 0.0);
 		
@@ -220,7 +220,7 @@ public class BoundaryPagamentoCC implements Initializable {
 				tableCC.setItems(cPCC.ritornaElencoCC(nomeUt));
 			}
 		} catch (IOException e) {
-			e.getMessage();
+			Log.LOGGER.log(Level.SEVERE,"eccezione ottenuta" ,e.getCause());
 		}
 		buttonPrendi.setDisable(false);
 	}

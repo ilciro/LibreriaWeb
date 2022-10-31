@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
 
 import controller.ControllerSystemState;
 import controller.ControllerVisualizzaRivista;
@@ -17,6 +18,7 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
+import model.Log;
 
 public class BoundaryVisualizzaRivista implements Initializable{
 
@@ -123,7 +125,7 @@ public class BoundaryVisualizzaRivista implements Initializable{
 			labelPrezzo.setText(cVR.getData(i).getPrezzo()+"");
 			labelCopieRimanenti.setText(cVR.getData(i).getCopieRim()+"");
 		} catch (SQLException e) {
-			e.printStackTrace();			
+			Log.LOGGER.log(Level.SEVERE,"eccezione ottenuta" ,e.getCause());
 		
 		
 		}

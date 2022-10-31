@@ -2,6 +2,7 @@ package servlet;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.logging.Level;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -12,6 +13,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import bean.NegozioBean;
 import database.NegozioDao;
+import model.Log;
 
 /**
  * Servlet implementation class NegozioServlet
@@ -19,8 +21,8 @@ import database.NegozioDao;
 @WebServlet("/NegozioServlet")
 public class NegozioServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-	private NegozioBean nB=new NegozioBean();
-	private NegozioDao nD=new NegozioDao();
+	private static NegozioBean nB=new NegozioBean();
+	private static NegozioDao nD=new NegozioDao();
        
     /**
      * @see HttpServlet#HttpServlet()
@@ -32,16 +34,18 @@ public class NegozioServlet extends HttpServlet {
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
+	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
 		try {
 			nB.setNegozi(nD.getNegoziList());
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
+		
 		request.setAttribute("bean",nB);
 		RequestDispatcher view = getServletContext().getRequestDispatcher("/negozio.jsp"); 
 		view.forward(request,response);
+		} catch (SQLException |ServletException e) {
+			Log.LOGGER.log(Level.SEVERE,"eccezione ottenuta" ,e.getCause());
+		}
 	}
 
 }

@@ -5,6 +5,7 @@ import java.sql.Date;
 import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.logging.Level;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -27,6 +28,7 @@ import database.LibroDao;
 import database.PagamentoDao;
 import database.RivistaDao;
 import model.CartaDiCredito;
+import model.Log;
 import model.Pagamento;
 import raccolta.Giornale;
 import raccolta.Libro;
@@ -38,27 +40,23 @@ import raccolta.Rivista;
 @WebServlet("/ServletPagamentoCC")
 public class ServletPagamentoCC extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-	private ExceptionBean eB=new ExceptionBean();
-	private String appoggio="";
-	private boolean state=false;
-	private int cont;
-	private CartaCreditoBean cCB=new CartaCreditoBean();
-     private CartaCreditoDao ccD=new CartaCreditoDao();
-     private CartaDiCredito cc=new CartaDiCredito();
-     private Libro l=new Libro();
-     private LibroDao lD=new LibroDao();
-     private PagamentoBean pB=new PagamentoBean();
-     private LibroBean lB=new LibroBean();
-     private PagamentoDao pD=new PagamentoDao();
-     private Pagamento p;
-     private Giornale g=new Giornale();
-     private GiornaleDao gD=new GiornaleDao();
-     private  java.util.Date utilDate;
-     private java.sql.Date sqlDate;
-     private Rivista r=new Rivista();
-     private RivistaBean rB=new RivistaBean();
-     private RivistaDao rD=new RivistaDao();
-     private GiornaleBean gB=new GiornaleBean();
+	private static ExceptionBean eB=new ExceptionBean();
+	private static CartaCreditoBean cCB=new CartaCreditoBean();
+     private static CartaCreditoDao ccD=new CartaCreditoDao();
+     private static CartaDiCredito cc=new CartaDiCredito();
+     private static  Libro l=new Libro();
+     private static LibroDao lD=new LibroDao();
+     private static PagamentoBean pB=new PagamentoBean();
+     private static LibroBean lB=new LibroBean();
+     private static PagamentoDao pD=new PagamentoDao();
+     
+     private static Giornale g=new Giornale();
+     private static GiornaleDao gD=new GiornaleDao();
+    
+     private static Rivista r=new Rivista();
+     private static RivistaBean rB=new RivistaBean();
+     private static RivistaDao rD=new RivistaDao();
+     private static GiornaleBean gB=new GiornaleBean();
     /**
      * @see HttpServlet#HttpServlet()
      */
@@ -75,21 +73,25 @@ public class ServletPagamentoCC extends HttpServlet {
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
+	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String nome=request.getParameter("nomeU");
 		String cognome=request.getParameter("cognomeU");
 		String codice=request.getParameter("codiceU");
 		String scad=request.getParameter("scadU");
 		String pin=request.getParameter("pinU");
-		
-		if((nome==null || nome=="") || (cognome==null || cognome==""))
+		try {
+			
+			 java.util.Date utilDate;
+		     java.sql.Date sqlDate;
+		if((nome==null || "".equals(nome)) || (cognome==null || "".equals(cognome)))
 		{
 			eB.setE(new IllegalArgumentException("nome o cognome null o vuoti"));
 			request.setAttribute("bean", eB);
 			RequestDispatcher view = getServletContext().getRequestDispatcher("/errore.jsp"); 
 			view.forward(request,response); 
 		}
-		if(controllaPag(scad,codice,pin)==true)
+		if(controllaPag(scad,codice,pin))
 		{
 			UserBean.getInstance().setNome(nome);
 			UserBean.getInstance().setCognome(cognome);
@@ -101,15 +103,11 @@ public class ServletPagamentoCC extends HttpServlet {
 			
 			SimpleDateFormat format = new SimpleDateFormat("yyyy/MM/dd");
 
-		    try {
+		  
 		         utilDate = format.parse(scad);
 		        sqlDate = new java.sql.Date(utilDate.getTime());
-		        System.out.println(sqlDate);
 		        cCB.setScadenza(sqlDate);
-		    } catch (ParseException e) {
-		        e.printStackTrace();
-		    }
-			
+		   
 			
 			
 			
@@ -122,12 +120,9 @@ public class ServletPagamentoCC extends HttpServlet {
 			cc.setScadenza((Date) cCB.getScadenza());
 			cc.setCiv(cCB.getCiv());
 			cc.setAmmontare(SystemBean.getIstance().getSpesaT());
-			try {
+			
 				ccD.insCC(cc);
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
-			try {
+			
 				if(SystemBean.getIstance().getType().equals("libro"))
 				{
 					l.setId(SystemBean.getIstance().getId());					
@@ -145,11 +140,8 @@ public class ServletPagamentoCC extends HttpServlet {
 					
 				}
 			//faccio pagamento
+			Pagamento p;
 			
-			} catch (SQLException e1) {
-				
-				e1.printStackTrace();
-			}
 			pB.setId(0);
 			pB.setMetodo("cc");
 			pB.setEsito(0);
@@ -158,17 +150,20 @@ public class ServletPagamentoCC extends HttpServlet {
 			
 			p=new Pagamento(pB.getId(), pB.getMetodo(), pB.getEsito(), pB.getNomeUtente(), SystemBean.getIstance().getSpesaT(), SystemBean.getIstance().getType(), SystemBean.getIstance().getId());
 			
-			try {
+		
 				pD.inserisciPagamento(p);
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
+			
 			
 			request.setAttribute("bean",UserBean.getInstance());
 			request.setAttribute("bean1", SystemBean.getIstance());
 			request.setAttribute("bean2", lB);
 			RequestDispatcher view = getServletContext().getRequestDispatcher("/esitoPositivo.jsp"); 
 			view.forward(request,response); 
+
+		}
+		}catch(SQLException|ServletException|ParseException e)
+		{
+			Log.LOGGER.log(Level.SEVERE,"eccezione ottenuta" ,e.getCause());
 
 		}
 
@@ -182,7 +177,9 @@ public class ServletPagamentoCC extends HttpServlet {
 		 int mese;
 		 int giorno;
 		String[] verifica=null;
-
+		String appoggio = null;
+		int cont=0;
+		boolean state=false;
 
 		appoggio = appoggio + d;
 		  anno = Integer.parseInt((String) appoggio.subSequence(0, 4));

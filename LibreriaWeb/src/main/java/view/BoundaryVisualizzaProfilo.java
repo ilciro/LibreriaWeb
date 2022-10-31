@@ -142,7 +142,7 @@ public class BoundaryVisualizzaProfilo implements Initializable  {
 				}
 			} catch ( SQLException | IOException e) {
 
-				e.printStackTrace();
+				Log.LOGGER.log(Level.SEVERE,"eccezione ottenuta" ,e.getCause());
 			}
 	
 	}

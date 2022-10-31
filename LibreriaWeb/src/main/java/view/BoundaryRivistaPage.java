@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
 
 import controller.ControllerCancRivista;
 import controller.ControllerRivistaPage;
@@ -24,6 +25,7 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
+import model.Log;
 
 public class BoundaryRivistaPage implements Initializable {
 	@FXML
@@ -75,7 +77,7 @@ public class BoundaryRivistaPage implements Initializable {
 			table.setItems(cRP.getRivistaS());
 		} catch (SQLException e) {
 		 
-			e.printStackTrace();
+			Log.LOGGER.log(Level.SEVERE,"eccezione ottenuta" ,e.getCause());
 		}
 	}
 	@FXML

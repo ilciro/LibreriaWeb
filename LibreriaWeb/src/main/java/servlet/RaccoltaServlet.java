@@ -3,6 +3,8 @@ package servlet;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.logging.Level;
+
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -11,6 +13,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import bean.TextAreaBean;
+import model.Log;
 
 /**
  * Servlet implementation class RaccoltaServlet
@@ -138,7 +141,7 @@ public class RaccoltaServlet extends HttpServlet {
 					
 			} catch (SQLException | IOException e) {
 		
-				e.printStackTrace();
+				Log.LOGGER.log(Level.SEVERE,"eccezione ottenuta" ,e.getCause());
 			}
 		
 		

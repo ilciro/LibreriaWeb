@@ -2,6 +2,7 @@ package servlet;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.logging.Level;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -12,6 +13,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import bean.NegozioBean;
 import database.NegozioDao;
+import model.Log;
 import model.Negozio;
 
 /**
@@ -20,9 +22,9 @@ import model.Negozio;
 @WebServlet("/RitiroNegozioServlet")
 public class RitiroNegozioServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-	private NegozioBean nB=new NegozioBean();
-	private NegozioDao nD=new NegozioDao();
-	private Negozio n1=new Negozio();
+	private static NegozioBean nB=new NegozioBean();
+	private static NegozioDao nD=new NegozioDao();
+	private static Negozio n1=new Negozio();
 
        
     /**
@@ -39,6 +41,7 @@ public class RitiroNegozioServlet extends HttpServlet {
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
+	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
 		String negozio=request.getParameter("negS");
@@ -54,7 +57,7 @@ public class RitiroNegozioServlet extends HttpServlet {
 			nB.setIsOpen(nD.checkOpen(n1));
 			nB.setIsValid(nD.checkRitiro(n1));
 			
-			if((nB.getIsValid()==true) && (nB.getIsOpen()==true))
+			if((nB.getIsValid()) && (nB.getIsOpen()))
 			{
 				request.setAttribute("bean1", nB);
 
@@ -72,8 +75,9 @@ public class RitiroNegozioServlet extends HttpServlet {
 			}
 			
 			
-		} catch (SQLException e) {
-			e.printStackTrace();
+		} catch (SQLException |ServletException e) {
+			Log.LOGGER.log(Level.SEVERE,"eccezione ottenuta" ,e.getCause());
+
 		}
 
 	}

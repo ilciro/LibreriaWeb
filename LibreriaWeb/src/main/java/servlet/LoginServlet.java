@@ -2,6 +2,7 @@ package servlet;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.logging.Level;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -13,6 +14,7 @@ import javax.servlet.http.HttpServletResponse;
 import bean.ExceptionBean;
 import bean.UserBean;
 import database.UsersDao;
+import model.Log;
 import model.User;
 
 /**
@@ -21,7 +23,7 @@ import model.User;
 @WebServlet("/LoginServlet")
 public class LoginServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-	private ExceptionBean eB=new ExceptionBean();
+	private static ExceptionBean eB=new ExceptionBean();
        
     /**
      * @see HttpServlet#HttpServlet()
@@ -38,13 +40,14 @@ public class LoginServlet extends HttpServlet {
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
+	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		try {
 
 		String email=request.getParameter("emailL");
 		String pass=request.getParameter("passL");
 		
-		if((email=="" || email==null) || (pass==""|| pass==null))
+		if(email.equals("")  || (pass.equals("")))
 		{
 			eB.setE(new Exception("credenziali sbagliate"));
 			request.setAttribute("bean",eB);
@@ -94,8 +97,8 @@ public class LoginServlet extends HttpServlet {
 		}
 		
 	
-	} catch (SQLException e) {
-		e.printStackTrace();
+	} catch (SQLException |ServletException e) {
+		Log.LOGGER.log(Level.SEVERE,"eccezione ottenuta ",e.getCause());
 	}
 	}
 

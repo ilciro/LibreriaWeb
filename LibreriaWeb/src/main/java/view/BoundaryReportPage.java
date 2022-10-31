@@ -66,7 +66,7 @@ public class BoundaryReportPage implements Initializable {
 			try {
 				cRR.generaReportRiviste();
 			} catch ( IOException | SQLException e1) {
-				e1.printStackTrace();
+				Log.LOGGER.log(Level.SEVERE,"eccezione ottenuta" ,e1.getCause());
 			}
 			cUP.getUtenti();
 				
@@ -85,7 +85,8 @@ public class BoundaryReportPage implements Initializable {
 		} 
 		catch(IOException | NullPointerException e)
 		{
-			e.getMessage();
+			Log.LOGGER.log(Level.SEVERE,"eccezione ottenuta" ,e.getCause());
+
 		}
 		
 		try (BufferedReader readerG = new BufferedReader(new FileReader(fileGiornale)))
@@ -119,7 +120,8 @@ public class BoundaryReportPage implements Initializable {
 		} 
 		catch(IOException | NullPointerException e)
 		{
-			e.getMessage();
+			Log.LOGGER.log(Level.SEVERE,"eccezione ottenuta" ,e.getCause());
+
 		}
 		
 
@@ -165,7 +167,8 @@ public class BoundaryReportPage implements Initializable {
 		try {
 			cRR.generaReportRiviste();
 		} catch ( IOException | SQLException e1) {
-			e1.printStackTrace();
+			Log.LOGGER.log(Level.SEVERE,"eccezione ottenuta" ,e1.getCause());
+
 		}
 		
 		try(BufferedReader readerL = new BufferedReader(new FileReader(fileLibro))) {
@@ -178,7 +181,8 @@ public class BoundaryReportPage implements Initializable {
 		}
 		catch(IOException e)
 		{
-			e.getMessage();
+			Log.LOGGER.log(Level.SEVERE,"eccezione ottenuta" ,e.getCause());
+
 		}
 		
         
@@ -222,7 +226,8 @@ public class BoundaryReportPage implements Initializable {
 			 }
 		}catch(IOException e)
 		{
-			e.getMessage();
+			Log.LOGGER.log(Level.SEVERE,"eccezione ottenuta" ,e.getCause());
+
 		}
 		
 	}
@@ -250,7 +255,8 @@ public class BoundaryReportPage implements Initializable {
 			try {
 				cRR.generaReportRiviste();
 			} catch ( IOException | SQLException e) {
-				e.printStackTrace();
+				Log.LOGGER.log(Level.SEVERE,"eccezione ottenuta" ,e.getCause());
+
 			}
 		
 			

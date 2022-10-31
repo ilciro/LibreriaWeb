@@ -242,7 +242,8 @@ public class BoundaryAcquista implements Initializable {
 		
 				costo.setText(""+cA.getCosto());
 			} catch (SQLException  e) {
-				e.printStackTrace();
+				Log.LOGGER.log(Level.SEVERE,"eccezione ottenuta" ,e.getCause());
+
 			} 
 		
 		

@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
 
 import controller.ControllerBookPage;
 import controller.ControllerCancLibro;
@@ -24,6 +25,7 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
+import model.Log;
 
 public class BoundaryBookPage implements Initializable {
 	
@@ -111,7 +113,8 @@ public class BoundaryBookPage implements Initializable {
 		try {
 			root = FXMLLoader.load(getClass().getResource("adminPage.fxml"));
 		} catch (IOException e) {
-			e.printStackTrace();
+			Log.LOGGER.log(Level.SEVERE,"eccezione ottenuta" ,e.getCause());
+
 		}
 		scene = new Scene(root);
 		stage.setScene(scene);
