@@ -484,7 +484,8 @@ public class LibroBean implements Raccolta {
 	public int cancella(Libro l) throws SQLException {
 		
 		int row=0;
-		String query="delete  FROM ispw.libro where idProd = "+l.getId()+" ;";
+		String query="delete  FROM ispw.libro "+
+				"where idProd = "+l.getId()+" ;";
 		try(Connection conn=ConnToDb.generalConnection();
 			PreparedStatement prepQ=conn.prepareStatement(query))
 		{

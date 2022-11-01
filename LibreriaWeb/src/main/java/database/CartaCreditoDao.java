@@ -29,7 +29,8 @@ public class CartaCreditoDao {
 		 * uare funzione internet
 		 */
 		ObservableList<CartaDiCredito> catalogo=FXCollections.observableArrayList();
-		String listaCC="select nomeP,cognomeP,codiceCarta from cartacredito where nomeP='"+nome+"'";
+		String listaCC="select nomeP,cognomeP,codiceCarta from cartacredito "
+				+"where nomeP='"+nome+"'";
 		
 			conn=ConnToDb.generalConnection();
 
@@ -115,7 +116,8 @@ public class CartaCreditoDao {
 		cog = null;
 		cod = null;
 
-		String popolaDati="select nomeP,cognomeP,codiceCarta,scad from cartacredito where codiceCarta='"+codice+"'";
+		String popolaDati="select nomeP,cognomeP,codiceCarta,scad from cartacredito"+
+		"where codiceCarta='"+codice+"'";
 		
 			conn=ConnToDb.generalConnection();
 			stmt1=conn.createStatement();

@@ -135,7 +135,8 @@ public class UserBeanNoS {
 
 		
 		List<UserBeanNoS>utentiL=new ArrayList<>();
-		String utenteS="select* from ispw.users where idUser='"+UserBean.getInstance().getId()+"'";
+		String utenteS="select* from ispw.users "+
+		"where idUser='"+UserBean.getInstance().getId()+"'";
 		
 		try(Connection conn=ConnToDb.generalConnection();
 			PreparedStatement prepQ=conn.prepareStatement(utenteS);

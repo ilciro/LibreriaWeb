@@ -182,7 +182,8 @@ public class GiornaleBean implements Raccolta {
 
 		int row=0;
 	
-		String cancella="DELETE from ISPW.GIORNALE  where id = '"+g.getId()+"'";
+		String cancella="DELETE from ISPW.GIORNALE"+
+						"where id = '"+g.getId()+"'";
 		
 		
 		
@@ -219,7 +220,8 @@ public class GiornaleBean implements Raccolta {
 	{
 
 			
-			String aggiorna="update ispw.giornale set dataPubblicazione= ? where titolo='"+g.getTitolo()+"'";
+			String aggiorna="update ispw.giornale set dataPubblicazione= ? "+
+			   "where titolo='"+g.getTitolo()+"'";
 			try(Connection conn=ConnToDb.generalConnection();
 					PreparedStatement prepQ=conn.prepareStatement(aggiorna);
 					)

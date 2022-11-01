@@ -254,7 +254,8 @@ public class RivistaBean implements Raccolta{
 public int cancella(Rivista r) throws SQLException {
 		
 		int row=0;
-		String cancella="delete  FROM ispw.rivista where id = "+r.getId()+" ;";
+		String cancella="delete  FROM ispw.rivista"
+				+"where id = "+r.getId()+" ;";
 		
 		try(Connection conn=ConnToDb.generalConnection();
 			PreparedStatement prepQ=conn.prepareStatement(cancella);)
@@ -286,7 +287,8 @@ public int cancella(Rivista r) throws SQLException {
 	}
 	public void aggiornaData(Rivista r,java.sql.Date dataSql) throws SQLException
 	{
-		String aggiorna="update ispw.rivista set dataPubblicazione= ? where id='"+r.getId()+"'";
+		String aggiorna="update ispw.rivista set dataPubblicazione= ? "
+				+"where id='"+r.getId()+"'";
 			try(Connection conn=ConnToDb.generalConnection();
 					PreparedStatement prepQ=conn.prepareStatement(aggiorna);)
 			{
@@ -319,7 +321,8 @@ public int cancella(Rivista r) throws SQLException {
 		 			+ "`dataPubblicazione` =?,"
 		 			+ "`disp` = ?,"
 		 			+ "`prezzo` = ?,"
-		 			+ "`copieRimanenti` =? WHERE `id` = "+r.getId()+";";
+		 			+ "`copieRimanenti` =? "
+		 			+ "WHERE `id` = "+r.getId()+";";
 		 	try(Connection conn=ConnToDb.generalConnection();
 		 			PreparedStatement prepQ=conn.prepareStatement(query)
 		 			)	

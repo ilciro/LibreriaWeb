@@ -149,7 +149,9 @@ public class RivistaDao {
 		ObservableList<Raccolta> catalogo=FXCollections.observableArrayList();
 		 
 		st=conn.createStatement();
-		String rivistaSE="SELECT * FROM ispw.rivista where titolo = '"+s+"' OR autore = '"+s+"'";
+		String rivistaSE="SELECT * FROM ispw.rivista"
+				+"where titolo = '"+s
+				+"' OR autore = '"+s+"'";
 				rs=st.executeQuery(rivistaSE);
             while(rs.next())
             {
@@ -175,7 +177,8 @@ public class RivistaDao {
 
 		 conn= ConnToDb.generalConnection();
 		 st=conn.createStatement();
-		 String rivistaId="SELECT * FROM rivista where id = "+id+" ";
+		 String rivistaId="SELECT * FROM rivista"
+				 +"where id = "+id+" ";
 		 rs=st.executeQuery(rivistaId);
         while (rs.next())
         {
@@ -197,7 +200,8 @@ public class RivistaDao {
 		  conn = ConnToDb.generalConnection();
 		 
          st = conn.createStatement();
-         String rivistaT="select id from rivista where titolo ='"+titolo+"'";
+         String rivistaT="select id from rivista"
+        		 +"where titolo ='"+titolo+"'";
 
          rs = st.executeQuery(rivistaT);
          while ( rs.next() ) {
