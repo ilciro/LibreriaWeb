@@ -10,7 +10,6 @@ import java.util.List;
 import java.util.logging.Level;
 
 import model.Log;
-import model.User;
 import utilities.ConnToDb;
 
 public class UserBeanNoS {

@@ -150,8 +150,10 @@ public class RivistaDao {
 		 
 		st=conn.createStatement();
 		String rivistaSE="SELECT * FROM ispw.rivista"
-				+"where titolo = '"+s
-				+"' OR autore = '"+s+"'";
+				+"where titolo = ?"
+				+" OR autore = ?";
+			prepQ.setString(1,s);
+			prepQ.setString(2,s);
 				rs=st.executeQuery(rivistaSE);
             while(rs.next())
             {
@@ -178,7 +180,8 @@ public class RivistaDao {
 		 conn= ConnToDb.generalConnection();
 		 st=conn.createStatement();
 		 String rivistaId="SELECT * FROM rivista"
-				 +"where id = "+id+" ";
+				 +"where id =? ";
+		 prepQ.setInt(1, id);
 		 rs=st.executeQuery(rivistaId);
         while (rs.next())
         {
@@ -201,9 +204,10 @@ public class RivistaDao {
 		 
          st = conn.createStatement();
          String rivistaT="select id from rivista"
-        		 +"where titolo ='"+titolo+"'";
-
-         rs = st.executeQuery(rivistaT);
+        		 +"where titolo =?";
+         prepQ=conn.prepareStatement(rivistaT);
+         prepQ.setString(1, titolo);
+         rs = prepQ.executeQuery(rivistaT);
          while ( rs.next() ) {
               id=rs.getInt("id");
 

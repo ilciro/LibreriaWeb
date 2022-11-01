@@ -96,13 +96,13 @@ public class ContrassegnoDao {
 	{
 		boolean state=false;
 		String cancella="delete from fattura"+
-		"where id='"+idC+"'";
+		"where id=?";
 		
 			conn =ConnToDb.generalConnection();
 			stmt= conn.prepareStatement(cancella);
 			
 
-				
+				stmt.setInt(1,idC);
 				 stmt.executeUpdate();
 				
 					state=true;

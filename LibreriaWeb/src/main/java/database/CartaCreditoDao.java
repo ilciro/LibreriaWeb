@@ -19,6 +19,7 @@ public class CartaCreditoDao {
 	private Connection conn=null;
 	private ResultSet rs=null;
 	private Statement stmt1=null;
+	private PreparedStatement prepQ=null;
 
 
 
@@ -30,11 +31,12 @@ public class CartaCreditoDao {
 		 */
 		ObservableList<CartaDiCredito> catalogo=FXCollections.observableArrayList();
 		String listaCC="select nomeP,cognomeP,codiceCarta from cartacredito "
-				+"where nomeP='"+nome+"'";
+				+"where nomeP=?";
 		
 			conn=ConnToDb.generalConnection();
 
 			stmt1= conn.createStatement();
+			prepQ.setString(1, nome);
 
 				rs=stmt1.executeQuery(listaCC);
 			
@@ -117,10 +119,11 @@ public class CartaCreditoDao {
 		cod = null;
 
 		String popolaDati="select nomeP,cognomeP,codiceCarta,scad from cartacredito"+
-		"where codiceCarta='"+codice+"'";
+		"where codiceCarta=?";
 		
 			conn=ConnToDb.generalConnection();
 			stmt1=conn.createStatement();
+			prepQ.setString(1,codice);
 			 rs=stmt1.executeQuery(popolaDati);
 			
 

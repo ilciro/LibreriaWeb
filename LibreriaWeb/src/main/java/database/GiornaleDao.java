@@ -221,7 +221,8 @@ public class GiornaleDao {
 
 			stmt=conn.createStatement();
 			String giornaleS="SELECT * FROM giornale"
-					+" where id = '"+id+"' ";
+					+" where id = ?";
+			prepQ.setInt(1, id);
 			rs=stmt.executeQuery(giornaleS);
 
 			if (rs.next())
@@ -256,7 +257,8 @@ public class GiornaleDao {
 			conn = ConnToDb.generalConnection();
 			stmt = conn.createStatement();
 			String prendiId="select id from giornale"
-					+"where titolo ='"+titoloG+"'";
+					+"where titolo =?";
+			prepQ.setString(1,titoloG);
 			rs = stmt.executeQuery(prendiId);
 
 			while ( rs.next() ) {
@@ -515,12 +517,14 @@ public class GiornaleDao {
 		ObservableList<Raccolta> catalogo=FXCollections.observableArrayList();
 
 		String giornaleNE="SELECT * FROM giornale"
-				+"where titolo = '"+s
-				+"' OR editore = '"+s+"'";
+				+"where titolo = ?"
+				+" OR editore =?";
 		
 
 			conn=ConnToDb.generalConnection();
 			stmt=conn.createStatement();
+			prepQ.setString(1,s);
+			prepQ.setString(2, s);
 			rs=stmt.executeQuery(giornaleNE);
 
 			while(rs.next())

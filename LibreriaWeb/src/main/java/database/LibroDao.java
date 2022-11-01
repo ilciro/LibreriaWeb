@@ -34,6 +34,7 @@ public class LibroDao  {
 	private ControllerSystemState vis=ControllerSystemState.getIstance();
 
 	private static final String LIBRO = "libro";
+	private static String libroTotale="SELECT * FROM libro";
 
 
 	public float getCosto(Libro l) throws SQLException
@@ -91,7 +92,7 @@ public class LibroDao  {
 		
 		conn= ConnToDb.generalConnection();
 		stmt=conn.createStatement();
-		rs=stmt.executeQuery("SELECT * FROM libro");
+		rs=stmt.executeQuery(libroTotale);
 		while(rs.next())
 		{
 			
@@ -116,10 +117,12 @@ public class LibroDao  {
 		
 		conn= ConnToDb.generalConnection();
 		String libroSE="SELECT * FROM libro "
-				+"where titolo = '"+s
-				+"' OR autore = '"+s+"'";
+				+"where titolo =?"
+				+" OR autore = ?";
 
 		stmt=conn.createStatement();
+		prepQ.setString(1, s);
+		prepQ.setString(2, s);
 		rs=stmt.executeQuery(libroSE);
 		while(rs.next())
 		{
@@ -142,8 +145,9 @@ public class LibroDao  {
 	{
 		conn= ConnToDb.generalConnection();
 		stmt=conn.createStatement();
-		String libroId="SELECT * FROM libro"
-				+"where idProd = '"+id+"'";
+		String libroId=libroTotale
+				+"where idProd = ?";
+		prepQ.setInt(1, id);
 		rs=stmt.executeQuery(libroId);
 		if (rs.next())
 		{
@@ -322,8 +326,9 @@ public class LibroDao  {
 				stmt = conn.createStatement();
 
 				String lDisp="SELECT disp FROM ispw.libro"
-						+"where idProd = '"+id+"'";
+						+"where idProd = ?";
 
+				prepQ.setInt(1, id);
 				rs=  stmt.executeQuery(lDisp);
 				if(rs.next())
 				{
@@ -361,7 +366,7 @@ public class LibroDao  {
 		conn= ConnToDb.generalConnection();
 		ObservableList<Libro> catalogo=FXCollections.observableArrayList();
 		stmt=conn.createStatement();
-		rs=stmt.executeQuery("SELECT * FROM libro");
+		rs=stmt.executeQuery(libroTotale);
 
 
 

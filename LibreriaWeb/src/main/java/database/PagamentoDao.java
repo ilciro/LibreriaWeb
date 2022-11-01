@@ -137,10 +137,10 @@ private ResultSet rs=null;
 		
 		conn = ConnToDb.generalConnection();
 		String cancella="delete from ispw.pagamento"
-				+"where id_op='"+idC+"'";
+				+"where id_op=?";
 			prepQ= conn.prepareStatement(cancella);
 				
-		
+			prepQ.setInt(1, idC);
 			
 			
 			
