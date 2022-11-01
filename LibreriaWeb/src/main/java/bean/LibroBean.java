@@ -448,7 +448,7 @@ public class LibroBean implements Raccolta {
 				+ " `disp` = ?,"
 				+ " `prezzo` = ?,"
 				+ " `copieRimanenti` =?"
-				+ " WHERE `idProd` ="+l.getId()+";";
+				+ " WHERE `idProd` =?";
 		 
 		 try(Connection conn=ConnToDb.generalConnection();
 			PreparedStatement prepQ=conn.prepareStatement(query);	 )
@@ -468,6 +468,7 @@ public class LibroBean implements Raccolta {
 		prepQ.setInt(12,l.getDisponibilita());
 		prepQ.setFloat(13,l.getPrezzo());
 		prepQ.setInt(14,l.getCopieRim());
+		prepQ.setInt(15, l.getId());
 
 
 		rowAffected = prepQ.executeUpdate();
@@ -485,10 +486,11 @@ public class LibroBean implements Raccolta {
 		
 		int row=0;
 		String query="delete  FROM ispw.libro "+
-				"where idProd = "+l.getId()+" ;";
+				"where idProd = ?";
 		try(Connection conn=ConnToDb.generalConnection();
 			PreparedStatement prepQ=conn.prepareStatement(query))
 		{
+			prepQ.setInt(1, l.getId());
 			row=prepQ.executeUpdate();
 
 		}catch(SQLException e)

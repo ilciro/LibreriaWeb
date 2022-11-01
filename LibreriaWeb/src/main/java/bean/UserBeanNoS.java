@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.logging.Level;
 
 import model.Log;
+import model.User;
 import utilities.ConnToDb;
 
 public class UserBeanNoS {
@@ -136,12 +137,13 @@ public class UserBeanNoS {
 		
 		List<UserBeanNoS>utentiL=new ArrayList<>();
 		String utenteS="select* from ispw.users "+
-		"where idUser='"+UserBean.getInstance().getId()+"'";
+		"where idUser=?";
 		
 		try(Connection conn=ConnToDb.generalConnection();
 			PreparedStatement prepQ=conn.prepareStatement(utenteS);
 			ResultSet rs=prepQ.executeQuery();)
 		{
+			prepQ.setInt(1,UserBean.getInstance().getId());
 			while(rs.next())
 			{
 				UserBeanNoS uS=new UserBeanNoS();
@@ -152,6 +154,7 @@ public class UserBeanNoS {
 				uS.setEmail(rs.getString(5));
 				uS.setDescrizione("utente generico");
 				uS.setDataDiNascita(rs.getDate(8).toLocalDate());
+				
 				
 				utentiL.add(uS);
 

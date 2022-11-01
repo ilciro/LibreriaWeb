@@ -180,7 +180,7 @@ public class UserBean {
 			
 			
 			String query="UPDATE ispw.users set idRuolo=?,Nome=?,Cognome=?,Email=?,pwd=?,descrizione=?,DataDiNascita=?"
-					+"where idUser="+u.getId()+"";
+					+"where idUser=?";
 
 			try(Connection conn=ConnToDb.generalConnection();
 					PreparedStatement prepQ=conn.prepareStatement(query);)
@@ -195,6 +195,7 @@ public class UserBean {
 			prepQ.setString(5,u.getPassword());
 			prepQ.setString(6, u.getDescrizione());
 			prepQ.setString(7,d.toString());
+			prepQ.setInt(8, u.getId());
 
 
 

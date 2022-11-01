@@ -255,13 +255,13 @@ public int cancella(Rivista r) throws SQLException {
 		
 		int row=0;
 		String cancella="delete  FROM ispw.rivista"
-				+"where id = "+r.getId()+" ;";
+				+"where id = ?";
 		
 		try(Connection conn=ConnToDb.generalConnection();
 			PreparedStatement prepQ=conn.prepareStatement(cancella);)
 		{
 			
-			
+			prepQ.setInt(1, r.getId());
 			row=prepQ.executeUpdate();
 			Log.LOGGER.log(Level.INFO,"Libro cancellato : .{0}",row);
 		}catch(SQLException e)
@@ -288,13 +288,14 @@ public int cancella(Rivista r) throws SQLException {
 	public void aggiornaData(Rivista r,java.sql.Date dataSql) throws SQLException
 	{
 		String aggiorna="update ispw.rivista set dataPubblicazione= ? "
-				+"where id='"+r.getId()+"'";
+				+"where id=?";
 			try(Connection conn=ConnToDb.generalConnection();
 					PreparedStatement prepQ=conn.prepareStatement(aggiorna);)
 			{
 		
 		
 				prepQ.setDate(1, dataSql);
+				prepQ.setInt(2, r.getId());
 				prepQ.executeUpdate();
 			}catch(SQLException e)
 			{
@@ -322,7 +323,7 @@ public int cancella(Rivista r) throws SQLException {
 		 			+ "`disp` = ?,"
 		 			+ "`prezzo` = ?,"
 		 			+ "`copieRimanenti` =? "
-		 			+ "WHERE `id` = "+r.getId()+";";
+		 			+ "WHERE `id` = ?";
 		 	try(Connection conn=ConnToDb.generalConnection();
 		 			PreparedStatement prepQ=conn.prepareStatement(query)
 		 			)	
@@ -337,6 +338,7 @@ public int cancella(Rivista r) throws SQLException {
 			prepQ.setInt(8,r.getDisp());
 			prepQ.setFloat(9,r.getPrezzo());
 			prepQ.setInt(10,r.getCopieRim());
+			prepQ.setInt(11, r.getId());
 		
 
 			rowAffected = prepQ.executeUpdate();

@@ -7,7 +7,6 @@ import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.logging.Level;
@@ -36,7 +35,6 @@ public class GiornaleBean implements Raccolta {
 	private String[] infoGenerali=new String[5];
 	private List<Giornale> miaListaG;
 	private java.sql.Date date;
-	Statement stmt;
 	private static String eccezione=" eccezione generata ";
 
 	public String getTitolo() {
@@ -183,13 +181,15 @@ public class GiornaleBean implements Raccolta {
 		int row=0;
 	
 		String cancella="DELETE from ISPW.GIORNALE"+
-						"where id = '"+g.getId()+"'";
+						"where id = ?";
 		
 		
 		
 			try	(Connection conn=ConnToDb.generalConnection();
 				 PreparedStatement prepQ=conn.prepareStatement(cancella);)
 			{
+				
+				prepQ.setInt(1,g.getId());
 				 row=prepQ.executeUpdate();
 			}
 			catch(SQLException e)
@@ -221,13 +221,14 @@ public class GiornaleBean implements Raccolta {
 
 			
 			String aggiorna="update ispw.giornale set dataPubblicazione= ? "+
-			   "where titolo='"+g.getTitolo()+"'";
+			   "where titolo=?";
 			try(Connection conn=ConnToDb.generalConnection();
 					PreparedStatement prepQ=conn.prepareStatement(aggiorna);
 					)
 			{
 		
 			prepQ.setDate(1, dataSql);
+			prepQ.setString(2, g.getTitolo());
 			prepQ.executeUpdate();
 			}catch(SQLException e) {
 				Log.LOGGER.log(Level.SEVERE,eccezione,e.getCause());
@@ -257,7 +258,7 @@ public class GiornaleBean implements Raccolta {
 				+ "`copiRim` = ?,"
 				+ "`disp` = ?,"
 				+ "`prezzo` = ?"
-				+ "WHERE `id` = "+g.getId()+"";
+				+ "WHERE `id` = ?";
 		try(Connection conn=ConnToDb.generalConnection();
 				PreparedStatement prepQ=conn.prepareStatement(query);)
 		{
@@ -270,6 +271,7 @@ public class GiornaleBean implements Raccolta {
 		prepQ.setInt(6,g.getCopieRimanenti());
 		prepQ.setInt(7,g.getDisponibilita());
 		prepQ.setFloat(8,g.getPrezzo());
+		prepQ.setInt(9,g.getId());
 
 
 		row=prepQ.executeUpdate();
