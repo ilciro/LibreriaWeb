@@ -6,7 +6,7 @@
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.layout.Pane?>
 
-<Pane fx:id="pane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="733.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.uniroma2.ispw.view.BoundaryRivistaPage">
+<Pane fx:id="pane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="733.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="view.BoundaryRivistaPage">
    <children>
       <Label fx:id="header" layoutX="51.0" layoutY="24.0" prefHeight="37.0" prefWidth="176.0" text="Benveuto nella schermata riviste" textAlignment="CENTER" textFill="#d08e09" />
       <TableView fx:id="table" layoutX="39.0" layoutY="115.0" onMouseClicked="#prendiDato" prefHeight="200.0" prefWidth="452.0">

@@ -37,40 +37,7 @@ public class RivistaDao {
 	private static final String RIVISTA="rivista";
 
 
-	
-	
-	
-	public void getDesc(Rivista r) throws SQLException
-	{
-		
-	             conn = ConnToDb.generalConnection();
-	             st = conn.createStatement();
-	 
-	            rs = st.executeQuery("select * from rivista where titolo ='"+r.getTitolo()+"'");
-	            while ( rs.next() ) {
-	                rs.getString("titolo");
-	               rs.getString("tipologia");
-	               rs.getString("autore");
-	               rs.getString("lingua");	   
-	               rs.getString("editore");
-	               rs.getString("Descrizione");
 
-	               rs.getDate("dataPubblicazione");
-	               
-	               rs.getInt("disp");
-	               rs.getFloat("prezzo");
-	               rs.getInt("copieRimanenti");
-
-
-	                
-	                
-	    	        
-	            }
-	        
-				conn.close();
-			
-		 
-	    }
 	
 	public float getCosto(Rivista r) throws SQLException
 	{

@@ -5,7 +5,7 @@
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.layout.Pane?>
 
-<Pane fx:id="pane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="564.0" prefWidth="743.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.uniroma2.ispw.view.BoundaryReportPage">
+<Pane fx:id="pane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="564.0" prefWidth="743.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="view.BoundaryReportPage">
    <children>
       <Button fx:id="raccoltaB" layoutX="632.0" layoutY="133.0" mnemonicParsing="false" onAction="#raccolta" text="Raccolta" textFill="#b7bf13" />
       <Label fx:id="header" layoutX="69.0" layoutY="33.0" text="Gestione report" textFill="#00ff1e" />

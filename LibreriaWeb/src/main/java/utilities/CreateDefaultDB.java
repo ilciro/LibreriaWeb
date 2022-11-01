@@ -138,6 +138,7 @@ public class CreateDefaultDB {
 						ConnToDb.conn.close();
 						Log.LOGGER.log(Level.INFO,"Trovato database e connesso senza problemi! Buone madonne!");
 					
+					
 				}
 				else
 				{
@@ -149,7 +150,6 @@ public class CreateDefaultDB {
 			else 
 			{
 				Log.LOGGER.log(Level.WARNING,"Ops..! qualcosa è andato storto nella connesione al database!");
-				ConnToDb.conn.close();		
 			}
 		}
 		

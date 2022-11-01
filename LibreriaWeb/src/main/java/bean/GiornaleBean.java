@@ -180,7 +180,6 @@ public class GiornaleBean implements Raccolta {
 	public  int cancella(Giornale g) throws SQLException  {
 
 
-		
 		int row=0;
 	
 		String cancella="DELETE from ISPW.GIORNALE  where id = '"+g.getId()+"'";

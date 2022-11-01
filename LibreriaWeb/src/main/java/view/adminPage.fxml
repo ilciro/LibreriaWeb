@@ -4,7 +4,7 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.Pane?>
 
-<Pane fx:id="pane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="326.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.uniroma2.ispw.view.BoundaryAdminPage">
+<Pane fx:id="pane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="326.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="view.BoundaryAdminPage">
    <children>
       <Label fx:id="header" layoutX="266.0" layoutY="48.0" text="Admin page" textAlignment="CENTER" textFill="#1a1dd9" />
       <Button fx:id="buttonR" layoutX="43.0" layoutY="148.0" mnemonicParsing="false" onAction="#report" prefHeight="49.0" prefWidth="102.0" text="Gestione Report" textFill="#c37a3b" />

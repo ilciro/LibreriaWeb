@@ -1,12 +1,6 @@
 package utilities;
 
-import java.io.UnsupportedEncodingException;
-import java.math.BigInteger;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-import java.util.logging.Level;
 
-import model.Log;
 
 public class Config {
 	private String host;
@@ -21,7 +15,7 @@ public class Config {
 	{
 		this.host="localhost";
 		this.user="root";
-		this.pwd=getEncryptedPassword("root");
+		this.pwd="root";
 		this.database="ispw";
 		this.port="3306";
 		this.driver="com.mysql.cj.jdbc.Driver";
@@ -73,17 +67,6 @@ public class Config {
 		this.database=dB;
 	}
 	
-	public static final String getEncryptedPassword(String password) {
-        String sha1 = null;
-        try {
-            MessageDigest crypt = MessageDigest.getInstance("SHA-1");
-            crypt.reset();
-            crypt.update(password.getBytes("UTF-8"));
-            sha1 = new BigInteger(1, crypt.digest()).toString(16);
-
-        } catch (NoSuchAlgorithmException | UnsupportedEncodingException ex) {
-        	Log.LOGGER.log(Level.SEVERE, ex.getMessage(), ex);        }
-        return sha1;
-    }
+	
 
 }

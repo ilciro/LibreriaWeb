@@ -36,32 +36,6 @@ public class LibroDao  {
 	private static final String LIBRO = "libro";
 
 
-	public void getDesc(Libro l) throws SQLException
-	{	           
-		
-			conn = ConnToDb.generalConnection();
-
-			stmt = conn.createStatement();
-			rs = stmt.executeQuery("select * from libro where Cod_isbn ='"+l.getCodIsbn()+"'");
-			while ( rs.next() ) {
-				rs.getString("titolo");
-				rs.getInt("numeroPagine");
-				rs.getString("Cod_isbn");
-				rs.getString("editore");
-				rs.getString("autore");
-				rs.getString("lingua");
-				rs.getString("categoria");
-				rs.getDate("dataPubblicazione");
-				rs.getString("recensione");
-				rs.getInt("copieVendute");
-				rs.getString("breveDescrizione");
-				rs.getInt("disp");
-				rs.getFloat("prezzo");
-				rs.getInt("copieRimanenti");
-			}
-			conn.close();
-	}
-
 	public float getCosto(Libro l) throws SQLException
 	{
 		float prezzo=(float) 0.0;
@@ -204,6 +178,7 @@ public class LibroDao  {
 
 
 	}
+	
 
 	public String retTip(Libro l) throws SQLException {
 

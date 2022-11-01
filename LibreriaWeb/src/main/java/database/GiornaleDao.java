@@ -45,7 +45,7 @@ public class GiornaleDao {
 
 
 
-
+/*
 
 	public void getDesc(Giornale g) throws SQLException 
 	{	  
@@ -77,7 +77,7 @@ public class GiornaleDao {
 
 
 	}
-
+*/
 
 	public float getCosto(Giornale g) throws SQLException  
 	{		

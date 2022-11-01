@@ -11,7 +11,7 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.RowConstraints?>
 
-<Pane fx:id="pane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="492.0" prefWidth="696.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.uniroma2.ispw.view.BoundaryModifUserPage">
+<Pane fx:id="pane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="492.0" prefWidth="696.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="view.BoundaryModifUserPage">
    <children>
       <Label fx:id="header" layoutX="54.0" layoutY="42.0" prefHeight="17.0" prefWidth="274.0" text="Benvenuto nella scherata di inserimento utente" textAlignment="CENTER" textFill="#1eff05" />
       <GridPane fx:id="grid" layoutX="70.0" layoutY="93.0" prefHeight="372.0" prefWidth="489.0">

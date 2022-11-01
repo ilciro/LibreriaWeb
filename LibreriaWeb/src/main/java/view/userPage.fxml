@@ -6,7 +6,7 @@
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.Pane?>
 
-<Pane fx:id="pane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="463.0" prefWidth="799.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.uniroma2.ispw.view.BoundaryUserPage">
+<Pane fx:id="pane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="463.0" prefWidth="799.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="view.BoundaryUserPage">
    <children>
       <Label fx:id="header" layoutX="91.0" layoutY="42.0" text="Gestione Utente" textFill="#121497" />
       <Button fx:id="buttonA" layoutX="566.0" layoutY="117.0" mnemonicParsing="false" onAction="#aggiungi" prefWidth="86.0" text="Aggiungi" textAlignment="CENTER" textFill="#0400ee" />
