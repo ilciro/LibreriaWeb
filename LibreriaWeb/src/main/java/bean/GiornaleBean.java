@@ -183,7 +183,7 @@ public class GiornaleBean implements Raccolta {
 		
 		int row=0;
 	
-		String cancella="delete  FROM ispw.giornale where id = '"+g.getId()+"'";
+		String cancella="DELETE from ISPW.GIORNALE  where id = '"+g.getId()+"'";
 		
 		
 		
