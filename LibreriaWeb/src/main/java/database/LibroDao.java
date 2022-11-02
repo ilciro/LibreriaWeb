@@ -6,7 +6,6 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
@@ -22,34 +21,35 @@ import javafx.collections.ObservableList;
 
 public class LibroDao  {
 	private Factory f;
-	private  String query ;
-	private  PreparedStatement prepQ =null; 
-	private  Connection conn =null;
+	private  String query ;	
 	private  int q; // quantita'
-	private  ResultSet rs=null;
-	private Statement stmt=null;
 	private boolean state=false;
 	private int disp=0;
 	private int id=0;
 	private ControllerSystemState vis=ControllerSystemState.getIstance();
-
 	private static final String LIBRO = "libro";
 	private static String libroTotale="SELECT * FROM libro";
+	private static String eccezione="eccezione ottenuta:";
 
 
 	public float getCosto(Libro l) throws SQLException
 	{
 		float prezzo=(float) 0.0;
 		
-			conn = ConnToDb.generalConnection();
-
-			stmt = conn.createStatement();
-
-			rs = stmt.executeQuery("select * from libro where idProd ='"+l.getId()+"'");
-			while ( rs.next() ) {
-				prezzo=rs.getFloat("prezzo");
+			query="select * from libro where idProd =?";
+			try(Connection conn=ConnToDb.generalConnection();
+					PreparedStatement prepQ=conn.prepareStatement(query);
+					ResultSet rs=prepQ.executeQuery())
+				{
+					prepQ.setInt(1, l.getId());
+					while ( rs.next() ) {
+						prezzo=rs.getFloat("prezzo");
+					}
+				}catch(SQLException e)
+			{
+					Log.LOGGER.log(Level.SEVERE,eccezione,e.getCause());
 			}
-		conn.close();
+		
 		return prezzo;
 
 	}
@@ -61,12 +61,20 @@ public class LibroDao  {
 		
 		int rim=i-d;
 		
-		
-			conn = ConnToDb.generalConnection();
-			prepQ=conn.prepareStatement("update ispw.libro set copieRimanenti= ? where Cod_isbn='"+l.getCodIsbn()+"'or idProd='"+l.getId()+"'");
-			prepQ.setInt(1,rim);			
+		query="update ispw.libro set copieRimanenti= ? where Cod_isbn=? or idProd=?";
+		try(Connection conn=ConnToDb.generalConnection();
+				PreparedStatement prepQ=conn.prepareStatement(query);
+				)
+			{
+			prepQ.setInt(1,rim);	
+			prepQ.setString(2, l.getCodIsbn());
+			prepQ.setInt(3, l.getId());
 			prepQ.executeUpdate();
-		conn.close();
+			}catch(SQLException e)
+		{
+				Log.LOGGER.log(Level.SEVERE,eccezione,e.getCause());
+		}
+
 		
 
 
@@ -76,10 +84,18 @@ public class LibroDao  {
 	{
 
 		
-			conn = ConnToDb.generalConnection();
-			stmt = conn.prepareStatement("SET SQL_SAFE_UPDATES=0");
-		
-			conn.close();
+			query="SET SQL_SAFE_UPDATES=?";
+			try(Connection conn=ConnToDb.generalConnection();
+					PreparedStatement prepQ=conn.prepareStatement(query);
+					)
+				{
+				prepQ.setInt(1, 0);
+				prepQ.execute();
+				}catch(SQLException e)
+				{
+					Log.LOGGER.log(Level.SEVERE,eccezione,e.getCause());
+				}
+			
 			
 
 	}
@@ -89,10 +105,11 @@ public class LibroDao  {
 	{
 		ObservableList<Raccolta> catalogo=FXCollections.observableArrayList();
 
-		
-		conn= ConnToDb.generalConnection();
-		stmt=conn.createStatement();
-		rs=stmt.executeQuery(libroTotale);
+		query=libroTotale;
+		try(Connection conn=ConnToDb.generalConnection();
+				PreparedStatement prepQ=conn.prepareStatement(query);
+				ResultSet rs=prepQ.executeQuery())
+			{
 		while(rs.next())
 		{
 			
@@ -104,6 +121,10 @@ public class LibroDao  {
 				
 			
 		}
+			}catch(SQLException e)
+			{
+				Log.LOGGER.log(Level.SEVERE,eccezione,e.getCause());
+			}
 		
 		
 
@@ -114,16 +135,16 @@ public class LibroDao  {
 	{
 		ObservableList<Raccolta> catalogo=FXCollections.observableArrayList();
 		
-		
-		conn= ConnToDb.generalConnection();
-		String libroSE="SELECT * FROM libro "
+		query="SELECT * FROM libro "
 				+"where titolo =?"
 				+" OR autore = ?";
 
-		stmt=conn.createStatement();
-		prepQ.setString(1, s);
-		prepQ.setString(2, s);
-		rs=stmt.executeQuery(libroSE);
+		try(Connection conn=ConnToDb.generalConnection();
+				PreparedStatement prepQ=conn.prepareStatement(query);
+				ResultSet rs=prepQ.executeQuery())
+			{prepQ.setString(1,s);
+			
+			prepQ.setString(2,s);
 		while(rs.next())
 		{
 			
@@ -134,21 +155,22 @@ public class LibroDao  {
 				
 			
 		}
+			}catch(SQLException e)
+		{
+				Log.LOGGER.log(Level.SEVERE,eccezione,e.getCause());
+		}
 		
-		conn.close();
-		Log.LOGGER.log(Level.INFO,"\n Catalogo :{0}",catalogo);
 		return catalogo;
 
 	}
 
 	public Libro getLibro(Libro l,int id) throws SQLException
 	{
-		conn= ConnToDb.generalConnection();
-		stmt=conn.createStatement();
-		String libroId=libroTotale
-				+"where idProd = ?";
-		prepQ.setInt(1, id);
-		rs=stmt.executeQuery(libroId);
+		query=libroTotale +"where idProd = ?";
+		try(Connection conn=ConnToDb.generalConnection();
+				PreparedStatement prepQ=conn.prepareStatement(query);
+				ResultSet rs=prepQ.executeQuery())
+			{prepQ.setInt(1, id);
 		if (rs.next())
 		{
 			f.createRaccoltaFinale1(LIBRO, rs.getString(1), rs.getString(7), rs.getString(5), rs.getString(6),rs.getString(4), rs.getString(7));
@@ -159,6 +181,10 @@ public class LibroDao  {
 			l=(Libro) f.createRaccoltaFinaleCompleta(LIBRO, rs.getDate(8).toLocalDate(), rs.getString(9), rs.getString(11),rs.getInt(15));
 		
 			
+		}
+			}catch(SQLException e)
+		{
+				Log.LOGGER.log(Level.SEVERE,eccezione,e.getCause());
 		}
 		
 		return l;
@@ -171,15 +197,19 @@ public class LibroDao  {
 	}
 
 	public int retId(Libro l) throws SQLException {
-		conn = ConnToDb.generalConnection();
-		
-			stmt = conn.createStatement();
-
-			rs = stmt.executeQuery("select idProd from libro where Cod_isbn ='"+l.getCodIsbn()+"'");
+		query="select idProd from libro where Cod_isbn =?";
+		try(Connection conn=ConnToDb.generalConnection();
+				PreparedStatement prepQ=conn.prepareStatement(query);
+				ResultSet rs=prepQ.executeQuery())
+			{prepQ.setString(1, l.getCodIsbn());
 			while ( rs.next() ) {
 				id=rs.getInt("idProd");
 			}
-			conn.close();
+			}catch(SQLException e)
+		{
+				Log.LOGGER.log(Level.SEVERE,eccezione,e.getCause());
+		}
+			
 		return id;
 
 
@@ -189,20 +219,24 @@ public class LibroDao  {
 
 	public String retTip(Libro l) throws SQLException {
 
-		String categoria=l.getCategoria();
+		String categoria=null;
 		
-			conn = ConnToDb.generalConnection();
-
-			stmt = conn.createStatement();
-			//add or id per matchare nel ControlelrPagamento
-
-			rs = stmt.executeQuery("select categoria from libro where Cod_isbn ='"+l.getCodIsbn()+"' or idProd='"+l.getId()+"' ");
+			query="select categoria from libro where Cod_isbn =? or idProd=? ";
+			try(Connection conn=ConnToDb.generalConnection();
+					PreparedStatement prepQ=conn.prepareStatement(query);
+					ResultSet rs=prepQ.executeQuery())
+				{prepQ.setString(1,l.getCodIsbn());
+				prepQ.setInt(2, l.getId());
+				
 			while ( rs.next() ) {
 				categoria=rs.getString("categoria");
 
 			}
-		conn.close();
-		return categoria;
+				}catch(SQLException e)
+			{
+					Log.LOGGER.log(Level.SEVERE,eccezione,e.getCause());
+			}
+			return categoria;
 
 
 	}
@@ -211,11 +245,21 @@ public class LibroDao  {
 	{
 
 		
-			conn = ConnToDb.generalConnection();
-			stmt = conn.prepareStatement("update libro set copieVendute=copievendute+'"+n+"' where Cod_isbn='"+l.getCodIsbn()+"'");
+			query="update libro set copieVendute=copievendute+? where Cod_isbn=?";
+			
+			try(Connection conn=ConnToDb.generalConnection();
+					PreparedStatement prepQ=conn.prepareStatement(query);
+					ResultSet rs=prepQ.executeQuery())
+			{
+				prepQ.setInt(1, n);
+				prepQ.setString(2, l.getCodIsbn());
+				prepQ.execute();
+			}catch(SQLException e)
+	{
+		Log.LOGGER.log(Level.SEVERE,eccezione,e.getCause());
+	}
 
-
-		conn.close();
+		
 
 
 	}
@@ -224,11 +268,6 @@ public class LibroDao  {
 	public boolean creaLibrio(Libro l) throws SQLException
 	{
 
-
-
-		
-				conn = ConnToDb.generalConnection();
-				
 				query= "INSERT INTO `ispw`.`libro`"
 						+ "(`titolo`,"
 						+ "`numeroPagine`,"
@@ -245,7 +284,11 @@ public class LibroDao  {
 						+ "`copieRimanenti`)"
 						+ "VALUES"
 						+ "(?,?,?,?,?,?,?,?,?,?,?,?,?);";
-				prepQ = conn.prepareStatement(query);	
+				try(Connection conn=ConnToDb.generalConnection();
+						PreparedStatement prepQ=conn.prepareStatement(query);
+						)
+				{
+				
 				prepQ.setString(1,l.getTitolo()); 
 				prepQ.setInt(2,l.getNumeroPagine());
 				prepQ.setString(3,l.getCodIsbn());
@@ -260,10 +303,13 @@ public class LibroDao  {
 				prepQ.setFloat(12, l.getPrezzo());
 				prepQ.setInt(13,l.getCopieRim());
 				prepQ.executeUpdate();
-				state= true; // true		 			 	
+				state= true; // true	
+				}catch(SQLException e)
+				{
+					Log.LOGGER.log(Level.SEVERE,eccezione,e.getCause());
+				}
 			
 			
-		conn.close();
 
 		return state;
 
@@ -274,14 +320,12 @@ public class LibroDao  {
 	//inserito la quantita da acquistare
 	public int getDisp(Libro l) throws SQLException
 	{
-					
-				conn = ConnToDb.generalConnection();
-				stmt=conn.createStatement();
-
-				
-
-				rs=  stmt.executeQuery(
-						"SELECT disp FROM ispw.libro where idProd='"+l.getId()+"'");
+				query="SELECT disp FROM ispw.libro where idProd=?";
+				try(Connection conn=ConnToDb.generalConnection();
+						PreparedStatement prepQ=conn.prepareStatement(query);
+						ResultSet rs=prepQ.executeQuery())
+				{
+					prepQ.setInt(1, l.getId());
 				if(rs.next())
 				{
 				disp = rs.getInt(1);
@@ -291,9 +335,13 @@ public class LibroDao  {
 				{
 					disp=-1;
 				}
-				conn.close();
-			
 				}
+				}catch(SQLException e)
+				{
+					Log.LOGGER.log(Level.SEVERE,eccezione,e.getCause());
+				}
+			
+				
 		return disp;
 	}
 
@@ -301,20 +349,19 @@ public class LibroDao  {
 	{
 		
 			
-				conn = ConnToDb.generalConnection();
-				stmt = conn.createStatement();
-				
-				rs=  stmt.executeQuery(	"SELECT copieRimanenti FROM `ispw`.`libro` where `idProd` = '"+l.getId()+"' ");
-				if (rs.next()) {
-					q = rs.getInt(1);
+				query="SELECT copieRimanenti FROM `ispw`.`libro` where `idProd` =?";
+				try(Connection conn=ConnToDb.generalConnection();
+						PreparedStatement prepQ=conn.prepareStatement(query);
+						ResultSet rs=prepQ.executeQuery())
+				{prepQ.setInt(1, l.getId());
+					if (rs.next()) {
+						q = rs.getInt(1);
+					}
+				}catch(SQLException e)
+				{
+					Log.LOGGER.log(Level.SEVERE,eccezione,e);
 				}
-
-			
 		
-
-		
-
-
 		return q;
 	}
 
@@ -322,14 +369,14 @@ public class LibroDao  {
 	public boolean checkDisp(int id) throws SQLException
 	{
 		
-				conn = ConnToDb.generalConnection();
-				stmt = conn.createStatement();
-
-				String lDisp="SELECT disp FROM ispw.libro"
-						+"where idProd = ?";
+				query="SELECT disp FROM ispw.libro where idProd = ?";
+				try(Connection conn=ConnToDb.generalConnection();
+						PreparedStatement prepQ=conn.prepareStatement(query);
+						ResultSet rs=prepQ.executeQuery())
+				{
 
 				prepQ.setInt(1, id);
-				rs=  stmt.executeQuery(lDisp);
+				
 				if(rs.next())
 				{
 					disp = rs.getInt(1);
@@ -338,6 +385,10 @@ public class LibroDao  {
 					
 				
 					Log.LOGGER.log(Level.INFO, "libro trovato");
+				}
+				}catch(SQLException e)
+				{Log.LOGGER.log(Level.SEVERE,eccezione,e.getCause());
+				
 				}
 				
 
@@ -349,24 +400,32 @@ public class LibroDao  {
 	public String getNome(Libro l) throws SQLException
 	{
 		String name=null;
-		conn= ConnToDb.generalConnection();
-		stmt=conn.createStatement();
-		rs=stmt.executeQuery("SELECT titolo FROM ispw.libro where idProd = '"+l.getId()+"' ");
+		query="SELECT titolo FROM ispw.libro where idProd = ?";
+		try(Connection conn=ConnToDb.generalConnection();
+				PreparedStatement prepQ=conn.prepareStatement(query);
+				ResultSet rs=prepQ.executeQuery())
+		{prepQ.setInt(1, l.getId());
 		if (rs.next())
 		{
 			name = rs.getString(1);
 		}
+		}catch(SQLException e)
+		{
+			Log.LOGGER.log(Level.SEVERE,eccezione,e.getCause());
+		}
 		
-		conn.close();
+		
 		return name;
 	}
 
 	public ObservableList<Libro> getLibriSingolo() throws SQLException
 	{
-		conn= ConnToDb.generalConnection();
-		ObservableList<Libro> catalogo=FXCollections.observableArrayList();
-		stmt=conn.createStatement();
-		rs=stmt.executeQuery(libroTotale);
+		query=libroTotale;
+		ObservableList<Libro>catalogo=FXCollections.observableArrayList();
+		try(Connection conn=ConnToDb.generalConnection();
+				PreparedStatement prepQ=conn.prepareStatement(query);
+				ResultSet rs=prepQ.executeQuery())
+		{
 
 
 
@@ -384,8 +443,11 @@ public class LibroDao  {
 				
 
 		}
+		}catch(SQLException e)
+		{
+			Log.LOGGER.log(Level.SEVERE,eccezione,e.getCause());
+		}
 
-		Log.LOGGER.log(Level.INFO,"{0}",catalogo);
 		return catalogo;
 
 	}
@@ -393,23 +455,30 @@ public class LibroDao  {
 	public void cancella(Libro l) throws SQLException {
 		
 			int row=0;
-				conn = ConnToDb.generalConnection();
-				
-				prepQ=conn.prepareStatement("delete  FROM ispw.libro where idProd = "+l.getId()+" ;");
+				query="delete  FROM ispw.libro where idProd = ?";
+				try(Connection conn=ConnToDb.generalConnection();
+						PreparedStatement prepQ=conn.prepareStatement(query);
+						)
+				{prepQ.setInt(1, l.getId());
 				row=prepQ.executeUpdate();
+				}catch(SQLException e)
+				{
+					Log.LOGGER.log(Level.SEVERE,eccezione,e.getCause());
+				}
 			
-		conn.close();
-
 		Log.LOGGER.log(Level.INFO,"Libro cancellato : .{0}",row);
 	}
 
 	public ObservableList<Libro> getLibriSingoloById(Libro l) throws SQLException
 	{
-		conn= ConnToDb.generalConnection();
+		
 		ObservableList<Libro> catalogo=FXCollections.observableArrayList();
-		stmt=conn.createStatement();
-		rs=stmt.executeQuery("SELECT * FROM libro where idProd="+l.getId()+"");
-
+		query="SELECT * FROM libro where idProd=?";
+		try(Connection conn=ConnToDb.generalConnection();
+				PreparedStatement prepQ=conn.prepareStatement(query);
+				ResultSet rs=prepQ.executeQuery())
+		{
+			prepQ.setInt(1,l.getId());
 		while(rs.next())
 		{
 
@@ -424,8 +493,11 @@ public class LibroDao  {
 				
 
 		}
+		}catch(SQLException e)
+		{
+			Log.LOGGER.log(Level.SEVERE,eccezione,e.getCause());
+		}
 
-		Log.LOGGER.log(Level.INFO,"{0}",catalogo);
 		return catalogo;
 
 	}
@@ -435,12 +507,6 @@ public class LibroDao  {
 
 
 		int rowAffected=0;
-
-		conn = ConnToDb.generalConnection();
-		stmt=conn.createStatement();
-
-
-		
 
 		query=" UPDATE libro "
 				+ "SET "
@@ -458,9 +524,11 @@ public class LibroDao  {
 				+ " `disp` = ?,"
 				+ " `prezzo` = ?,"
 				+ " `copieRimanenti` =?"
-				+ " WHERE `idProd` ="+l.getId()+";";
-		prepQ=conn.prepareStatement(query);
-
+				+ " WHERE `idProd` =?";
+		try(Connection conn=ConnToDb.generalConnection();
+				PreparedStatement prepQ=conn.prepareStatement(query);
+				)
+		{
 		prepQ.setString(1,l.getTitolo());
 		prepQ.setInt(2,l.getNumeroPagine());
 		prepQ.setString(3,l.getCodIsbn());
@@ -475,10 +543,15 @@ public class LibroDao  {
 		prepQ.setInt(12,l.getDisponibilita());
 		prepQ.setFloat(13,l.getPrezzo());
 		prepQ.setInt(14,l.getCopieRim());
-
+		prepQ.setInt(15, l.getId());
+	
 
 		rowAffected = prepQ.executeUpdate();
-		prepQ.close();
+		}catch(SQLException e)
+		{
+			Log.LOGGER.log(Level.SEVERE,eccezione,e.getCause());
+		}
+		
 
 		Log.LOGGER.log(Level.INFO, "row affected .{0}", rowAffected);
 
@@ -490,17 +563,11 @@ public class LibroDao  {
 		w=new FileWriter("ReportFinale\\riepilogoLibro.txt");
 		
 		   try (BufferedWriter b=new BufferedWriter (w)){
-		
-
-		
-		
-			conn = ConnToDb.generalConnection();
-			stmt=conn.createStatement();
-			
-
-
-			stmt=conn.createStatement();
-			rs=stmt.executeQuery("select titolo,copieVendute,prezzo as totale  from libro;");
+			   query="select titolo,copieVendute,prezzo as totale  from libro";
+			   try(Connection conn=ConnToDb.generalConnection();
+						PreparedStatement prepQ=conn.prepareStatement(query);
+						ResultSet rs=prepQ.executeQuery())
+			   {
 
 
 			while(rs.next())
@@ -523,9 +590,11 @@ public class LibroDao  {
 
 			}
 
-		}
-		   conn.close();
-		
+		}catch(SQLException e)
+			   {
+			Log.LOGGER.log(Level.SEVERE,eccezione,e.getCause());
+			   }
+		   }
 
 	}
 	
@@ -537,28 +606,41 @@ public class LibroDao  {
 		int rim=i+d;
 		
 		
-			conn = ConnToDb.generalConnection();
-			prepQ=conn.prepareStatement("update ispw.libro set copieRimanenti= ? where Cod_isbn='"+l.getCodIsbn()+"'or idProd='"+l.getId()+"'");
-			prepQ.setInt(1,rim);			
+			query="update ispw.libro set copieRimanenti= ? where Cod_isbn=? or idProd=?";
+			try(Connection conn=ConnToDb.generalConnection();
+					PreparedStatement prepQ=conn.prepareStatement(query);
+					)
+			{
+			prepQ.setInt(1,rim);
+			prepQ.setString(2, l.getCodIsbn());
+			prepQ.setInt(3, l.getId());
 			prepQ.executeUpdate();
-		conn.close();
-		
-		
-
+			}catch(SQLException e)
+			{
+				Log.LOGGER.log(Level.SEVERE,eccezione,e.getCause());
+			}
+	
 	}
 	
 	public String getTitolo(Libro l) throws SQLException
 	{
-		String titolo="";
+		String titolo=null;
 			
-				conn = ConnToDb.generalConnection();
-				stmt = conn.createStatement();
-				
-				rs=  stmt.executeQuery(	"SELECT titolo from ispw.libro where `idProd` = '"+l.getId()+"' ");
+					query="SELECT titolo from ispw.libro where `idProd` = ?";
+					try(Connection conn=ConnToDb.generalConnection();
+							PreparedStatement prepQ=conn.prepareStatement(query);
+							ResultSet rs=prepQ.executeQuery())
+					{
+						
+					prepQ.setInt(1, l.getId());
 				if (rs.next()) {
 					titolo = rs.getString("titolo");
 				}
-
+					}catch(SQLException e)
+					{
+						Log.LOGGER.log(Level.SEVERE,eccezione,e.getCause());
+					}
+	
 
 		
 		return titolo;
@@ -566,10 +648,13 @@ public class LibroDao  {
 	
 	public List<Libro> getLibriSingoloList() throws SQLException
 	{
-		conn= ConnToDb.generalConnection();
+		
 		List<Libro> catalogo=new ArrayList<>();
-		stmt=conn.createStatement();
-		rs=stmt.executeQuery("SELECT * FROM ispw.libro");
+		query=libroTotale;
+		try(Connection conn=ConnToDb.generalConnection();
+				PreparedStatement prepQ=conn.prepareStatement(query);
+				ResultSet rs=prepQ.executeQuery())
+		{
 
 
 
@@ -587,19 +672,26 @@ public class LibroDao  {
 				
 
 		}
+		}catch(SQLException e)
+		{
+			Log.LOGGER.log(Level.SEVERE,eccezione,e.getCause());
+		}
 
-		Log.LOGGER.log(Level.INFO,"{0}",catalogo);
+		
 		return catalogo;
 
 	}
 	
 	public List<Libro> getLibriSingoloByIdLista(Libro l) throws SQLException
 	{
-		conn= ConnToDb.generalConnection();
+		
 		List<Libro> catalogo=new ArrayList<>();
-		stmt=conn.createStatement();
-		rs=stmt.executeQuery("SELECT * FROM libro where idProd="+l.getId()+"");
-
+		query="SELECT * FROM libro where idProd=?";
+		try(Connection conn=ConnToDb.generalConnection();
+				PreparedStatement prepQ=conn.prepareStatement(query);
+				ResultSet rs=prepQ.executeQuery())
+		{
+			prepQ.setInt(1, l.getId());
 		while(rs.next())
 		{
 
@@ -614,9 +706,11 @@ public class LibroDao  {
 				
 
 		}
-		Log.LOGGER.log(Level.INFO,"{0}",catalogo);
-
-
+		}catch(SQLException e)
+		{
+			Log.LOGGER.log(Level.SEVERE,eccezione,e.getCause());
+		}
+		
 		return catalogo;
 
 	}

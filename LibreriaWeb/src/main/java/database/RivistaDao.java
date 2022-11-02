@@ -7,10 +7,10 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
+
 
 import controller.ControllerSystemState;
 import model.Log;
@@ -23,16 +23,12 @@ import javafx.collections.ObservableList;
 
 public class RivistaDao {
 	private  Factory f;
-	private  Statement st = null ;
 	private  String query ;
-	private  PreparedStatement prepQ = null; 
-	private  Connection conn ;
+	private static String eccezione="eccezione ottenuta:";
 	private  int q;
-	private  ResultSet rs;
 	private int id = 0;
 	private boolean state=false;
-	private String riv="SELECT * from RIVISTA;";
-
+	private String riv="SELECT * from RIVISTA";
 	private ControllerSystemState vis=ControllerSystemState.getIstance();
 	private static final String RIVISTA="rivista";
 
@@ -42,14 +38,21 @@ public class RivistaDao {
 	public float getCosto(Rivista r) throws SQLException
 	{
 		float prezzo=(float) 0.0;
-		  conn = ConnToDb.generalConnection();
-         st = conn.createStatement();
-
-         rs = st.executeQuery("select * from rivista  where id='"+r.getId()+"'");
+		  query="select * from rivista  where id=?";
+		  try(Connection conn=ConnToDb.generalConnection();
+					PreparedStatement prepQ=conn.prepareStatement(query);
+					ResultSet rs=prepQ.executeQuery())
+		  {
+			  
+		  prepQ.setInt(1, r.getId());
          while ( rs.next() ) {
               prezzo=rs.getFloat("prezzo");
 
          }
+		  }catch(SQLException e)
+		  {
+			  Log.LOGGER.log(Level.SEVERE,eccezione,e.getCause());
+		  }
 		return prezzo;
 		
 	}
@@ -61,46 +64,50 @@ public class RivistaDao {
 		
 		int rim=i-d;
 		
-
-			conn = ConnToDb.generalConnection();
-			prepQ=conn.prepareStatement("update ispw.rivista set copieRimanenti= ? where titolo='"+r.getTitolo()+"'or id='"+r.getId()+"'");
-			prepQ.setInt(1,rim);			
+		query="update ispw.rivista set copieRimanenti= ? where titolo=? or id=?";
+		try(Connection conn=ConnToDb.generalConnection();
+				PreparedStatement prepQ=conn.prepareStatement(query);
+				){
+			
+		
+			prepQ.setInt(1,rim);	
+			prepQ.setString(2,r.getTitolo());
+			prepQ.setInt(3, r.getId());
 			prepQ.executeUpdate();
-
-
-		conn.close();
-
+		}catch(SQLException e)
+		{
+			Log.LOGGER.log(Level.SEVERE,eccezione,e.getCause());
+		}
 
 		}
 
 	public void daiPrivilegi() throws SQLException
 	{
-
-		
-			  conn = ConnToDb.generalConnection();
-			  prepQ = conn.prepareStatement(" SET SQL_SAFE_UPDATES=0");
+		query=" SET SQL_SAFE_UPDATES=?";
+		try(Connection conn=ConnToDb.generalConnection();
+				PreparedStatement prepQ=conn.prepareStatement(query);
+				)
+		{
+				prepQ.setInt(1, 0);
 			         prepQ.executeUpdate();
 
 	            
-	         
-			
-			 conn.close();
-			 
-		 
-
-		 Log.LOGGER.log(Level.INFO,"LibroDao. privilegi");
+		}  catch(SQLException e)
+		{
+			Log.LOGGER.log(Level.SEVERE,eccezione,e.getCause());
+		}
+		
 
 }
 	
 	public ObservableList<Raccolta> getRiviste() throws SQLException
 	{
-		 conn= ConnToDb.generalConnection();
-
-		
-		ObservableList<Raccolta> catalogo=FXCollections.observableArrayList();
-		 
-		st=conn.createStatement();
-		rs=st.executeQuery(riv);
+		 query=riv;
+		 ObservableList<Raccolta> catalogo=FXCollections.observableArrayList();
+		 try(Connection conn=ConnToDb.generalConnection();
+					PreparedStatement prepQ=conn.prepareStatement(query);
+					ResultSet rs=prepQ.executeQuery())
+		 {
             while(rs.next())
             {
 
@@ -112,19 +119,24 @@ public class RivistaDao {
 					
         		
             }
+		 }catch(SQLException e)
+		 {
+			 Log.LOGGER.log(Level.SEVERE,eccezione,e.getCause());
+		 }
 		return catalogo;
 		
 	}
 	
 	public List<Rivista> getRivisteList() throws SQLException
 	{
-		 conn= ConnToDb.generalConnection();
-
+		 query=riv;
 		
 		List<Rivista> catalogo=new ArrayList<>();
 		 
-		st=conn.createStatement();
-		rs=st.executeQuery(riv);
+		try(Connection conn=ConnToDb.generalConnection();
+				PreparedStatement prepQ=conn.prepareStatement(query);
+				ResultSet rs=prepQ.executeQuery())
+		{
             while(rs.next())
             {
 
@@ -136,6 +148,10 @@ public class RivistaDao {
 					
         		
             }
+		}catch(SQLException e)
+		{
+			Log.LOGGER.log(Level.SEVERE,eccezione,e.getCause());
+		}
 		return catalogo;
 		
 	}
@@ -143,18 +159,21 @@ public class RivistaDao {
 	
 	public ObservableList<Raccolta> getRivisteByName(String s) throws SQLException
 	{
-		 conn= ConnToDb.generalConnection();
-
+		
 		
 		ObservableList<Raccolta> catalogo=FXCollections.observableArrayList();
 		 
-		st=conn.createStatement();
-		String rivistaSE="SELECT * FROM ispw.rivista"
+		
+		query="SELECT * FROM ispw.rivista"
 				+"where titolo = ?"
 				+" OR autore = ?";
+		try(Connection conn=ConnToDb.generalConnection();
+				PreparedStatement prepQ=conn.prepareStatement(query);
+				ResultSet rs=prepQ.executeQuery())
+		{
 			prepQ.setString(1,s);
 			prepQ.setString(2,s);
-				rs=st.executeQuery(rivistaSE);
+				
             while(rs.next())
             {
 
@@ -166,9 +185,12 @@ public class RivistaDao {
 				
         		
             }
-            conn.close();
+		}catch(SQLException e)
+		{
+			Log.LOGGER.log(Level.SEVERE,eccezione,e.getCause());
+		}
 			
-		Log.LOGGER.log(Level.INFO,"{0}",catalogo);
+		
 		return catalogo;
 		
 	}
@@ -177,18 +199,26 @@ public class RivistaDao {
 	public Rivista getRivista(Rivista r,int id) throws SQLException
 	{
 
-		 conn= ConnToDb.generalConnection();
-		 st=conn.createStatement();
-		 String rivistaId="SELECT * FROM rivista"
+		 query="SELECT * FROM rivista"
 				 +"where id =? ";
+		 try(Connection conn=ConnToDb.generalConnection();
+					PreparedStatement prepQ=conn.prepareStatement(query);
+					ResultSet rs=prepQ.executeQuery())
+		 {
 		 prepQ.setInt(1, id);
-		 rs=st.executeQuery(rivistaId);
+		
         while (rs.next())
         {
         	f.createRaccoltaFinale1(RIVISTA, rs.getString(1),null, null,rs.getString(4),rs.getString(5),null);
 			f.createRaccoltaFinale2(RIVISTA,0,null,0,rs.getInt(8),rs.getFloat(9),rs.getInt(10));
 			r=(Rivista) (f.createRaccoltaFinaleCompleta(RIVISTA, rs.getDate(7).toLocalDate(), null, null,rs.getInt(11)));
         }
+		 }catch(SQLException e)
+		
+		 {
+			 Log.LOGGER.log(Level.SEVERE,eccezione,e.getCause());
+		 
+		 }
              return r;
 	}
 
@@ -199,20 +229,25 @@ public class RivistaDao {
 	
 	public int retId(Rivista r) throws SQLException {
 		
-		String titolo=r.getTitolo();
-		  conn = ConnToDb.generalConnection();
-		 
-         st = conn.createStatement();
-         String rivistaT="select id from rivista"
+		
+		query="select id from rivista"
         		 +"where titolo =?";
-         prepQ=conn.prepareStatement(rivistaT);
-         prepQ.setString(1, titolo);
-         rs = prepQ.executeQuery(rivistaT);
+		try(Connection conn=ConnToDb.generalConnection();
+				PreparedStatement prepQ=conn.prepareStatement(query);
+				ResultSet rs=prepQ.executeQuery())
+		{
+        
+         prepQ.setString(1, r.getTitolo());
+        
          while ( rs.next() ) {
               id=rs.getInt("id");
 
          }
-		 conn.close();
+		}catch(SQLException e)
+		{
+			Log.LOGGER.log(Level.SEVERE,eccezione,e.getCause());
+		}
+		
 		return id;
 
 		
@@ -222,18 +257,23 @@ public class RivistaDao {
 	public String retTip(Rivista r) throws SQLException {
 		
 		String categoria=null;
-		  conn = ConnToDb.generalConnection();
-		 
-          st = conn.createStatement();
-
-         rs = st.executeQuery("select tipologia from rivista where titolo ='"+r.getTitolo()+"' or id='"+r.getId()+"'");
+		query="select tipologia from rivista where titolo =? or id=?";
+		try(Connection conn=ConnToDb.generalConnection();
+				PreparedStatement prepQ=conn.prepareStatement(query);
+				ResultSet rs=prepQ.executeQuery())
+		{
+			prepQ.setString(1,r.getTitolo());
+			prepQ.setInt(2, r.getId());
+		
          while ( rs.next() ) {
               categoria=rs.getString("tipologia");
 
          }
+		}catch(SQLException e)
+		{
+			Log.LOGGER.log(Level.SEVERE,eccezione,e.getCause());
+		}
 		 
-				conn.close();
-			
 			
 		return categoria;
 
@@ -244,18 +284,26 @@ public class RivistaDao {
 	{
 		String name=null;
 
-	 conn= ConnToDb.generalConnection();
-	 st=conn.createStatement();
-			 rs=st.executeQuery("SELECT titolo FROM rivista where id ='"+r.getId()+"'");
-        if (rs.next())
+	 query="SELECT titolo FROM rivista where id =?";
+	 try(Connection conn=ConnToDb.generalConnection();
+				PreparedStatement prepQ=conn.prepareStatement(query);
+				ResultSet rs=prepQ.executeQuery())
+		{
+		 
+		prepQ.setInt(1,r.getId());
+		if (rs.next())
         {
         	name = rs.getString(1);
         }
         else {
-        	Log.LOGGER.log(Level.INFO,"non ho torvato un cazzo e ritorno null");
+        	
             return null;
 
-        }	
+        }
+		}catch(SQLException e)
+	 {
+			Log.LOGGER.log(Level.SEVERE,eccezione,e.getCause());
+	 }
         return name;
    }
 
@@ -263,11 +311,13 @@ public class RivistaDao {
 	{
 		int disp = 0;
 		
-			conn = ConnToDb.generalConnection();
-				st=conn.createStatement();
-
-
-				rs=st.executeQuery("SELECT disp FROM ispw.rivista where id ='"+r.getId()+"'");
+			query="SELECT disp FROM ispw.rivista where id =?";
+			try(Connection conn=ConnToDb.generalConnection();
+					PreparedStatement prepQ=conn.prepareStatement(query);
+					ResultSet rs=prepQ.executeQuery())
+			{
+				
+				prepQ.setInt(1, r.getId());
 				if(rs.next())
 				{
 					disp = rs.getInt(1);
@@ -279,7 +329,10 @@ public class RivistaDao {
 						disp=0;
 				}
 				
-			
+			}catch(SQLException e)
+			{
+				Log.LOGGER.log(Level.SEVERE,eccezione,e.getCause());
+			}
 		
 		
 		return disp;
@@ -290,14 +343,18 @@ public class RivistaDao {
         
 		
 			
-				conn = ConnToDb.generalConnection();
-				st=conn.createStatement();
-				
-				rs=  st.executeQuery(
-						"SELECT copieRimanenti FROM ispw.rivista where id =' "+r.getId()+"'");
+				query="SELECT copieRimanenti FROM ispw.rivista where id =?";
+				try(Connection conn=ConnToDb.generalConnection();
+						PreparedStatement prepQ=conn.prepareStatement(query);
+						ResultSet rs=prepQ.executeQuery())
+				{prepQ.setInt(1, r.getId());
 				if (rs.next()) {
 					q = rs.getInt(1);
-				}			
+				}	
+				}catch(SQLException e)
+				{
+					Log.LOGGER.log(Level.SEVERE,eccezione,e.getCause());
+				}
 			
 		
 
@@ -309,11 +366,13 @@ public class RivistaDao {
 		int disp=0;
 		r.setId(id);
 		
-			conn = ConnToDb.generalConnection();
-			st=conn.createStatement();
-
-
-			rs=  st.executeQuery("SELECT disp FROM ispw.rivista where id = '"+r.getId()+"'");
+		query="SELECT disp FROM ispw.rivista where id = ?";
+		try(Connection conn=ConnToDb.generalConnection();
+				PreparedStatement prepQ=conn.prepareStatement(query);
+				ResultSet rs=prepQ.executeQuery())
+		{
+			
+		prepQ.setInt(1, r.getId());
 			if(rs.next())
 			{
 				disp = rs.getInt(1);
@@ -326,6 +385,10 @@ public class RivistaDao {
 				
 				}
 			}
+		}catch(SQLException e)
+		{
+			Log.LOGGER.log(Level.SEVERE,eccezione,e.getCause());
+		}
 			
 	 	return state;
 	
@@ -333,12 +396,14 @@ public class RivistaDao {
 
 	public ObservableList<Rivista> getRivistaSingolo() throws SQLException {
 		
-		conn= ConnToDb.generalConnection();
+		
 		ObservableList<Rivista> catalogo=FXCollections.observableArrayList();
 		
-		st=conn.createStatement();
-		 
-             rs=st.executeQuery(riv);
+		query=riv;
+		try(Connection conn=ConnToDb.generalConnection();
+				PreparedStatement prepQ=conn.prepareStatement(query);
+				ResultSet rs=prepQ.executeQuery())
+		{
 
             while(rs.next())
             {
@@ -348,8 +413,10 @@ public class RivistaDao {
 					f.createRaccoltaFinale2(RIVISTA,0,null,0,rs.getInt(8),rs.getFloat(9),rs.getInt(10));
 					catalogo.add((Rivista) f.createRaccoltaFinaleCompleta(RIVISTA, rs.getDate(7).toLocalDate(), null, null,rs.getInt(11)));
 		} 
-            conn.close();
-		Log.LOGGER.log(Level.INFO,"{0}",catalogo);
+		}catch(SQLException e)
+		{
+			Log.LOGGER.log(Level.SEVERE,eccezione,e.getCause());
+		}
 		return catalogo;
 		
 	}
@@ -357,7 +424,7 @@ public class RivistaDao {
 	public Boolean creaRivista(Rivista r) throws SQLException {
     	
     		
-				conn = ConnToDb.generalConnection();
+				
 				query= "INSERT INTO `ispw`.`rivista`"
 			 			+ "(`titolo`,"
 			 			+ "`tipologia`,"
@@ -370,7 +437,10 @@ public class RivistaDao {
 			 			+ "`prezzo`,"
 			 			+ "`copieRimanenti`)"
 			 			+ "VALUES (?,?,?,?,?,?,?,?,?,?)";
-			 	prepQ = conn.prepareStatement(query);	
+				try(Connection conn=ConnToDb.generalConnection();
+						PreparedStatement prepQ=conn.prepareStatement(query);
+						ResultSet rs=prepQ.executeQuery())
+				{
 				prepQ.setString(1,r.getTitolo()); 
 				prepQ.setString(2,r.getTipologia());
 				prepQ.setString(3,r.getAutore());
@@ -385,12 +455,12 @@ public class RivistaDao {
 
 				
 				prepQ.executeUpdate();
-			 	state= true; // true		 			 	
-			
-			
-		
-		
-
+			 	state= true; // true	
+				}catch(SQLException e)
+				{
+					Log.LOGGER.log(Level.SEVERE,eccezione,e.getCause());
+				}
+	
 		return state;
 		
 		
@@ -400,12 +470,16 @@ public class RivistaDao {
 
 		 int row=0;
 
-			
-				conn = ConnToDb.generalConnection();
-				st=conn.createStatement();
-				
-				prepQ=conn.prepareStatement("delete  FROM ispw.rivista where id = '"+r.getId()+"'");
+			query="delete  FROM ispw.rivista where id =?";
+			try(Connection conn=ConnToDb.generalConnection();
+					PreparedStatement prepQ=conn.prepareStatement(query);
+					ResultSet rs=prepQ.executeQuery())
+			{
+				prepQ.setInt(1, r.getId());
 				 row=prepQ.executeUpdate();
+			}catch(SQLException e) {
+				Log.LOGGER.log(Level.SEVERE,eccezione,e.getCause());
+			}
 				
 		
 		
@@ -419,10 +493,12 @@ public class RivistaDao {
 		ObservableList<Rivista> catalogo=FXCollections.observableArrayList();
 
 		
-		conn= ConnToDb.generalConnection();
-		st=conn.createStatement();
-		rs=st.executeQuery("SELECT * from RIVISTA where id='"+r.getId()+"'");
-
+		query="SELECT * from RIVISTA where id=?";
+		try(Connection conn=ConnToDb.generalConnection();
+				PreparedStatement prepQ=conn.prepareStatement(query);
+				ResultSet rs=prepQ.executeQuery())
+		{
+			prepQ.setInt(1, r.getId());
             if(rs.next())
             {
 
@@ -431,8 +507,10 @@ public class RivistaDao {
 					f.createRaccoltaFinale2(RIVISTA,0,null,0,rs.getInt(8),rs.getFloat(9),rs.getInt(10));
 					catalogo.add((Rivista) f.createRaccoltaFinaleCompleta(RIVISTA, rs.getDate(7).toLocalDate(), null, rs.getString(6),rs.getInt(11)));
             }
-          conn.close();            
-		
+		}catch(SQLException e)
+		{
+			Log.LOGGER.log(Level.SEVERE,eccezione,e.getCause());
+		}
 		return catalogo;
 		
 	}
@@ -441,9 +519,13 @@ public class RivistaDao {
 		List<Rivista> catalogo=new ArrayList<>();
 
 		
-		conn= ConnToDb.generalConnection();
-		st=conn.createStatement();
-		rs=st.executeQuery("SELECT * from RIVISTA where id='"+r.getId()+"'");
+		query="SELECT * from RIVISTA where id=?";
+		try(Connection conn=ConnToDb.generalConnection();
+				PreparedStatement prepQ=conn.prepareStatement(query);
+				ResultSet rs=prepQ.executeQuery())
+		{
+			
+		prepQ.setInt(1, r.getId());
 
             if(rs.next())
             {
@@ -453,7 +535,10 @@ public class RivistaDao {
 					f.createRaccoltaFinale2(RIVISTA,0,null,0,rs.getInt(8),rs.getFloat(9),rs.getInt(10));
 					catalogo.add((Rivista) f.createRaccoltaFinaleCompleta(RIVISTA, rs.getDate(7).toLocalDate(), null, rs.getString(6),rs.getInt(11)));
             }
-          conn.close();            
+		}catch(SQLException e)
+		{
+			Log.LOGGER.log(Level.SEVERE,eccezione,e.getCause());
+		}
 		
 		return catalogo;
 		
@@ -463,10 +548,6 @@ public class RivistaDao {
 		 int rowAffected=0;
 
 
-		
-			conn = ConnToDb.generalConnection();
-			st=conn.createStatement();
-			
 
 			query="UPDATE `ispw`.`rivista`"
 		 			+ "SET"
@@ -479,9 +560,13 @@ public class RivistaDao {
 		 			+ "`dataPubblicazione` =?,"
 		 			+ "`disp` = ?,"
 		 			+ "`prezzo` = ?,"
-		 			+ "`copieRimanenti` =? WHERE `id` = "+r.getId()+";";
+		 			+ "`copieRimanenti` =? WHERE `id` = ?";
+			try(Connection conn=ConnToDb.generalConnection();
+					PreparedStatement prepQ=conn.prepareStatement(query);
+					ResultSet rs=prepQ.executeQuery())
+			{
 		 		
-		 	prepQ=conn.prepareStatement(query);
+		 	
 			
 			prepQ.setString(1,r.getTitolo());
 			prepQ.setString(2,r.getTipologia());
@@ -493,10 +578,14 @@ public class RivistaDao {
 			prepQ.setInt(8,r.getDisp());
 			prepQ.setFloat(9,r.getPrezzo());
 			prepQ.setInt(10,r.getCopieRim());
+			prepQ.setInt(11, r.getId());
 		
 
 			rowAffected = prepQ.executeUpdate();
-			prepQ.close();
+			}catch(SQLException e)
+			{
+				Log.LOGGER.log(Level.SEVERE,eccezione,e.getCause());
+			}
 			
             Log.LOGGER.log(Level.INFO,"row affected .{0}",rowAffected);
 
@@ -508,12 +597,13 @@ public class RivistaDao {
 		        w=new FileWriter("ReportFinale\\riepilogoRiviste.txt");
 		        
 		        
+		        
 		        try (BufferedWriter b=new BufferedWriter (w)){
-				conn = ConnToDb.generalConnection();
-				
-				st=conn.createStatement();
-				rs=st.executeQuery("select titolo,editore,copieRimanenti,prezzo as totale  from ispw.rivista");
-				
+				query="select titolo,editore,copieRimanenti,prezzo as totale  from ispw.rivista";
+				try(Connection conn=ConnToDb.generalConnection();
+						PreparedStatement prepQ=conn.prepareStatement(query);
+						ResultSet rs=prepQ.executeQuery())
+				{
 				
 		           
 		            while(rs.next())
@@ -540,11 +630,14 @@ public class RivistaDao {
 		        			
 		        		
 		            }
-		     st.close();
+				}catch(SQLException e)
+				{
+					Log.LOGGER.log(Level.SEVERE,eccezione,e.getCause());
+				}
 
 				
 	}
-	conn.close();
+
 		
 	}
 			
@@ -558,12 +651,20 @@ public class RivistaDao {
 		
 		int rim=i+d;
 		
-
-			conn = ConnToDb.generalConnection();
-			prepQ=conn.prepareStatement("update ispw.rivista set copieRimanenti= ? where titolo='"+r.getTitolo()+"'or id='"+r.getId()+"'");
-			prepQ.setInt(1,rim);			
+		query="update ispw.rivista set copieRimanenti= ? where titolo=? or id=?";
+		try(Connection conn=ConnToDb.generalConnection();
+				PreparedStatement prepQ=conn.prepareStatement(query);
+				ResultSet rs=prepQ.executeQuery())
+		{
+			prepQ.setInt(1,rim);
+			prepQ.setString(2, r.getTitolo());
+			prepQ.setInt(3,r.getId());
 			prepQ.executeUpdate();
 
+		}catch(SQLException e)
+		{
+			Log.LOGGER.log(Level.SEVERE,eccezione,e.getCause());
+		}
 
 		
 		

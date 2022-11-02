@@ -4,62 +4,60 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.logging.Level;
 
 import utilities.ConnToDb;
 import model.Fattura;
+import model.Log;
 
 public class ContrassegnoDao {
-	private  Connection conn=null;
-	private  PreparedStatement stmt=null;
-	
+	private static String eccezione="eccezione ottenuta:";
 	
 
 	public void inserisciFattura(Fattura f) throws SQLException 
 	{
 		 
 		
-		String par1=f.getNome();
- 		String par2=f.getCognome();
- 		String par3=f.getVia();
- 		String par4=f.getCom();
- 		float par5=f.getAmmontare();
+		
+ 		String query="insert into ispw.fattura values (?,?,?,?,?,?);";
  		
- 		
+ 		try(Connection conn=ConnToDb.generalConnection();
+				PreparedStatement prepQ=conn.prepareStatement(query);
+				)
+			{
+		
        
-		 
-
-			 conn = ConnToDb.generalConnection();
-         
-             stmt = conn.prepareStatement("insert into ispw.fattura values (?,?,?,?,?,?);");
-             stmt.setString(1,par1);
-             stmt.setString(2,par2);
-             stmt.setString(3,par3);
-             stmt.setString(4,par4 );
-             stmt.setInt(5, 0);
-             stmt.setFloat(6, par5);
-             stmt.execute();
+	
+             prepQ.setString(1,f.getNome());
+             prepQ.setString(2,f.getCognome());
+             prepQ.setString(3,f.getVia());
+             prepQ.setString(4,f.getCom() );
+             prepQ.setInt(5, 0);
+             prepQ.setFloat(6, f.getAmmontare());
+             prepQ.execute();
              
-
-     		
-             
-            
-       
-         conn.close();
-		 		 
+			}catch(SQLException e)
+			{
+				Log.LOGGER.log(Level.SEVERE,eccezione,e.getCause());
+			}
          
          
         	 
 	}  
 	public void daiPrivilegi() throws SQLException 
 	{
-		
+		String query="set sql_safe_updates=?";
 
-			  conn = ConnToDb.generalConnection();
-			  stmt = conn.prepareStatement(" SET SQL_SAFE_UPDATES=0");
-			         stmt.executeUpdate();
-
-	            
-	         conn.close();
+		try(Connection conn=ConnToDb.generalConnection();
+				PreparedStatement prepQ=conn.prepareStatement(query);
+				)
+			{
+				prepQ.setInt(1, 0);
+				prepQ.execute();
+			}catch(SQLException e)
+		{
+				Log.LOGGER.log(Level.SEVERE,eccezione,e.getCause());
+		}
 
 
 		}
@@ -68,25 +66,24 @@ public class ContrassegnoDao {
 	public int retUltimoOrdine() throws SQLException 
 	{
 		int id=0;
-		 ResultSet rs=null;
-
-		
-			conn = ConnToDb.generalConnection();
-		
-			stmt=conn.prepareStatement("select count(*) as massimo from ispw.fattura");
-		
-					
-					rs=stmt.executeQuery();
+		 String query="select count(*) as massimo from ispw.fattura";
+		 
+		 try(Connection conn=ConnToDb.generalConnection();
+					PreparedStatement prepQ=conn.prepareStatement(query);
+					ResultSet rs=prepQ.executeQuery())
+				{
+			
 			
 				while(rs.next())
 				{
 					id=rs.getInt("massimo");
 
 				}
-			
-
-		conn.close();
-			
+				}catch(SQLException e)
+		 {
+					Log.LOGGER.log(Level.SEVERE,eccezione,e.getCause());
+		 }
+						
 		return id;
 		
 		
@@ -97,17 +94,23 @@ public class ContrassegnoDao {
 		boolean state=false;
 		String cancella="delete from fattura"+
 		"where id=?";
+		int row=0;
 		
-			conn =ConnToDb.generalConnection();
-			stmt= conn.prepareStatement(cancella);
-			
-
-				stmt.setInt(1,idC);
-				 stmt.executeUpdate();
+		try(Connection conn=ConnToDb.generalConnection();
+				PreparedStatement prepQ=conn.prepareStatement(cancella);
 				
+				)
+			{
+
+				prepQ.setInt(1,idC);
+				row=prepQ.executeUpdate();
+				if(row==1)
 					state=true;
 
-				conn.close();
+			}catch(SQLException e)
+		{
+				Log.LOGGER.log(Level.SEVERE,eccezione,e.getCause());
+		}
 			
 			return state;
 

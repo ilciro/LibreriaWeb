@@ -8,7 +8,6 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
@@ -24,13 +23,9 @@ import javafx.collections.ObservableList;
 
 public class GiornaleDao {
 	private Factory f;
-	private  Statement stmt = null ;
-	private  Connection conn=null;
-	private  ResultSet rs=null;
-
+	
 
 	private  String query  ;
-	private  PreparedStatement prepQ = null; 
 	private  int q =0; 
 	private String categoria;
 	private int disp=0;
@@ -39,61 +34,33 @@ public class GiornaleDao {
 	private boolean state=false;
 	private ControllerSystemState vis=ControllerSystemState.getIstance();
 	private static final String GIORNALE = "giornale";
+	private static String prendiGiornale="SELECT * FROM giornale";
+	private static String eccezione="eccezione ottenuta:"; 
 
 
 
 
 
 
-/*
 
-	public void getDesc(Giornale g) throws SQLException 
-	{	  
-
-
-
-
-		
-			conn = ConnToDb.generalConnection();
-			stmt = conn.createStatement();
-
-			rs = stmt.executeQuery("select * from giornale where titolo ='"+g.getTitolo()+"'");
-
-
-			while ( rs.next() ) {
-				rs.getString("titolo");
-				rs.getString("tipologia");
-				rs.getString("lingua");	       
-				rs.getString("editore");
-				rs.getDate("dataPubblicazione");	
-				rs.getInt("copiRim");	
-				rs.getInt("disp");
-
-				rs.getFloat("prezzo");
-
-
-			}
-		conn.close();
-
-
-	}
-*/
 
 	public float getCosto(Giornale g) throws SQLException  
 	{		
-
+		query=prendiGiornale+"where id=?";
 		float prezzo=(float) 0.0;
-		conn = ConnToDb.generalConnection();
 		
-			stmt = conn.createStatement();
-
-			rs = stmt.executeQuery("select * from giornale where id ='"+g.getId()+"'");
+		try(Connection conn=ConnToDb.generalConnection();
+				PreparedStatement prepQ=conn.prepareStatement(query);
+				ResultSet rs=prepQ.executeQuery())
+			{
+				prepQ.setInt(1, g.getId());
 			while ( rs.next() ) {
 				prezzo=rs.getFloat("prezzo");
 			}
-		
-		
-			conn.close();
+			}catch(SQLException e)
+		{
+				Log.LOGGER.log(Level.SEVERE,eccezione,e.getCause());
+		}
 		
 		return prezzo;
 
@@ -103,18 +70,29 @@ public class GiornaleDao {
 
 	public  void aggiornaDisponibilita(Giornale g) throws SQLException 
 	{
+		
+		query="update ispw.giornale set copiRim=? where titolo=? or id=?";
 
 		int d=vis.getQuantita();
 		int i=getQuantita(g);
 		
 		int rim=i-d;
 		
+		try(Connection conn=ConnToDb.generalConnection();
+				PreparedStatement prepQ=conn.prepareStatement(query);
+				)
+			{
+		
 
 		
-			conn = ConnToDb.generalConnection();
-			prepQ=conn.prepareStatement("update ispw.giornale set copiRim= ? where titolo='"+g.getTitolo()+"'or id='"+g.getId()+"'");
-			prepQ.setInt(1,rim);			
+			prepQ.setInt(1,rim);
+			prepQ.setString(2,g.getTitolo());
+			prepQ.setInt(3, g.getId());
 			prepQ.executeUpdate();
+			}catch(SQLException e)
+		{
+				Log.LOGGER.log(Level.SEVERE,eccezione,e.getCause());
+		}
 
 
 
@@ -123,15 +101,18 @@ public class GiornaleDao {
 	public   void daiPrivilegi() throws  SQLException 
 	{
 
-
+		query="set sql_safe_updates=?";
+		try(Connection conn=ConnToDb.generalConnection();
+				PreparedStatement prepQ=conn.prepareStatement(query);
+				)
+			{
 		
-			conn = ConnToDb.generalConnection();
-			prepQ = conn.prepareStatement(" SET SQL_SAFE_UPDATES=0");
+			prepQ.setInt(1, 0);
 			prepQ.executeUpdate();
-
-
-		
-
+			}catch(SQLException e)
+			{
+				Log.LOGGER.log(Level.SEVERE,eccezione,e.getCause());	
+			}
 
 
 	}
@@ -140,11 +121,12 @@ public class GiornaleDao {
 
 			ObservableList<Raccolta> catalogo=FXCollections.observableArrayList();
 
+			try(Connection conn=ConnToDb.generalConnection();
+					PreparedStatement prepQ=conn.prepareStatement(prendiGiornale);
+					ResultSet rs=prepQ.executeQuery())
+				{
 		
-		
-			conn= ConnToDb.generalConnection();
-			stmt=conn.createStatement();
-			rs=stmt.executeQuery("SELECT * FROM giornale");
+			
 			while(rs.next())        
 
 			{
@@ -155,9 +137,12 @@ public class GiornaleDao {
 			
 				
 			}
+				}catch(SQLException e)
+			{
+					Log.LOGGER.log(Level.SEVERE,eccezione,e.getCause());
+			}
 
 
-		conn.close();
 		return catalogo;
 	}
 	
@@ -165,11 +150,11 @@ public class GiornaleDao {
 
 		List<Giornale> catalogo=new ArrayList<>();
 
+		try(Connection conn=ConnToDb.generalConnection();
+				PreparedStatement prepQ=conn.prepareStatement(prendiGiornale);
+				ResultSet rs=prepQ.executeQuery())
+			{
 	
-	
-		conn= ConnToDb.generalConnection();
-		stmt=conn.createStatement();
-		rs=stmt.executeQuery("SELECT * FROM giornale");
 		while(rs.next())        
 
 		{
@@ -180,9 +165,12 @@ public class GiornaleDao {
 		
 			
 		}
+			}
+		catch(SQLException e)
+		{
+			Log.LOGGER.log(Level.SEVERE,eccezione,e.getCause());
+		}
 
-
-	conn.close();
 	return catalogo;
 }
 
@@ -191,11 +179,14 @@ public class GiornaleDao {
 
 		List<Giornale> catalogo=new ArrayList<>();
 
+		query="select * from ispw.giornale where id=?";
 	
+		try(Connection conn=ConnToDb.generalConnection();
+				PreparedStatement prepQ=conn.prepareStatement(query);
+				ResultSet rs=prepQ.executeQuery())
+			{
 	
-		conn= ConnToDb.generalConnection();
-		stmt=conn.createStatement();
-		rs=stmt.executeQuery("SELECT * FROM ispw.giornale where id='"+g.getId()+"'");
+			prepQ.setInt(1,g.getId());
 		while(rs.next())        
 
 		{
@@ -206,25 +197,24 @@ public class GiornaleDao {
 		
 			
 		}
+			}catch(SQLException e)
+		{
+				Log.LOGGER.log(Level.SEVERE,eccezione,e.getCause());
+		}
 
-
-	conn.close();
 	return catalogo;
 }
 
 	public  Giornale getGiornale(Giornale g,int id) throws SQLException  
 	{
 
-
-
-			conn=ConnToDb.generalConnection();
-
-			stmt=conn.createStatement();
-			String giornaleS="SELECT * FROM giornale"
+			query=prendiGiornale
 					+" where id = ?";
-			prepQ.setInt(1, id);
-			rs=stmt.executeQuery(giornaleS);
-
+			try(Connection conn=ConnToDb.generalConnection();
+					PreparedStatement prepQ=conn.prepareStatement(query);
+					ResultSet rs=prepQ.executeQuery())
+				{
+				prepQ.setInt(1, id);
 			if (rs.next())
 			{
 
@@ -234,11 +224,11 @@ public class GiornaleDao {
 	
 			
 			}
-			
+				}catch(SQLException e)
+			{
+					Log.LOGGER.log(Level.SEVERE,eccezione,e.getCause());
+			}
 
-
-
-	conn.close();
 		return g;
 
 	}
@@ -249,24 +239,27 @@ public class GiornaleDao {
 	}
 
 	public  int retId(Giornale g) throws SQLException  {
-		String titoloG=g.getTitolo();
-
-
-
 		
-			conn = ConnToDb.generalConnection();
-			stmt = conn.createStatement();
-			String prendiId="select id from giornale"
+	
+		query="select id from giornale"
 					+"where titolo =?";
-			prepQ.setString(1,titoloG);
-			rs = stmt.executeQuery(prendiId);
+		try(Connection conn=ConnToDb.generalConnection();
+				PreparedStatement prepQ=conn.prepareStatement(query);
+				ResultSet rs=prepQ.executeQuery())
+			{
+			prepQ.setString(1,g.getTitolo());
+			
 
 			while ( rs.next() ) {
 				id=rs.getInt("id");
 
 			}
+			}catch(SQLException e)
+		{
+				Log.LOGGER.log(Level.SEVERE,eccezione,e.getCause());
+		}
 		
-		conn.close();
+		
 
 		return id;
 
@@ -275,23 +268,26 @@ public class GiornaleDao {
 	}
 
 	public  String retTip(Giornale g) throws SQLException  {
-		String titoloG;
-
-		titoloG=g.getTitolo();
-
+		
 
 		
-			conn = ConnToDb.generalConnection();
-			stmt = conn.createStatement();
-
-			rs=stmt.executeQuery("select tipologia from ispw.giornale where titolo ='"+titoloG+"' or id ='"+g.getId()+"'");
-
-			while ( rs.next() ) {
+		
+			query="select tipologia from ispw.giornale where titolo =? or id =?";
+			try(Connection conn=ConnToDb.generalConnection();
+					PreparedStatement prepQ=conn.prepareStatement(query);
+					ResultSet rs=prepQ.executeQuery())
+				{
+				prepQ.setString(1, g.getTitolo());
+				prepQ.setInt(2,g.getId());
+				while ( rs.next() ) {
 				categoria=rs.getString("tipologia");
 
 			}
+				}catch(SQLException e)
+				{
+					Log.LOGGER.log(Level.SEVERE,eccezione,e.getCause());
+				}
 		
-			conn.close();
 		
 		return categoria;
 
@@ -304,20 +300,22 @@ public class GiornaleDao {
 		String name = null;
 
 			
-			conn= ConnToDb.generalConnection();
-
-			stmt=conn.createStatement();
-			rs=stmt.executeQuery("SELECT titolo FROM giornale where id = '"+g.getId()+"' ");
-			if (rs.next())
+		query="SELECT titolo FROM giornale where id =?";
+		try(Connection conn=ConnToDb.generalConnection();
+				PreparedStatement prepQ=conn.prepareStatement(query);
+				ResultSet rs=prepQ.executeQuery())
+			{
+			prepQ.setInt(1, g.getId());
+			while (rs.next())
 			{
 				name = rs.getString(1);
 			}
+			}catch(SQLException e)
+		{
+				Log.LOGGER.log(Level.SEVERE,eccezione,e.getCause());
+		}
 			
 		
-			conn.close();
-
-		
-
 		return name;
 	}
 
@@ -326,10 +324,13 @@ public class GiornaleDao {
 
 
 		
-				conn = ConnToDb.generalConnection();
-				stmt=conn.createStatement();
-				rs=  stmt.executeQuery(
-						"SELECT `disp` FROM `ispw`.`giornale` where `id` = '"+g.getId()+"'");
+			query="SELECT `disp` FROM `ispw`.`giornale` where `id` = ?";
+			try(Connection conn=ConnToDb.generalConnection();
+					PreparedStatement prepQ=conn.prepareStatement(query);
+					ResultSet rs=prepQ.executeQuery())
+				{
+				prepQ.setInt(1, g.getId());
+				
 				if (rs.next())
 				{
 				
@@ -338,13 +339,12 @@ public class GiornaleDao {
 					disp=1;
 				else if (disp == 0)
 					disp= 0;
+				}
+				}catch(SQLException e)
+			{
+					Log.LOGGER.log(Level.SEVERE,eccezione,e.getCause());
 			}
 		
-			
-				conn.close();
-			
-		
-
 		return disp;
 	}
 
@@ -353,21 +353,23 @@ public class GiornaleDao {
 
 		
 			
-				conn = ConnToDb.generalConnection();
-			
-				stmt = conn.createStatement();
-
-				rs=  stmt.executeQuery("SELECT copiRim FROM ispw.giornale where id = '"+g.getId()+"'");
-				if (rs.next()) {
-					q = rs.getInt("copiRim");
-				}			
+				
+				query="SELECT copiRim FROM ispw.giornale where id = ?";
+				try(Connection conn=ConnToDb.generalConnection();
+						PreparedStatement prepQ=conn.prepareStatement(query);
+						ResultSet rs=prepQ.executeQuery())
+					{
+					prepQ.setInt(1, g.getId());
+					
+					while (rs.next()) {
+						q = rs.getInt("copiRim");
+					}	
+					}catch(SQLException e)
+				{
+						Log.LOGGER.log(Level.SEVERE,eccezione,e.getCause());
+				}
 			
 		
-			
-				conn.close();
-			
-		
-
 		return q;
 	}
 
@@ -375,20 +377,22 @@ public class GiornaleDao {
 	{
 		g.setId(id);
 
-		
-			conn = ConnToDb.generalConnection();
-			stmt=conn.createStatement();
-
-
-			rs=  stmt.executeQuery("SELECT disp FROM ispw.giornale where id = '"+g.getId()+"' ;");
-			if(rs.next())
+		query="SELECT disp FROM ispw.giornale where id = ?";
+		try(Connection conn=ConnToDb.generalConnection();
+				PreparedStatement prepQ=conn.prepareStatement(query);
+				ResultSet rs=prepQ.executeQuery())
+			{
+			while(rs.next())
 			{
 				disp = rs.getInt(1);
 				if (disp >= 1)
 					state=true;
 				Log.LOGGER.log(Level.INFO, "giornale trovato");
 			}
-			
+			}catch(SQLException e)
+			{
+				Log.LOGGER.log(Level.SEVERE,eccezione,e.getCause());
+			}
 	 	return state;
 	}
 
@@ -399,9 +403,11 @@ public class GiornaleDao {
 
 		
 		
-			conn=ConnToDb.generalConnection();
-			stmt= conn.createStatement();
-			rs=stmt.executeQuery("SELECT * FROM ispw.giornale;");
+			query="SELECT * FROM ispw.giornale";
+			try(Connection conn=ConnToDb.generalConnection();
+					PreparedStatement prepQ=conn.prepareStatement(query);
+					ResultSet rs=prepQ.executeQuery())
+				{
 
 			while(rs.next())
 			{
@@ -418,8 +424,11 @@ public class GiornaleDao {
 
 				
 			}
+				}catch(SQLException e)
+				{
+					Log.LOGGER.log(Level.SEVERE,eccezione,e.getCause());
+				}
 		
-		conn.close();
 		return catalogo;
 	}
 
@@ -427,7 +436,7 @@ public class GiornaleDao {
 	public  boolean creaGiornale(Giornale g) throws SQLException  {
 		
 
-			conn = ConnToDb.generalConnection();
+			
 			query= "INSERT INTO `ispw`.`giornale`"
 					+ "(`titolo`,"
 					+ "`tipologia`,"
@@ -438,9 +447,12 @@ public class GiornaleDao {
 					+ "`disp`,"
 					+ "`prezzo`)"
 					+ "VALUES"
-					+ "(?,?,?,?,?,?,?,?);"
-					+ "";
-			prepQ = conn.prepareStatement(query);	
+					+ "(?,?,?,?,?,?,?,?);";
+			try(Connection conn=ConnToDb.generalConnection();
+					PreparedStatement prepQ=conn.prepareStatement(query);
+					)
+				{
+				
 			prepQ.setString(1,g.getTitolo()); 
 			prepQ.setString(2,g.getTipologia());
 			prepQ.setString(3,g.getLingua());
@@ -452,12 +464,13 @@ public class GiornaleDao {
 
 			prepQ.executeUpdate();
 
-			state= true; // true		 			 	
+			state= true; // true
+				}catch(SQLException e)
+			{
+					Log.LOGGER.log(Level.SEVERE,eccezione,e.getCause());
+			}
 		
-		conn.close();
-
-
-
+		
 		return state;
 
 
@@ -466,20 +479,24 @@ public class GiornaleDao {
 
 	public  void cancella(Giornale g) throws SQLException  {
 
-
+		
 		
 
-			conn = ConnToDb.generalConnection();
-			stmt=conn.createStatement();
 
+			query="delete  FROM ispw.giornale where id = ?";
+			try(Connection conn=ConnToDb.generalConnection();
+					PreparedStatement prepQ=conn.prepareStatement(query);
+					ResultSet rs=prepQ.executeQuery())
+				{
+					prepQ.setInt(1, g.getId());
+				
+					prepQ.executeUpdate();
+				}catch(SQLException e)
+			{
+					Log.LOGGER.log(Level.SEVERE,eccezione,e.getCause());
+			}
 
-			prepQ=conn.prepareStatement("delete  FROM ispw.giornale where id = '"+g.getId()+"'");
-			prepQ.executeUpdate();
-
-		conn.close();
-
-
-
+	
 	}
 
 	public ObservableList<Giornale> getGiornaliSingoloById(Giornale g) throws SQLException    {
@@ -487,14 +504,12 @@ public class GiornaleDao {
 		ObservableList<Giornale> catalogo=FXCollections.observableArrayList();
 
 
-		
-
-			conn=ConnToDb.generalConnection();
-
-
-			stmt= conn.createStatement();
-			rs=stmt.executeQuery("SELECT * FROM ispw.giornale where id='"+g.getId()+"'");
-
+		query="SELECT * FROM ispw.giornale where id=?";
+		try(Connection conn=ConnToDb.generalConnection();
+				PreparedStatement prepQ=conn.prepareStatement(query);
+				ResultSet rs=prepQ.executeQuery())
+			{
+				prepQ.setInt(1, g.getId());
 			while(rs.next())
 			{
 				
@@ -506,8 +521,10 @@ public class GiornaleDao {
 
 		}
 
-		
-			Log.LOGGER.log(Level.SEVERE," Catalogo nel dao : {0}",catalogo);
+			}catch(SQLException e)
+		{
+				Log.LOGGER.log(Level.SEVERE,eccezione,e.getCause());
+		}
 		return catalogo;
 
 	}
@@ -516,16 +533,19 @@ public class GiornaleDao {
 
 		ObservableList<Raccolta> catalogo=FXCollections.observableArrayList();
 
-		String giornaleNE="SELECT * FROM giornale"
+		query=prendiGiornale
 				+"where titolo = ?"
 				+" OR editore =?";
 		
+		try(Connection conn=ConnToDb.generalConnection();
+				PreparedStatement prepQ=conn.prepareStatement(query);
+				ResultSet rs=prepQ.executeQuery())
+			{
 
-			conn=ConnToDb.generalConnection();
-			stmt=conn.createStatement();
+		
 			prepQ.setString(1,s);
 			prepQ.setString(2, s);
-			rs=stmt.executeQuery(giornaleNE);
+			
 
 			while(rs.next())
 			{
@@ -538,13 +558,12 @@ public class GiornaleDao {
 				
 				
 			}
+			}catch(SQLException e)
+		{
+				Log.LOGGER.log(Level.SEVERE,eccezione,e.getCause());
+		}
 
 		
-
-			conn.close();
-			Log.LOGGER.log(Level.SEVERE,"Catalogo : {0}",catalogo);
-
-
 		return catalogo;
 
 
@@ -552,12 +571,6 @@ public class GiornaleDao {
 
 	public  void aggiornaGiornale(Giornale g) throws SQLException  {
 		
-
-
-					
-			conn = ConnToDb.generalConnection();
-
-			stmt=conn.createStatement();
 
 
 			query=" UPDATE `ispw`.`giornale`"
@@ -570,9 +583,12 @@ public class GiornaleDao {
 					+ "`copiRim` = ?,"
 					+ "`disp` = ?,"
 					+ "`prezzo` = ?"
-					+ "WHERE `id` = "+g.getId()+"";
-			prepQ=conn.prepareStatement(query);
-
+					+ "WHERE `id` =?";
+			try(Connection conn=ConnToDb.generalConnection();
+					PreparedStatement prepQ=conn.prepareStatement(query);
+					)
+				{
+			
 			prepQ.setString(1,g.getTitolo());
 			prepQ.setString(2,g.getTipologia());
 			prepQ.setString(3,g.getLingua());
@@ -581,15 +597,14 @@ public class GiornaleDao {
 			prepQ.setInt(6,g.getCopieRimanenti());
 			prepQ.setInt(7,g.getDisponibilita());
 			prepQ.setFloat(8,g.getPrezzo());
+			prepQ.setInt(9, g.getId());
 
 
 			prepQ.executeUpdate();
-			prepQ.close();
-
-
-
-		conn.close();
-
+				}catch(SQLException e)
+			{
+					Log.LOGGER.log(Level.SEVERE,eccezione,e.getCause());
+			}
 
 	}	
 
@@ -599,49 +614,46 @@ public class GiornaleDao {
 		w=new FileWriter("ReportFinale\\riepilogoGiornali.txt");
 		   try (BufferedWriter b=new BufferedWriter (w)){
 
-			conn = ConnToDb.generalConnection();
-			
+			query="select titolo,editore,copiRim,prezzo as totale  from ispw.giornale";
+			try(Connection conn=ConnToDb.generalConnection();
+					PreparedStatement prepQ=conn.prepareStatement(query);
+					ResultSet rs=prepQ.executeQuery())
+				{
 
-
-			stmt=conn.createStatement();
-			rs=stmt.executeQuery("select titolo,editore,copiRim,prezzo as totale  from ispw.giornale;");
-
-			while(rs.next())
+					while(rs.next())
+					{
+		
+		
+		
+						rs.getString(1);
+						rs.getString(2);
+						rs.getInt(3);
+						rs.getFloat(4);
+		
+		
+		
+						b.write("Titolo :"+rs.getString(1)+"\t"+"Editore :"+rs.getString(2)+"\t"+"Ricavo totale :" +rs.getInt(3)*rs.getFloat(4)+"\n");
+		
+		
+		
+		
+						b.flush();
+		
+		
+		
+		
+		
+					}
+				}catch(SQLException e)
 			{
-
-
-
-				rs.getString(1);
-				rs.getString(2);
-				rs.getInt(3);
-				rs.getFloat(4);
-
-
-
-				b.write("Titolo :"+rs.getString(1)+"\t"+"Editore :"+rs.getString(2)+"\t"+"Ricavo totale :" +rs.getInt(3)*rs.getFloat(4)+"\n");
-
-
-
-
-				b.flush();
-
-
-
-
-
+					Log.LOGGER.log(Level.SEVERE,eccezione,e.getCause());
 			}
 
 
 
 
 		}
-		finally {
-			conn.close();
-
-		}
-
-
-
+		
 
 	}
 
@@ -654,14 +666,19 @@ public class GiornaleDao {
 		
 
 		
-			conn = ConnToDb.generalConnection();
-			prepQ=conn.prepareStatement("update ispw.giornale set copiRim= ? where titolo='"+g.getTitolo()+"'or id='"+g.getId()+"'");
-			prepQ.setInt(1,rim);			
-			prepQ.executeUpdate();
-
-
-		conn.close();
-
+			query="update ispw.giornale set copiRim= ? where titolo=? or id=?";
+			try(Connection conn=ConnToDb.generalConnection();
+					PreparedStatement prepQ=conn.prepareStatement(query);
+					)
+				{
+				prepQ.setInt(1,rim);	
+				prepQ.setString(2,g.getTitolo());
+				prepQ.setInt(3, g.getId());
+				prepQ.executeUpdate();
+				}catch(SQLException e)
+				{
+					Log.LOGGER.log(Level.SEVERE,eccezione,e.getCause());
+				}
 
 
 		
