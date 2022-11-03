@@ -6,6 +6,8 @@ jobs:
       - checkout
       - sonarcloud/scan
 orbs:
+#add this
+  node: circleci/node@5.0.2
   sonarcloud: sonarsource/sonarcloud@1.1.0
 version: 2.1
 workflows:
