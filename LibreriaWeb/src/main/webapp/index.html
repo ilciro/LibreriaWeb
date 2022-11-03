@@ -13,7 +13,7 @@
 Scegliere quale oggetto si desidera
 </h2>
 
-<br>
+
 
 <form action="InizioServlet" method="post">
 <table>
@@ -30,6 +30,12 @@ giornale
 <th>
 rivista
 </th>
+<th>
+login
+</th>
+<th>
+ricerca
+</th>
 </tr>
 <tr>
 <td>
@@ -40,6 +46,12 @@ rivista
 </td>
 <td>
 <img alt="source not found" src="immagini/una-rivista_318-1607.jpg" width=100  height=100 >
+</td>
+<td>
+<img alt="source not found" src="immagini\vector-users-icon-png_302626.jpg" width=100  height=100 >
+</td>
+<td>
+<img alt="source not found" src="immagini\Search-icon-13.png" width=100  height=100 >
 </td>
 </tr>
 <tr>
@@ -52,80 +64,16 @@ rivista
 <td>
 <input type="submit" name="buttonR" id="buttonR" value="riviste">
 </td>
+<td>
+<input type="submit" name="buttonLogin" id="buttonLogin" value="login">
+</td>
+<td>
+<input type="submit" name="buttonRic" id="buttonRic" value="ricerca">
+</td>
 </tr>
 </table>
 </form>
 
-
-
-<!--  
-<br>
-<form action="LoginServlet" method="post" >
-<table>
-<caption > TABELLA LOGIN</caption>
-<tr>
-<th scope="col"></th>
-</tr>
-<tr>
-<td>
-<label for="emailL">Email Utente</label>
-<input type="text" name="emailL" id="emailL"/>
-</td>
-</tr>
-<tr>
-<td>
-<label for="passL">Password Utente</label>
-<input type="password" name="passL" id="passL"/>
-</td>
-</tr>
-<tr>
-<td>
-<input type="submit" name="loginU" />
-</td>
-</tr>
-<tr>
-<td><img alt="source not found" src="immagini\vector-users-icon-png_302626.jpg" width=100  height=100 ></td>
-</tr>
-</table>
-</form>
-<br>
-<br>
-<form action="RivercaServlet" method="post" >
-<table>
-<caption > TABELLA CERCA</caption>
-<tr>
-<th scope="col"></th>
-</tr>
-<tr>
-<td>
-<label for="nomeC">Inserisci nome oggetto</label>
-<input type="text" name="nomeC" id="nomeC"/>
-</td>
-</tr>
-<tr>
-<td>
-<input type="checkbox" id="libro" name="libro" value="Libro">
-<label for="libro"> LIBRO</label>
-<input type="checkbox" id="giornale" name="giornale" value="Giornale">
-<label for="giornale"> GIORNALE</label>
-<input type="checkbox" id="rivista" name="rivista" value="Rivista">
-<label for="rivista"> RIVISTA</label>
-</td>
-</tr>
-<tr>
-<td>
-<label for="cercaB" ></label>
-<input type="submit" name="cercaB" value="${cercaB}">Cerca>
-</td>
-</tr>
-<tr>
-<td><img alt="source not found" src="immagini\Search-icon-13.png" width=100  height=100 ></td>
-</tr>
-</table>
-</form>
-
-
--->
 
 </body>
 </html>
