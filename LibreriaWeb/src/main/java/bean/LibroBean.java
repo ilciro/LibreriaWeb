@@ -7,10 +7,10 @@ import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.logging.Level;
+
 
 import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
@@ -46,7 +46,7 @@ public class LibroBean implements Raccolta {
 	private List<Libro> miaLista;
 	private String listaCategorie;
 	private java.sql.Date date;
-	Statement stmt=null;
+	
 	public List<Libro> getMiaLista() {
 		return miaLista;
 	}
@@ -291,7 +291,7 @@ public class LibroBean implements Raccolta {
 	   		document = new Document();
    			PdfWriter.getInstance(document, new FileOutputStream("C:\\libriScaricati\\Alessandro Coppola - Apocalypse Town.pdf"));
    			document.open();	   		
-			file=new File("C:\\Users\\dani\\git\\ProgettoIspwFinale\\AAA\\libriPerSito\\Alessandro Coppola - Apocalypse Town.pdf");
+			file=new File("libriPerSito\\Alessandro Coppola - Apocalypse Town.pdf");
 	        Desktop.getDesktop().open(file);
 	     }
 		if (i==2)
@@ -299,7 +299,7 @@ public class LibroBean implements Raccolta {
 			document = new Document();
    			PdfWriter.getInstance(document, new FileOutputStream("C:\\libriScaricati\\Andrea Baranes - �Dobbiamo restituire.pdf"));
    			document.open();	   		
-			file=new File("C:\\Users\\dani\\git\\ProgettoIspwFinale\\AAA\\libriPerSito\\Andrea Baranes - �Dobbiamo restituire.pdf");
+			file=new File("libriPerSito\\Andrea Baranes - �Dobbiamo restituire.pdf");
 	        Desktop.getDesktop().open(file);
 		}
 		if (i==3)
@@ -308,7 +308,7 @@ public class LibroBean implements Raccolta {
 			document = new Document();
    			PdfWriter.getInstance(document, new FileOutputStream("C:\\libriScaricati\\Ariel Toaff, Elio Toaff - Zohar. Il libro dello splendore.pdf"));
    			document.open();	   		
-			file=new File("C:\\Users\\dani\\git\\ProgettoIspwFinale\\AAA\\libriPerSito\\Ariel Toaff, Elio Toaff - Zohar. Il libro dello splendore.pdf");
+			file=new File("libriPerSito\\Ariel Toaff, Elio Toaff - Zohar. Il libro dello splendore.pdf");
 	        Desktop.getDesktop().open(file);
 					
 		}
@@ -318,7 +318,7 @@ public class LibroBean implements Raccolta {
 			document = new Document();
    			PdfWriter.getInstance(document, new FileOutputStream("C:\\libriScaricati\\Come i servizi segreti usano i media - Aldo Giannuli.pdf"));
    			document.open();	   		
-			file=new File("C:\\Users\\dani\\git\\ProgettoIspwFinale\\AAA\\libriPerSito\\Come i servizi segreti usano i media - Aldo Giannuli.pdf");
+			file=new File("libriPerSito\\Come i servizi segreti usano i media - Aldo Giannuli.pdf");
 	        Desktop.getDesktop().open(file);
 					
 		}
@@ -327,7 +327,7 @@ public class LibroBean implements Raccolta {
 			document = new Document();
    			PdfWriter.getInstance(document, new FileOutputStream("C:\\libriScaricati\\Donald Davidson - Sulla verit� (2006).pdf"));
    			document.open();	   		
-			file=new File("C:\\Users\\dani\\git\\ProgettoIspwFinale\\AAA\\libriPerSito\\Donald Davidson - Sulla verit� (2006).pdf");
+			file=new File("libriPerSito\\Donald Davidson - Sulla verit� (2006).pdf");
 	        Desktop.getDesktop().open(file);
 		}
 		if(i==6)
@@ -336,7 +336,7 @@ public class LibroBean implements Raccolta {
 			document = new Document();
    			PdfWriter.getInstance(document, new FileOutputStream("C:\\libriScaricati\\eragon.pdf"));
    			document.open();	   		
-			file=new File("C:\\Users\\dani\\git\\ProgettoIspwFinale\\AAA\\libriPerSito\\eragon.pdf");
+			file=new File("libriPerSito\\eragon.pdf");
 	        Desktop.getDesktop().open(file);
 		}
 		if(i==8)
@@ -344,7 +344,7 @@ public class LibroBean implements Raccolta {
 			document = new Document();
    			PdfWriter.getInstance(document, new FileOutputStream("C:\\libriScaricati\\Gershom Scholem - Alchimia E Kabbalah.pdf"));
    			document.open();	   		
-			file=new File("C:\\Users\\dani\\git\\ProgettoIspwFinale\\AAA\\libriPerSito\\Gershom Scholem - Alchimia E Kabbalah.pdf");
+			file=new File("libriPerSito\\Gershom Scholem - Alchimia E Kabbalah.pdf");
 	        Desktop.getDesktop().open(file);
 		}
 		if (i==9)
@@ -352,7 +352,7 @@ public class LibroBean implements Raccolta {
 			document = new Document();
    			PdfWriter.getInstance(document, new FileOutputStream("C:\\libriScaricati\\Excell - Giampietro Lanzanova.pdf"));
    			document.open();	   		
-			file=new File("C:\\Users\\dani\\git\\ProgettoIspwFinale\\AAA\\libriPerSito\\Excell - Giampietro Lanzanova.pdf");
+			file=new File("libriPerSito\\Excell - Giampietro Lanzanova.pdf");
 	        Desktop.getDesktop().open(file);
 		}
 		if (i==10)
@@ -360,7 +360,7 @@ public class LibroBean implements Raccolta {
 			document = new Document();
    			PdfWriter.getInstance(document, new FileOutputStream("C:\\libriScaricati\\Giocatore5.pdf"));
    			document.open();	   		
-			file=new File("C:\\Users\\dani\\git\\ProgettoIspwFinale\\AAA\\libriPerSito\\Giocatore5.pdf");
+			file=new File("libriPerSito\\Giocatore5.pdf");
 	        Desktop.getDesktop().open(file);
 		}
 		if (i==11)
@@ -368,7 +368,7 @@ public class LibroBean implements Raccolta {
 			document = new Document();
    			PdfWriter.getInstance(document, new FileOutputStream("C:\\libriScaricati\\Grammatica italiana-Garzanti(le garzantine)(2012).pdf"));
    			document.open();	   		
-			file=new File("C:\\Users\\dani\\git\\ProgettoIspwFinale\\AAA\\libriPerSito\\Grammatica italiana-Garzanti(le garzantine)(2012).pdf");
+			file=new File("libriPerSito\\Grammatica italiana-Garzanti(le garzantine)(2012).pdf");
 	        Desktop.getDesktop().open(file);
 		}
 		else {
@@ -505,4 +505,7 @@ public class LibroBean implements Raccolta {
 	Log.LOGGER.log(Level.INFO,"Libro cancellato : .{0}",row);
 	return row;
 		}
+	
+	
+	
 }

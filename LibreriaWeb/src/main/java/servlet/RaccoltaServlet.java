@@ -38,7 +38,8 @@ public class RaccoltaServlet extends HttpServlet {
     @Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-    	 String s = null;
+    	 StringBuilder s=new StringBuilder();
+    	 String finale="";
 		try {
 			String buttonTot=request.getParameter("totaleC");
 			String buttonL=request.getParameter("totaleL");
@@ -53,15 +54,16 @@ public class RaccoltaServlet extends HttpServlet {
 			 if(buttonTot!=null && buttonTot.equals("totale") )
 			{
 				
-								s+="";
-				tAB.setS(s);
+								
+				tAB.setScrivi(finale);
 				
 				
-					s+=tAB.generaReportL();
-					s+=tAB.generaReportG();
-					s+=tAB.generaReportR();
-					s+=tAB.getListaUtenti();
-					tAB.setS(s);
+					s.append(tAB.generaReportL());
+					s.append(tAB.generaReportG());
+					s.append(tAB.generaReportR());
+					s.append(tAB.getListaUtenti());
+					finale=s.toString();
+					tAB.setScrivi(finale);
 					request.setAttribute("bean",tAB);
 					RequestDispatcher view = getServletContext().getRequestDispatcher(report); 
 					view.forward(request,response);			
@@ -70,12 +72,12 @@ public class RaccoltaServlet extends HttpServlet {
 			}
 			else if(buttonL!=null && buttonL.equals("libri") )
 			{
-				s="";
-				tAB.setS(s);
+				finale="";
+				tAB.setScrivi(finale);
 				
-				
-					s+=tAB.generaReportL();
-					tAB.setS(s);
+					s.append(tAB.generaReportL());
+					finale=s.toString();					
+					tAB.setScrivi(finale);
 					request.setAttribute("bean",tAB);
 					RequestDispatcher view = getServletContext().getRequestDispatcher(report); 
 					view.forward(request,response);			
@@ -84,13 +86,13 @@ public class RaccoltaServlet extends HttpServlet {
 			}
 			else if(buttonG!=null && buttonG.equals("giornale") )
 			{
-				s="";
-				tAB.setS(s);
+				tAB.setScrivi(finale);
 				
 				
 					
-					s+=tAB.generaReportG();
-					tAB.setS(s);
+					s.append(tAB.generaReportG());
+					finale=s.toString();
+					tAB.setScrivi(finale);
 					request.setAttribute("bean",tAB);
 					RequestDispatcher view = getServletContext().getRequestDispatcher(report); 
 					view.forward(request,response);			
@@ -99,13 +101,14 @@ public class RaccoltaServlet extends HttpServlet {
 			}
 			else if(buttonR!=null && buttonR.equals("rivista")  )
 			{
-				s="";
-				tAB.setS(s);
+				finale="";
+				tAB.setScrivi(finale);
 				
 				
 					
-					s+=tAB.generaReportR();
-					tAB.setS(s);
+					s.append(tAB.generaReportR());
+					finale=s.toString();
+					tAB.setScrivi(finale);
 					request.setAttribute("bean",tAB);
 					RequestDispatcher view = getServletContext().getRequestDispatcher(report); 
 					view.forward(request,response);			
@@ -114,14 +117,15 @@ public class RaccoltaServlet extends HttpServlet {
 			}
 			else if(buttonRacc!=null && buttonRacc.equals("raccolta")  )
 			{
-				s="";
-				tAB.setS(s);
+				finale="";
+				tAB.setScrivi(finale);
 			
 				
-					s+=tAB.generaReportL();
-					s+=tAB.generaReportG();
-					s+=tAB.generaReportR();
-					tAB.setS(s);
+					s.append(tAB.generaReportL());
+					s.append(tAB.generaReportG());
+					s.append(tAB.generaReportR());
+					finale=s.toString();
+					tAB.setScrivi(finale);
 					request.setAttribute("bean",tAB);
 					RequestDispatcher view = getServletContext().getRequestDispatcher(report); 
 					view.forward(request,response);			

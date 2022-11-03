@@ -39,20 +39,17 @@ public class ContantiServlet extends HttpServlet {
     	String negozio=request.getParameter("negozioC");
     	
     	
-    	//SystemBean.getIstance().setSpesaT((float)11.3);
     	SystemBean.getIstance().setMetodoP("cash");
     	
     	if(negozio==null)
     	{
     		SystemBean.getIstance().setNegScelto(false);
-        	System.out.println("NEgozio :"+ negozio);
 
 
     	}
     	else
     	{
     		SystemBean.getIstance().setNegScelto(true);
-        	System.out.println("NEgozio :"+ negozio);
 
 
     	}

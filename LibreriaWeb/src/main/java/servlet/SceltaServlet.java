@@ -11,7 +11,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import bean.ExceptionBean;
-//import bean.AcquistaBean;
 import bean.SystemBean;
 import database.GiornaleDao;
 import database.LibroDao;
@@ -53,6 +52,7 @@ public class SceltaServlet extends HttpServlet {
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
+	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		try {
 			String quantita=request.getParameter("quantitaL");
