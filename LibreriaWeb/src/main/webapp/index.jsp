@@ -1,10 +1,10 @@
-
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
 <!DOCTYPE html>
-<html lang="it">
+<html lang=it>
 <head>
-<title>Benvenuti nella Libreria online</title>
-<meta charset="ISO-8859-1">
-<link href="css//CssFile.css" rel="stylesheet" type="text/css">
+<meta charset="UTF-8">
+<title>Insert title here</title>
 </head>
 <body>
 <h1>  Benvenuti nella Libreria </h1>
@@ -15,7 +15,7 @@ Scegliere quale oggetto si desidera
 
 
 
-<form action="InizioServlet" method="post">
+<form action="ServletI" method="post">
 <table>
 <caption>
 scegliere tra libri , giornali e riviste
@@ -73,6 +73,7 @@ ricerca
 </tr>
 </table>
 </form>
+
 
 
 </body>
