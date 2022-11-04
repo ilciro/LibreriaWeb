@@ -15,7 +15,7 @@ Scegliere quale oggetto si desidera
 
 
 
-<form action="ServletI" method="post">
+<form action="Servlet" method="post">
 <table>
 <caption>
 scegliere tra libri , giornali e riviste
