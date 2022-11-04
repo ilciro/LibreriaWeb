@@ -30,7 +30,7 @@ public class InizioServlet extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	@Override
-	protected void doPost(HttpServletRequest request, HttpServletResponse response)  {
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException,IOException  {
 		String l=request.getParameter("buttonL");
 		String g=request.getParameter("buttonG");
 		String r=request.getParameter("buttonR");
